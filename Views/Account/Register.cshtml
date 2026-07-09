@@ -1,0 +1,313 @@
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    Layout = null;
+    ViewData["Title"] = T.T("RegisterPageTitle");
+
+    bool hasUsers = ViewBag.HasUsers == true;
+    string currentRole = ViewBag.CurrentRole as string ?? "";
+    string isSuperAdmin = ViewBag.IsSuperAdmin as string ?? "false";
+}
+
+<!DOCTYPE html>
+<html lang="@T.Lang">
+<head>
+    <meta charset="utf-8" />
+    <title>@T.T("RegisterPageTitle")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(124,58,237,.35), transparent 34%),
+                radial-gradient(circle at bottom left, rgba(37,99,235,.28), transparent 32%),
+                #020617;
+            color: #e5e7eb;
+            display: grid;
+            grid-template-columns: .9fr 1.1fr;
+        }
+
+        .language-switch {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 20;
+        }
+
+        .language-switch select {
+            border: 1px solid #334155;
+            border-radius: 12px;
+            background: #0f172a;
+            color: white;
+            padding: 10px 12px;
+            font-weight: 800;
+        }
+
+        .left {
+            padding: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(15,23,42,.45);
+            border-right: 1px solid #1e293b;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: 900;
+            margin-bottom: 35px;
+        }
+
+        .brand span { color: #8b5cf6; }
+
+        h1 {
+            font-size: 46px;
+            line-height: 1.08;
+            margin: 0 0 20px;
+            color: white;
+        }
+
+        h1 span { color: #a78bfa; }
+
+        p {
+            color: #cbd5e1;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .steps {
+            margin-top: 28px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .step {
+            background: rgba(2,6,23,.75);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(2,6,23,.92);
+            border: 1px solid #334155;
+            border-radius: 28px;
+            padding: 38px;
+            box-shadow: 0 35px 100px rgba(0,0,0,.45);
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .muted {
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+
+        .info {
+            background: rgba(37,99,235,.14);
+            color: #bfdbfe;
+            padding: 14px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            border: 1px solid #2563eb;
+            font-size: 14px;
+        }
+
+        .error {
+            background: rgba(127,29,29,.8);
+            color: #fecaca;
+            border: 1px solid #ef4444;
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,.18);
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 15px;
+            border-radius: 14px;
+            border: 0;
+            background: #7c3aed;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover { background: #6d28d9; }
+
+        .links {
+            margin-top: 22px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @@media(max-width: 950px) {
+            body { grid-template-columns: 1fr; }
+            .left { padding: 40px; border-right: 0; }
+            h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<form method="get" action="/Language/Set" class="language-switch">
+    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+    <select name="lang" onchange="this.form.submit()" aria-label="Language">
+        <option value="fr" selected="@(T.Lang == "fr")">FR</option>
+        <option value="en" selected="@(T.Lang == "en")">EN</option>
+        <option value="sv" selected="@(T.Lang == "sv")">SV</option>
+        <option value="es" selected="@(T.Lang == "es")">ES</option>
+        <option value="de" selected="@(T.Lang == "de")">DE</option>
+    </select>
+</form>
+
+<section class="left">
+    <div class="brand">Enterprise<span>ERP</span></div>
+
+    <h1>@T.T("RegisterHeroTitle") <span>@T.T("RegisterHeroAccent")</span>.</h1>
+    <p>@T.T("RegisterHeroText")</p>
+
+    <div class="steps">
+        <div class="step">@T.T("RegisterStepSuperAdmin")</div>
+        <div class="step">@T.T("RegisterStepAdmins")</div>
+        <div class="step">@T.T("RegisterStepMobile")</div>
+        <div class="step">@T.T("RegisterStepAi")</div>
+    </div>
+</section>
+
+<section class="right">
+    <div class="card">
+        <h2>@T.T("RegisterTitle")</h2>
+
+        @if (!hasUsers)
+        {
+            <div class="muted">@T.T("MainAdminCreation")</div>
+            <div class="info">
+                @T.T("FirstAccountInfo") <strong>SuperAdmin</strong>.
+            </div>
+        }
+        else
+        {
+            <div class="muted">@T.T("UserCreation")</div>
+            <div class="info">@T.T("AdminOnlyInfo")</div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">@ViewBag.Error</div>
+        }
+
+        <form method="post" action="/Account/Register">
+            @Html.AntiForgeryToken()
+
+            <label>@T.T("FullName")</label>
+            <input type="text" name="FullName" placeholder="@T.T("FullNamePlaceholder")" required />
+
+            <label>@T.T("Email")</label>
+            <input type="email" name="Email" placeholder="exemple@email.com" required />
+
+            <label>@T.T("Password")</label>
+            <input type="password" name="Password" placeholder="@T.T("SecurePasswordPlaceholder")" required />
+
+            @if (!hasUsers)
+            {
+                <label>@T.T("Role")</label>
+                <input type="text" value="SuperAdmin" disabled />
+                <input type="hidden" name="Role" value="SuperAdmin" />
+            }
+            else
+            {
+                <label>@T.T("Role")</label>
+                <select name="Role" required>
+                    @if (isSuperAdmin == "true")
+                    {
+                        <option value="Admin">@T.T("Admin")</option>
+                        <option value="Manager">@T.T("Manager")</option>
+                        <option value="Employee" selected>@T.T("Employee")</option>
+                    }
+                    else if (currentRole == "Admin")
+                    {
+                        <option value="Manager">@T.T("Manager")</option>
+                        <option value="Employee" selected>@T.T("Employee")</option>
+                    }
+                    else
+                    {
+                        <option value="Employee" selected>@T.T("Employee")</option>
+                    }
+                </select>
+            }
+
+            <button class="btn" type="submit">@T.T("CreateTheAccount")</button>
+        </form>
+
+        <div class="links">
+            <a href="/">← @T.T("Home")</a>
+
+            @if (hasUsers)
+            {
+                <a href="/Account/Login">@T.T("AlreadyHaveAccount")</a>
+            }
+            else
+            {
+                <span>@T.T("FirstSystemAccount")</span>
+            }
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

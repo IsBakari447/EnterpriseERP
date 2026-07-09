@@ -1,0 +1,80 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Presence>
+
+@{
+    ViewData["Title"] = T.T("Presences");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Presences")</h1>
+        <p>@T.T("PresencesDescription")</p>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+        <a href="/Presence/CheckIn" class="btn-primary">
+            @T.T("CheckIn")
+        </a>
+
+        <a href="/Presence/CheckOut" class="btn-secondary">
+            @T.T("CheckOut")
+        </a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>@T.T("PresencesHistory")</h2>
+        <span class="badge">@((Model ?? new()).Count) @T.T("RegisteredPresences")</span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>@T.T("Employee")</th>
+                    <th>@T.T("Date")</th>
+                    <th>@T.T("CheckInTime")</th>
+                    <th>@T.T("CheckOutTime")</th>
+                    <th>@T.T("Status")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var presence in Model)
+                {
+                    <tr>
+                        <td><strong>@presence.Employee?.FullName</strong></td>
+                        <td>@presence.Date.ToString("dd/MM/yyyy")</td>
+                        <td>@presence.CheckIn</td>
+                        <td>@presence.CheckOut</td>
+                        <td>
+                            @if (presence.CheckIn != null && presence.CheckOut != null)
+                            {
+                                <span class="status-badge success">@T.T("Completed")</span>
+                            }
+                            else if (presence.CheckIn != null)
+                            {
+                                <span class="status-badge warning">@T.T("InProgress")</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge danger">@T.T("Absent")</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🕒</div>
+            <h3>@T.T("NoPresences")</h3>
+            <p>@T.T("NoPresencesText")</p>
+            <a href="/Presence/CheckIn" class="btn-primary">@T.T("CheckIn")</a>
+        </div>
+    }
+</div>

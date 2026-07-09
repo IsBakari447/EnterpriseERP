@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Pointer sortie";
+    var presences = ViewBag.OpenPresences as List<EnterpriseERP.Models.Presence>;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Pointer sortie</h1>
+        <p>Enregistrer l'heure de départ d'un employé</p>
+    </div>
+
+    <a href="/Presence/Index" class="btn-secondary">
+        ← Retour
+    </a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form method="post" action="/Presence/CheckOut">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label>Présence en cours</label>
+
+            <select name="presenceId" required>
+                <option value="">-- Sélectionner une présence --</option>
+
+                @if (presences != null)
+                {
+                    foreach (var presence in presences)
+                    {
+                        <option value="@presence.Id">
+                            @presence.Employee?.FullName - entrée : @presence.CheckIn
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Pointer la sortie
+        </button>
+    </form>
+</div>

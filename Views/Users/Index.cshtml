@@ -1,0 +1,186 @@
+@model List<EnterpriseERP.Models.User>
+
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Users Management</h1>
+        <p>Gestion avancée des comptes utilisateurs, rôles et statuts</p>
+    </div>
+
+    <a href="/Admin/Index" class="btn-secondary">
+        ← Retour Admin Center
+    </a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert-danger">@TempData["Error"]</div>
+}
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div>
+            <h3>@ViewBag.TotalUsers</h3>
+            <p>Total utilisateurs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+            <h3>@ViewBag.ActiveUsers</h3>
+            <p>Actifs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⛔</div>
+        <div>
+            <h3>@ViewBag.InactiveUsers</h3>
+            <p>Inactifs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div>
+            <h3>@ViewBag.PendingUsers</h3>
+            <p>En attente</p>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Filtres</h2>
+
+    <form method="get" action="/Users/Index" class="search-box" style="max-width:100%; margin-bottom:20px;">
+        <input type="text"
+               name="search"
+               placeholder="Rechercher nom ou email..."
+               value="@ViewBag.Search" />
+
+        <select name="role">
+            <option value="">Tous les rôles</option>
+            <option value="Admin" selected="@(ViewBag.Role == "Admin")">Admin</option>
+            <option value="Manager" selected="@(ViewBag.Role == "Manager")">Manager</option>
+            <option value="Employee" selected="@(ViewBag.Role == "Employee")">Employee</option>
+        </select>
+
+        <select name="status">
+            <option value="">Tous les statuts</option>
+            <option value="active" selected="@(ViewBag.Status == "active")">Actifs</option>
+            <option value="inactive" selected="@(ViewBag.Status == "inactive")">Inactifs</option>
+            <option value="pending" selected="@(ViewBag.Status == "pending")">En attente</option>
+        </select>
+
+        <button type="submit" class="btn-primary">Filtrer</button>
+
+        <button type="button"
+                class="btn-secondary"
+                onclick="window.location.href='@Url.Action("Index", "Users")'">
+            Réinitialiser
+        </button>
+    </form>
+</div>
+
+<div class="panel">
+    <div class="page-header" style="margin-bottom:15px;">
+        <div>
+            <h2>Liste des utilisateurs</h2>
+        </div>
+
+        <a href="/Account/Register" class="btn-primary">
+            + Créer utilisateur
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                    <th>Dernière connexion</th>
+                    <th>IP</th>
+                    <th>Connexions</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@user.FullName</strong><br />
+                            <small>@user.Email</small>
+                        </td>
+
+                        <td>
+                            @if (user.IsSuperAdmin)
+                            {
+                                <strong>SuperAdmin</strong>
+                            }
+                            else
+                            {
+                                <form method="post" action="/Users/ChangeRole" style="display:flex; gap:6px;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+
+                                    <select name="role">
+                                        <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                                        <option value="Manager" selected="@(user.Role == "Manager")">Manager</option>
+                                        <option value="Employee" selected="@(user.Role == "Employee")">Employee</option>
+                                    </select>
+
+                                    <button type="submit" class="btn-secondary">OK</button>
+                                </form>
+                            }
+                        </td>
+
+                        <td>
+                            <div>Actif : @(user.IsActive ? "Oui" : "Non")</div>
+                            <div>Approuvé : @(user.IsApproved ? "Oui" : "Non")</div>
+                        </td>
+
+                        <td>@(user.LastConnection?.ToString("dd/MM/yyyy HH:mm") ?? "Jamais")</td>
+                        <td>@user.LastIPAddress</td>
+                        <td>@user.LoginCount</td>
+
+                        <td>
+                            @if (!user.IsApproved)
+                            {
+                                <form method="post" action="/Users/Approve" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn-primary">Approuver</button>
+                                </form>
+                            }
+
+                            @if (!user.IsSuperAdmin)
+                            {
+                                <form method="post" action="/Users/ToggleActive" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn-danger">
+                                        @(user.IsActive ? "Désactiver" : "Activer")
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="empty">Aucun utilisateur trouvé.</p>
+    }
+</div>

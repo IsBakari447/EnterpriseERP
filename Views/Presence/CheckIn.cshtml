@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Pointer entrée";
+    var employees = ViewBag.Employees as List<EnterpriseERP.Models.Employee>;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Pointer entrée</h1>
+        <p>Enregistrer l'heure d'arrivée d'un employé</p>
+    </div>
+
+    <a href="/Presence/Index" class="btn-secondary">
+        ← Retour
+    </a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form method="post" action="/Presence/CheckIn">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label>Employé</label>
+            <select name="employeeId" required>
+                <option value="">-- Sélectionner un employé --</option>
+
+                @if (employees != null)
+                {
+                    foreach (var employee in employees)
+                    {
+                        <option value="@employee.Id">@employee.FullName</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Pointer l'entrée
+        </button>
+    </form>
+</div>

@@ -1,0 +1,88 @@
+@model List<System.IO.FileInfo>
+
+@{
+    ViewData["Title"] = "Backup Center";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Backup Center</h1>
+        <p>Sauvegarde manuelle de la base de données EnterpriseERP</p>
+    </div>
+
+    <a href="/Admin/Index" class="btn-secondary">
+        ← Retour Admin Center
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert-danger">@TempData["Error"]</div>
+}
+
+<div class="panel">
+    <h2>Créer une sauvegarde</h2>
+    <p>Cette action crée un fichier ZIP contenant la base SQLite actuelle.</p>
+
+    <form method="post" action="/Backup/Create">
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn-primary">
+            Créer une sauvegarde maintenant
+        </button>
+    </form>
+</div>
+
+<div class="panel" style="margin-top:20px;">
+    <h2>Sauvegardes disponibles</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Fichier</th>
+                    <th>Date</th>
+                    <th>Taille</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var backup in Model)
+                {
+                    <tr>
+                        <td>@backup.Name</td>
+                        <td>@backup.CreationTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@Math.Round(backup.Length / 1024.0, 2) KB</td>
+                        <td>
+                            <a href="/Backup/Download?file=@backup.Name" class="btn-secondary">
+                                Télécharger
+                            </a>
+
+                            <form method="post"
+                                  action="/Backup/Delete"
+                                  style="display:inline;"
+                                  onsubmit="return confirm('Supprimer cette sauvegarde ?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="file" value="@backup.Name" />
+                                <button type="submit" class="btn-danger">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="empty">Aucune sauvegarde disponible.</p>
+    }
+</div>

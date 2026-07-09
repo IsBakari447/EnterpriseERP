@@ -1,0 +1,60 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Product>
+
+@{
+    ViewData["Title"] = T.T("Products");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Products")</h1>
+        <p>@T.T("ProductsDescription")</p>
+    </div>
+
+    <a href="/Products/Create" class="btn-primary">
+        @T.T("AddProduct")
+    </a>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>@T.T("ProductsList")</h2>
+        <span class="badge">@Model.Count @T.T("RegisteredProducts")</span>
+    </div>
+
+    @if (Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>@T.T("Product")</th>
+                    <th>@T.T("Category")</th>
+                    <th>@T.T("PurchasePrice")</th>
+                    <th>@T.T("SalePrice")</th>
+                    <th>@T.T("Quantity")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Category</td>
+                        <td>@product.PurchasePrice.ToString("N2") €</td>
+                        <td>@product.SalePrice.ToString("N2") €</td>
+                        <td>@product.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h3>@T.T("NoProducts")</h3>
+            <p>@T.T("NoProductsText")</p>
+            <a href="/Products/Create" class="btn-primary">@T.T("AddFirstProduct")</a>
+        </div>
+    }
+</div>

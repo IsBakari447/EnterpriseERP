@@ -1,0 +1,26 @@
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("ExcelExport");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("ExcelExport")</h1>
+        <p>@T.T("ExcelExportDescription")</p>
+    </div>
+
+    <a href="/Dashboard/Index" class="btn-secondary">← @T.T("BackToDashboard")</a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel"><h2>@T.T("Clients")</h2><a href="/Exports/Clients" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Employees")</h2><a href="/Exports/Employees" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Products")</h2><a href="/Exports/Products" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Invoices")</h2><a href="/Exports/Invoices" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Orders")</h2><a href="/Exports/Orders" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Payments")</h2><a href="/Exports/Payments" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Suppliers")</h2><a href="/Exports/Suppliers" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Stock")</h2><a href="/Exports/Stock" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Presences")</h2><a href="/Exports/Presences" class="btn-primary">@T.T("Export")</a></div>
+    <div class="panel"><h2>@T.T("Users")</h2><a href="/Exports/Users" class="btn-primary">@T.T("Export")</a></div>
+</div>

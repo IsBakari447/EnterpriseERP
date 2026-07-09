@@ -1,0 +1,65 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Order>
+
+@{
+    ViewData["Title"] = T.T("Orders");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Orders")</h1>
+        <p>@T.T("OrdersDescription")</p>
+    </div>
+
+    <a href="/Orders/Create" class="btn-primary">
+        @T.T("AddOrder")
+    </a>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>@T.T("OrdersList")</h2>
+        <span class="badge">@((Model ?? new()).Count) @T.T("RegisteredOrders")</span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>@T.T("Client")</th>
+                    <th>@T.T("Product")</th>
+                    <th>@T.T("Quantity")</th>
+                    <th>@T.T("Total")</th>
+                    <th>@T.T("Status")</th>
+                    <th>@T.T("Date")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>#@order.Id</strong></td>
+                        <td>@order.Client?.FullName</td>
+                        <td>@order.Product?.Name</td>
+                        <td>@order.Quantity</td>
+                        <td>@order.TotalAmount.ToString("N2") €</td>
+                        <td><span class="status-badge">@order.Status</span></td>
+                        <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🚚</div>
+            <h3>@T.T("NoOrders")</h3>
+            <p>@T.T("NoOrdersText")</p>
+            <a href="/Orders/Create" class="btn-primary">@T.T("AddFirstOrder")</a>
+        </div>
+    }
+</div>

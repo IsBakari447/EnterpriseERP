@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "Centre d'administration";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Centre d'administration</h1>
+        <p>Gestion centrale de la sécurité, des rôles, des utilisateurs et des paramètres ERP</p>
+    </div>
+
+    <a href="/Dashboard/Index" class="btn-secondary">
+        ← Retour dashboard
+    </a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div>
+            <h3>@ViewBag.UsersCount</h3>
+            <p>Utilisateurs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+            <h3>@ViewBag.ActiveUsers</h3>
+            <p>Comptes actifs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⚠️</div>
+        <div>
+            <h3>@ViewBag.SecurityWarnings</h3>
+            <p>Alertes sécurité</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🔐</div>
+        <div>
+            <h3>@ViewBag.PermissionsCount</h3>
+            <p>Permissions</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>👥 Gestion des utilisateurs</h2>
+        <p>Créer, activer, désactiver et contrôler les comptes utilisateurs.</p>
+        <a href="/Account/Register" class="btn-primary">Créer utilisateur</a>
+        <a href="/Profile/Index" class="btn-secondary">Mon profil</a>
+    </div>
+
+    <div class="panel">
+        <h2>🛡️ Rôles & permissions</h2>
+        <p>Définir les droits d'accès par rôle : Admin, Manager, Employee.</p>
+        <a href="/Roles/Index" class="btn-primary">Gérer les permissions</a>
+    </div>
+
+    <div class="panel">
+        <h2>📜 Journal d'audit</h2>
+        <p>Consulter toutes les actions importantes effectuées dans l'ERP.</p>
+        <a href="/Audit/Index" class="btn-primary">Ouvrir l'audit</a>
+    </div>
+
+    <div class="panel">
+        <h2>⚙️ Paramètres système</h2>
+        <p>Configurer la société, TVA, seuil de stock, devise et préférences.</p>
+        <a href="/Settings/Index" class="btn-primary">Paramètres</a>
+    </div>
+
+    <div class="panel">
+        <h2>🔔 Notifications</h2>
+        <p>Surveiller les alertes importantes : stock, factures, commandes, utilisateurs.</p>
+        <a href="/Notifications/Index" class="btn-primary">Notifications</a>
+    </div>
+
+    <div class="panel">
+        <h2>📊 Exports & rapports</h2>
+        <p>Exporter les données de l'entreprise vers Excel et PDF.</p>
+        <a href="/Exports/Index" class="btn-primary">Exports Excel</a>
+        <a href="/Analytics/Index" class="btn-secondary">Analytics</a>
+    </div>
+
+    <div class="panel">
+    <h2>💾 Backup Center</h2>
+    <p>Créer, télécharger et supprimer les sauvegardes de la base SQLite.</p>
+    <a href="/Backup/Index" class="btn-primary">Ouvrir Backup Center</a>
+</div>
+
+<div class="panel">
+    <h2>🔐 Security Center</h2>
+    <p>Surveiller les connexions, accès refusés, alertes et événements sensibles.</p>
+    <a href="/Security/Index" class="btn-primary">Ouvrir Security Center</a>
+</div>
+
+<div class="panel">
+    <h2>👥 Users Management</h2>
+    <p>Gérer les comptes, statuts, approbations et rôles utilisateurs.</p>
+    <a href="/Users/Index" class="btn-primary">Ouvrir Users Management</a>
+</div>
+</div>

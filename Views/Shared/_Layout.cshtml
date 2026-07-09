@@ -1,0 +1,253 @@
+@inject EnterpriseERP.Services.TranslationService T
+@inject EnterpriseERP.Services.Trial.TrialPolicyService TrialPolicy
+@{
+    var trial = await TrialPolicy.GetStatusAsync();
+}
+<!DOCTYPE html>
+<html lang="@T.Lang">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - EnterpriseERP</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="bi bi-buildings"></i>
+            </div>
+
+            <div class="brand-text">
+                <strong>EnterpriseERP</strong>
+                <span>Business Suite</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a href="/Dashboard/Index" class="menu-link">
+                <i class="bi bi-speedometer2"></i>
+                <span>@T.T("Dashboard")</span>
+            </a>
+
+            <div class="menu-section">CRM</div>
+
+            <a href="/Clients/Index" class="menu-link">
+                <i class="bi bi-person-vcard"></i>
+                <span>@T.T("Clients")</span>
+            </a>
+
+            <a href="/Suppliers/Index" class="menu-link">
+                <i class="bi bi-bank"></i>
+                <span>@T.T("Suppliers")</span>
+            </a>
+
+            <div class="menu-section">@T.T("Sales")</div>
+
+            <a href="/Quotes/Index" class="menu-link">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>@T.T("Quotes")</span>
+            </a>
+
+            <a href="/Orders/Index" class="menu-link">
+                <i class="bi bi-truck"></i>
+                <span>@T.T("Orders")</span>
+            </a>
+
+            <a href="/Invoices/Index" class="menu-link">
+                <i class="bi bi-receipt"></i>
+                <span>@T.T("Invoices")</span>
+            </a>
+
+            <a href="/Payments/Index" class="menu-link">
+                <i class="bi bi-credit-card"></i>
+                <span>@T.T("Payments")</span>
+            </a>
+
+            <div class="menu-section">@T.T("Stock")</div>
+
+            <a href="/Products/Index" class="menu-link">
+                <i class="bi bi-box-seam"></i>
+                <span>@T.T("Products")</span>
+            </a>
+
+            <a href="/Stock/Index" class="menu-link">
+                <i class="bi bi-boxes"></i>
+                <span>@T.T("Stock")</span>
+            </a>
+
+            <div class="menu-section">@T.T("Finance")</div>
+
+            <a href="/Expenses/Index" class="menu-link">
+                <i class="bi bi-cash-coin"></i>
+                <span>@T.T("Expenses")</span>
+            </a>
+
+            <a href="/Exports/Index" class="menu-link">
+                <i class="bi bi-file-earmark-excel"></i>
+                <span>@T.T("ExcelExports")</span>
+            </a>
+
+            <div class="menu-section">@T.T("HR")</div>
+
+            <a href="/Employees/Index" class="menu-link">
+                <i class="bi bi-people"></i>
+                <span>@T.T("Employees")</span>
+            </a>
+
+            <a href="/Presence/Index" class="menu-link">
+                <i class="bi bi-calendar-check"></i>
+                <span>@T.T("Presences")</span>
+            </a>
+
+            <div class="menu-section">@T.T("Administration")</div>
+
+            <a href="/Admin/Index" class="menu-link">
+                <i class="bi bi-grid-1x2"></i>
+                <span>@T.T("AdminCenter")</span>
+            </a>
+
+            <a href="/Users/Index" class="menu-link">
+                <i class="bi bi-person-gear"></i>
+                <span>@T.T("Users")</span>
+            </a>
+
+            <a href="/Roles/Index" class="menu-link">
+                <i class="bi bi-shield-lock"></i>
+                <span>@T.T("RolesPermissions")</span>
+            </a>
+
+            <a href="/Security/Index" class="menu-link">
+                <i class="bi bi-shield-check"></i>
+                <span>@T.T("SecurityCenter")</span>
+            </a>
+
+            <a href="/Audit/Index" class="menu-link">
+                <i class="bi bi-journal-text"></i>
+                <span>@T.T("Audit")</span>
+            </a>
+
+            <a href="/Backup/Index" class="menu-link">
+                <i class="bi bi-cloud-arrow-down"></i>
+                <span>@T.T("BackupCenter")</span>
+            </a>
+
+            <a href="/Settings/Index" class="menu-link">
+                <i class="bi bi-gear"></i>
+                <span>@T.T("Settings")</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <section class="main-area">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-btn" id="sidebarToggle" type="button">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <form class="search-box" method="get" action="/Search/Index">
+                    <i class="bi bi-search"></i>
+
+                    <select name="type">
+                        <option value="all">@T.T("All")</option>
+                        <option value="clients">@T.T("Clients")</option>
+                        <option value="employees">@T.T("Employees")</option>
+                        <option value="products">@T.T("Products")</option>
+                        <option value="quotes">@T.T("Quotes")</option>
+                        <option value="orders">@T.T("Orders")</option>
+                        <option value="invoices">@T.T("Invoices")</option>
+                        <option value="payments">@T.T("Payments")</option>
+                        <option value="expenses">@T.T("Expenses")</option>
+                        <option value="stock">@T.T("Stock")</option>
+                    </select>
+
+                    <input type="text" name="q" placeholder="@T.T("Search")" />
+
+                    <button type="submit" class="icon-btn">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="topbar-right">
+                <form method="get" action="/Language/Set" style="display:inline-flex;gap:8px;align-items:center;">
+                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                    <select name="lang" onchange="this.form.submit()" aria-label="Language">
+                        <option value="fr" selected="@(T.Lang == "fr")">FR · Français</option>
+                        <option value="en" selected="@(T.Lang == "en")">EN · English</option>
+                        <option value="sv" selected="@(T.Lang == "sv")">SV · Svenska</option>
+                        <option value="es" selected="@(T.Lang == "es")">ES · Español</option>
+                        <option value="de" selected="@(T.Lang == "de")">DE · Deutsch</option>
+                    </select>
+                </form>
+
+                <a href="/Notifications/Index" class="icon-btn" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="dot"></span>
+                </a>
+
+                <button class="icon-btn" id="themeToggle" type="button" title="@T.T("Theme")">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+
+                <a href="/Profile/Index" class="user-chip profile-link">
+                    <div class="avatar">
+                        @((Context.Session.GetString("UserName") ?? "U").Substring(0, 1).ToUpper())
+                    </div>
+
+                    <div class="user-info">
+                        <strong>@(Context.Session.GetString("UserName") ?? T.T("User"))</strong>
+                        <span>@(Context.Session.GetString("UserRole") ?? T.T("Role"))</span>
+                    </div>
+                </a>
+
+                <a href="/Account/Logout" class="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i>
+                    @T.T("Logout")
+                </a>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <section class="trial-banner @(trial.IsReadOnly ? "trial-banner-danger" : "trial-banner-active")">
+                <div>
+                    <strong>@trial.PlanName</strong>
+                    <span>@trial.StatusLabel</span>
+                </div>
+                <div class="trial-metrics">
+                    <span>RÃ´le : @trial.Role complet</span>
+                    <span>Utilisateurs @trial.UsersUsed/@trial.MaxUsers</span>
+                    <span>Factures @trial.InvoicesUsed/@trial.MaxInvoices</span>
+                    <span>Produits @trial.ProductsUsed/@trial.MaxProducts</span>
+                    <span>DonnÃ©es conservÃ©es @trial.DataRetentionDays jours</span>
+                </div>
+                <details>
+                    <summary>Suggestions</summary>
+                    <ul>
+                        @foreach (var suggestion in trial.Suggestions)
+                        {
+                            <li>@suggestion</li>
+                        }
+                    </ul>
+                </details>
+            </section>
+            @RenderBody()
+        </main>
+
+    </section>
+
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

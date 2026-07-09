@@ -1,0 +1,60 @@
+@model EnterpriseERP.Models.Employee
+
+@{
+    ViewData["Title"] = "Modifier un employé";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Modifier un employé</h1>
+        <p>Mettre à jour les informations de l'employé</p>
+    </div>
+
+    <a href="/Employees/Index" class="btn-secondary">
+        ← Retour à la liste
+    </a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">
+            @ViewBag.Error
+        </div>
+    }
+
+    <form method="post" action="/Employees/Edit">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label>Nom complet</label>
+            <input name="FullName" value="@Model.FullName" required />
+        </div>
+
+        <div class="form-group">
+            <label>Poste</label>
+            <input name="Position" value="@Model.Position" />
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input name="Email" type="email" value="@Model.Email" />
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone</label>
+            <input name="Phone" value="@Model.Phone" />
+        </div>
+
+        <div class="form-group">
+            <label>Salaire</label>
+            <input name="Salary" type="number" step="0.01" value="@Model.Salary" />
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Enregistrer les modifications
+        </button>
+    </form>
+</div>

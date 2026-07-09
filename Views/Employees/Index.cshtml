@@ -1,0 +1,73 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Employee>
+
+@{
+    ViewData["Title"] = T.T("Employees");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Employees")</h1>
+        <p>@T.T("EmployeesDescription")</p>
+    </div>
+
+    <a href="/Employees/Create" class="btn-primary">
+        @T.T("AddEmployee")
+    </a>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>@T.T("EmployeesList")</h2>
+        <span class="badge">@((Model ?? new()).Count) @T.T("RegisteredEmployees")</span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>@T.T("Name")</th>
+                    <th>@T.T("Position")</th>
+                    <th>@T.T("Email")</th>
+                    <th>@T.T("Phone")</th>
+                    <th>@T.T("Salary")</th>
+                    <th>@T.T("Actions")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td><strong>@employee.FullName</strong></td>
+                        <td><span class="status-badge">@employee.Position</span></td>
+                        <td>@employee.Email</td>
+                        <td>@employee.Phone</td>
+                        <td>@employee.Salary.ToString("N2") €</td>
+                        <td>
+                            <a href="/Employees/Edit/@employee.Id" class="btn-secondary">
+                                @T.T("Edit")
+                            </a>
+
+                            <a href="/Employees/Delete/@employee.Id" class="btn-danger">
+                                @T.T("Delete")
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">👨‍💼</div>
+            <h3>@T.T("NoEmployees")</h3>
+            <p>@T.T("NoEmployeesText")</p>
+            <a href="/Employees/Create" class="btn-primary">
+                @T.T("AddFirstEmployee")
+            </a>
+        </div>
+    }
+</div>

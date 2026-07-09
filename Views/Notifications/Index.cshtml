@@ -1,0 +1,308 @@
+@{
+    ViewData["Title"] = "Notifications";
+
+    var outOfStockProducts = ViewBag.OutOfStockProducts as List<EnterpriseERP.Models.Product>;
+    var lowStockProducts = ViewBag.LowStockProducts as List<EnterpriseERP.Models.Product>;
+    var unpaidInvoices = ViewBag.UnpaidInvoices as List<EnterpriseERP.Models.Invoice>;
+    var pendingOrders = ViewBag.PendingOrders as List<EnterpriseERP.Models.Order>;
+    var recentPayments = ViewBag.RecentPayments as List<EnterpriseERP.Models.Payment>;
+    var pendingUsers = ViewBag.PendingUsers as List<EnterpriseERP.Models.User>;
+    var todayPresences = ViewBag.TodayPresences as List<EnterpriseERP.Models.Presence>;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Notifications avancées</h1>
+        <p>Centre de contrôle des alertes importantes de l'entreprise</p>
+    </div>
+
+    <a href="/Dashboard/Index" class="btn-secondary">
+        ← Retour dashboard
+    </a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">🔔</div>
+        <div>
+            <h3>@ViewBag.TotalAlerts</h3>
+            <p>Alertes importantes</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⛔</div>
+        <div>
+            <h3>@(outOfStockProducts?.Count ?? 0)</h3>
+            <p>Produits épuisés</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⚠️</div>
+        <div>
+            <h3>@(lowStockProducts?.Count ?? 0)</h3>
+            <p>Stock faible</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🧾</div>
+        <div>
+            <h3>@(unpaidInvoices?.Count ?? 0)</h3>
+            <p>Factures à suivre</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>⛔ Produits épuisés</h2>
+
+        @if (outOfStockProducts != null && outOfStockProducts.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Stock</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var product in outOfStockProducts)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Quantity</td>
+                            <td>
+                                <a href="/Stock/Movement" class="btn-primary">Réapprovisionner</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun produit épuisé.</p>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>⚠️ Stock faible</h2>
+
+        @if (lowStockProducts != null && lowStockProducts.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Stock restant</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var product in lowStockProducts)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun stock faible.</p>
+        }
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>🧾 Factures impayées / en attente</h2>
+
+        @if (unpaidInvoices != null && unpaidInvoices.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var invoice in unpaidInvoices)
+                    {
+                        <tr>
+                            <td>#@invoice.Id</td>
+                            <td>@invoice.Client?.FullName</td>
+                            <td>@invoice.InvoiceDate.ToString("dd/MM/yyyy")</td>
+                            <td>@invoice.TotalAmount €</td>
+                            <td>@invoice.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucune facture impayée.</p>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>🚚 Commandes en attente</h2>
+
+        @if (pendingOrders != null && pendingOrders.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Client</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var order in pendingOrders)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.Client?.FullName</td>
+                            <td>@order.Product?.Name</td>
+                            <td>@order.Quantity</td>
+                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucune commande en attente.</p>
+        }
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>💳 Paiements récents</h2>
+
+        @if (recentPayments != null && recentPayments.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Facture</th>
+                        <th>Client</th>
+                        <th>Montant</th>
+                        <th>Méthode</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var payment in recentPayments)
+                    {
+                        <tr>
+                            <td>#@payment.InvoiceId</td>
+                            <td>@payment.Invoice?.Client?.FullName</td>
+                            <td>@payment.Amount €</td>
+                            <td>@payment.Method</td>
+                            <td>@payment.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun paiement récent.</p>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>👤 Comptes utilisateurs à surveiller</h2>
+
+        @if (pendingUsers != null && pendingUsers.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Actif</th>
+                        <th>Approuvé</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var user in pendingUsers)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td>@(user.IsActive ? "Oui" : "Non")</td>
+                            <td>@(user.IsApproved ? "Oui" : "Non")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun compte utilisateur à surveiller.</p>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <h2>👥 Présences aujourd'hui</h2>
+
+    @if (todayPresences != null && todayPresences.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Employé</th>
+                    <th>Entrée</th>
+                    <th>Sortie</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var presence in todayPresences)
+                {
+                    <tr>
+                        <td>@presence.Employee?.FullName</td>
+                        <td>@presence.CheckIn</td>
+                        <td>@presence.CheckOut</td>
+                        <td>@presence.Date.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="empty">Aucune présence enregistrée aujourd'hui.</p>
+    }
+</div>

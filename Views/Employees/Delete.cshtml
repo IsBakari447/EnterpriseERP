@@ -1,0 +1,46 @@
+@model EnterpriseERP.Models.Employee
+
+@{
+    ViewData["Title"] = "Supprimer un employé";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Supprimer un employé</h1>
+        <p>Confirmer la suppression</p>
+    </div>
+
+    <a href="/Employees/Index" class="btn-secondary">
+        ← Retour à la liste
+    </a>
+</div>
+
+<div class="form-card">
+    <div class="alert-error">
+        Voulez-vous vraiment supprimer cet employé ?
+    </div>
+
+    <p>
+        <strong>Nom :</strong> @Model.FullName
+    </p>
+
+    <p>
+        <strong>Poste :</strong> @Model.Position
+    </p>
+
+    <p>
+        <strong>Email :</strong> @Model.Email
+    </p>
+
+    <form method="post" action="/Employees/DeleteConfirmed/@Model.Id">
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn-danger">
+            Oui, supprimer
+        </button>
+
+        <a href="/Employees/Index" class="btn-secondary">
+            Annuler
+        </a>
+    </form>
+</div>

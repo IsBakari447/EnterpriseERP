@@ -1,0 +1,269 @@
+@{
+    var type = ViewBag.Type as string ?? "all";
+    var query = ViewBag.Query as string ?? "";
+
+    string pageTitle = type switch
+    {
+        "clients" => "Recherche clients",
+        "employees" => "Recherche employés",
+        "products" => "Recherche produits",
+        "invoices" => "Recherche factures",
+        "stock" => "Recherche stock",
+        "presence" => "Recherche présences",
+        _ => "Recherche globale"
+    };
+
+    ViewData["Title"] = pageTitle;
+
+    var employees = ViewBag.Employees as List<EnterpriseERP.Models.Employee>;
+    var clients = ViewBag.Clients as List<EnterpriseERP.Models.Client>;
+    var products = ViewBag.Products as List<EnterpriseERP.Models.Product>;
+    var invoices = ViewBag.Invoices as List<EnterpriseERP.Models.Invoice>;
+    var stockMovements = ViewBag.StockMovements as List<EnterpriseERP.Models.StockMovement>;
+    var presences = ViewBag.Presences as List<EnterpriseERP.Models.Presence>;
+}
+
+<div class="page-header">
+    <div>
+        <h1>@pageTitle</h1>
+        <p>
+            Catégorie :
+            <strong>@type</strong>
+            —
+            Résultats pour :
+            <strong>@query</strong>
+        </p>
+    </div>
+
+    <a href="/Dashboard/Index" class="btn-secondary">
+        ← Retour dashboard
+    </a>
+</div>
+
+@if (type == "all" || type == "employees")
+{
+    <div class="panel">
+        <h2>Employés</h2>
+
+        @if (employees != null && employees.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Poste</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var e in employees)
+                    {
+                        <tr>
+                            <td>@e.FullName</td>
+                            <td>@e.Position</td>
+                            <td>@e.Email</td>
+                            <td>@e.Phone</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun employé trouvé.</p>
+        }
+    </div>
+}
+
+@if (type == "all" || type == "clients")
+{
+    <div class="panel">
+        <h2>Clients</h2>
+
+        @if (clients != null && clients.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Entreprise</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var c in clients)
+                    {
+                        <tr>
+                            <td>@c.FullName</td>
+                            <td>@c.CompanyName</td>
+                            <td>@c.Email</td>
+                            <td>@c.Phone</td>
+                            <td>@c.Address</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun client trouvé.</p>
+        }
+    </div>
+}
+
+@if (type == "all" || type == "products")
+{
+    <div class="panel">
+        <h2>Produits</h2>
+
+        @if (products != null && products.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Prix achat</th>
+                        <th>Prix vente</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var p in products)
+                    {
+                        <tr>
+                            <td>@p.Name</td>
+                            <td>@p.Category</td>
+                            <td>@p.PurchasePrice €</td>
+                            <td>@p.SalePrice €</td>
+                            <td>@p.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun produit trouvé.</p>
+        }
+    </div>
+}
+
+@if (type == "all" || type == "invoices")
+{
+    <div class="panel">
+        <h2>Factures</h2>
+
+        @if (invoices != null && invoices.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var i in invoices)
+                    {
+                        <tr>
+                            <td>#@i.Id</td>
+                            <td>@i.Client?.FullName</td>
+                            <td>@i.InvoiceDate.ToString("dd/MM/yyyy")</td>
+                            <td>@i.TotalAmount €</td>
+                            <td>@i.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucune facture trouvée.</p>
+        }
+    </div>
+}
+
+@if (type == "all" || type == "stock")
+{
+    <div class="panel">
+        <h2>Stock</h2>
+
+        @if (stockMovements != null && stockMovements.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Type</th>
+                        <th>Quantité</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var s in stockMovements)
+                    {
+                        <tr>
+                            <td>@s.Product?.Name</td>
+                            <td>@s.Type</td>
+                            <td>@s.Quantity</td>
+                            <td>@s.Date.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun mouvement de stock trouvé.</p>
+        }
+    </div>
+}
+
+@if (type == "all" || type == "presence")
+{
+    <div class="panel">
+        <h2>Présences</h2>
+
+        @if (presences != null && presences.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employé</th>
+                        <th>Date</th>
+                        <th>Entrée</th>
+                        <th>Sortie</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var p in presences)
+                    {
+                        <tr>
+                            <td>@p.Employee?.FullName</td>
+                            <td>@p.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@p.CheckIn</td>
+                            <td>@p.CheckOut</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucune présence trouvée.</p>
+        }
+    </div>
+}

@@ -1,0 +1,264 @@
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    Layout = null;
+    ViewData["Title"] = T.T("LoginPageTitle");
+}
+
+<!DOCTYPE html>
+<html lang="@T.Lang">
+<head>
+    <meta charset="utf-8" />
+    <title>@T.T("LoginPageTitle")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(124,58,237,.35), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(37,99,235,.28), transparent 35%),
+                #020617;
+            color: #e5e7eb;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+        }
+
+        .language-switch {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 20;
+        }
+
+        .language-switch select {
+            border: 1px solid #334155;
+            border-radius: 12px;
+            background: #0f172a;
+            color: white;
+            padding: 10px 12px;
+            font-weight: 800;
+        }
+
+        .left {
+            padding: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: 900;
+            margin-bottom: 35px;
+        }
+
+        .brand span { color: #8b5cf6; }
+
+        h1 {
+            font-size: 54px;
+            line-height: 1.05;
+            margin: 0 0 22px;
+            color: white;
+        }
+
+        h1 span { color: #a78bfa; }
+
+        p {
+            color: #cbd5e1;
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 680px;
+        }
+
+        .features {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .feature {
+            background: rgba(15,23,42,.75);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 16px;
+            color: #cbd5e1;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(2,6,23,.92);
+            border: 1px solid #334155;
+            border-radius: 28px;
+            padding: 38px;
+            box-shadow: 0 35px 100px rgba(0,0,0,.45);
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .muted {
+            color: #94a3b8;
+            margin-bottom: 26px;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,.18);
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 15px;
+            border-radius: 14px;
+            border: 0;
+            background: #7c3aed;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover { background: #6d28d9; }
+
+        .error {
+            background: rgba(127,29,29,.8);
+            color: #fecaca;
+            border: 1px solid #ef4444;
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .links {
+            margin-top: 22px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .download {
+            margin-top: 24px;
+            padding: 14px;
+            border-radius: 16px;
+            background: #111827;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        @@media(max-width: 950px) {
+            body { grid-template-columns: 1fr; }
+            .left { padding: 40px; }
+            h1 { font-size: 38px; }
+        }
+    </style>
+</head>
+<body>
+
+<form method="get" action="/Language/Set" class="language-switch">
+    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+    <select name="lang" onchange="this.form.submit()" aria-label="Language">
+        <option value="fr" selected="@(T.Lang == "fr")">FR</option>
+        <option value="en" selected="@(T.Lang == "en")">EN</option>
+        <option value="sv" selected="@(T.Lang == "sv")">SV</option>
+        <option value="es" selected="@(T.Lang == "es")">ES</option>
+        <option value="de" selected="@(T.Lang == "de")">DE</option>
+    </select>
+</form>
+
+<section class="left">
+    <div class="brand">Enterprise<span>ERP</span></div>
+
+    <h1>@T.T("LoginHeroTitle") <span>@T.T("LoginHeroAccent")</span>.</h1>
+    <p>@T.T("LoginHeroText")</p>
+
+    <div class="features">
+        <div class="feature">AI - @T.T("LoginFeatureAi")</div>
+        <div class="feature">CEO - @T.T("LoginFeatureDashboard")</div>
+        <div class="feature">PDF - @T.T("LoginFeatureDocuments")</div>
+        <div class="feature">Mobile - @T.T("LoginFeatureMobile")</div>
+    </div>
+</section>
+
+<section class="right">
+    <div class="card">
+        <h2>@T.T("LoginTitle")</h2>
+        <div class="muted">@T.T("LoginSubtitle")</div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">@ViewBag.Error</div>
+        }
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            <label>@T.T("Email")</label>
+            <input type="email" name="email" placeholder="exemple@email.com" required />
+
+            <label>@T.T("Password")</label>
+            <input type="password" name="password" placeholder="@T.T("PasswordPlaceholder")" required />
+
+            <button class="btn" type="submit">@T.T("SignIn")</button>
+        </form>
+
+        <div class="links">
+            <a href="/">← @T.T("Home")</a>
+            <a asp-controller="Account" asp-action="Register">@T.T("CreateAccount")</a>
+        </div>
+
+        <div class="download">
+            @T.T("MobileApp") :
+            <a href="/downloads/EnterpriseERP.Mobile.apk">Android</a> ·
+            <a href="/downloads/EnterpriseERP.Mobile.msix">Windows</a>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

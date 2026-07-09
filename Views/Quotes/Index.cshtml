@@ -1,0 +1,114 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model IEnumerable<EnterpriseERP.Models.Quote>
+
+@{
+    ViewData["Title"] = T.T("Quotes");
+    var quotes = Model?.ToList() ?? new List<EnterpriseERP.Models.Quote>();
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Quotes")</h1>
+        <p>@T.T("QuotesDescription")</p>
+    </div>
+
+    <a asp-controller="Quotes" asp-action="Create" class="btn-primary">
+        @T.T("AddQuote")
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div>
+            <h3>@ViewBag.TotalQuotes</h3>
+            <p>@T.T("TotalQuotes")</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div>
+            <h3>@ViewBag.TotalAmount.ToString("N2") €</h3>
+            <p>@T.T("TotalAmount")</p>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>@T.T("QuotesList")</h2>
+        <span class="badge">@quotes.Count @T.T("RegisteredQuotes")</span>
+    </div>
+
+    @if (quotes.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>@T.T("Number")</th>
+                    <th>@T.T("Client")</th>
+                    <th>@T.T("Date")</th>
+                    <th>@T.T("ValidUntil")</th>
+                    <th>@T.T("Status")</th>
+                    <th>@T.T("Total")</th>
+                    <th class="text-end">@T.T("Actions")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var quote in quotes)
+                {
+                    <tr>
+                        <td><strong>@quote.QuoteNumber</strong></td>
+                        <td>@quote.Client?.CompanyName</td>
+                        <td>@quote.QuoteDate.ToString("dd/MM/yyyy")</td>
+                        <td>@quote.ValidUntil.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="status-badge">
+                                @quote.Status
+                            </span>
+                        </td>
+                        <td>@quote.TotalAmount.ToString("N2") €</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-sm btn-info">
+                                @T.T("View")
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-sm btn-warning">
+                                @T.T("Edit")
+                            </a>
+
+                            <form asp-action="Delete" asp-route-id="@quote.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('@T.T("ConfirmDeleteQuote")');">
+                                    @T.T("Delete")
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📄</div>
+            <h3>@T.T("NoQuotes")</h3>
+            <p>@T.T("NoQuotesText")</p>
+            <a asp-controller="Quotes" asp-action="Create" class="btn-primary">
+                @T.T("AddFirstQuote")
+            </a>
+        </div>
+    }
+</div>

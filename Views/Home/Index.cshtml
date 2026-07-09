@@ -1,0 +1,1148 @@
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    Layout = null;
+    string L(string key)
+    {
+        var translations = new Dictionary<string, Dictionary<string, string>>
+        {
+            ["en"] = new()
+            {
+                ["Title"] = "EnterpriseERP - Web, Mobile and AI ERP",
+                ["Features"] = "Features",
+                ["Modules"] = "Modules",
+                ["Downloads"] = "Downloads",
+                ["Pricing"] = "Pricing",
+                ["Demo"] = "Demo",
+                ["Contact"] = "Contact",
+                ["Login"] = "Sign in",
+                ["TryFree"] = "Try for free",
+                ["CreateAccount"] = "Create account",
+                ["DownloadMobile"] = "Download mobile",
+                ["Badge"] = "ERP Web + Mobile + AI",
+                ["HeroTitle"] = "The next-generation ERP to manage your business",
+                ["HeroAccent"] = "with AI.",
+                ["HeroText"] = "EnterpriseERP centralizes your customers, suppliers, products, quotes, invoices, payments, attendance, reports, backups and audits in one modern platform. The AI Assistant and CEO Dashboard help you understand your priorities in seconds.",
+                ["StatModules"] = "ERP modules",
+                ["StatAi"] = "Smart assistant",
+                ["StatPdf"] = "Professional documents",
+                ["StatMobile"] = "Android & Windows",
+                ["CompanyHealth"] = "Business health: 84/100",
+                ["Priority"] = "Priority: follow up overdue invoices.",
+                ["Profit"] = "Profit",
+                ["UnpaidInvoices"] = "Overdue invoices",
+                ["LowStock"] = "Low stock",
+                ["Clients"] = "Customers",
+                ["ModulesTitle"] = "A complete ERP to run the whole business",
+                ["ModulesText"] = "EnterpriseERP brings together the essential tools to manage operations, sales, stock, HR, finance and security.",
+                ["CrmTitle"] = "CRM & Customers",
+                ["CrmText"] = "Customer management, history, orders, invoices, payments and sales follow-up.",
+                ["StockTitle"] = "Products & Stock",
+                ["StockText"] = "Catalog, stock movements, shortage alerts and inventory.",
+                ["InvoicesTitle"] = "Quotes & Invoices",
+                ["InvoicesText"] = "Professional documents, PDF, Excel, statuses and payment tracking.",
+                ["HrTitle"] = "HR & Attendance",
+                ["HrText"] = "Employees, clock-in, today's attendance, roles and users.",
+                ["Security"] = "Security",
+                ["SecurityText"] = "JWT, roles, permissions, audit, backups and data protection.",
+                ["AiTitle"] = "AI Assistant",
+                ["AiText"] = "Financial analysis, smart alerts, recommendations and natural-language answers.",
+                ["AiBadge"] = "Enterprise AI Copilot",
+                ["AiSectionTitle"] = "AI that understands your ERP data",
+                ["AiSectionText"] = "Ask a question like \"Which customers should I follow up?\" or \"Give me a financial summary\". The assistant analyzes real data: invoices, payments, expenses, customers, stock and attendance.",
+                ["TryAi"] = "Test the AI Assistant",
+                ["SeeDemo"] = "See the demo",
+                ["Chat1"] = "Issa: Why is my profit low?",
+                ["Chat2"] = "AI: Your profit is EUR 10,000, but 2 invoices are still unpaid. I recommend a follow-up today.",
+                ["Chat3"] = "Issa: Prepare a full report.",
+                ["Chat4"] = "AI: I can generate a PDF financial report with alerts and recommendations.",
+                ["MobileBadge"] = "Mobile application",
+                ["MobileTitle"] = "Your business in your pocket",
+                ["MobileText"] = "EnterpriseERP Mobile connects managers to essential data: customers, invoices, payments, attendance, reports, professional profile, AI Assistant and CEO Dashboard.",
+                ["AndroidText"] = "APK connected to the EnterpriseERP API.",
+                ["WindowsText"] = "MAUI Windows application.",
+                ["Download"] = "Download",
+                ["WhyTitle"] = "Why choose EnterpriseERP?",
+                ["WhyText"] = "A modern, extensible solution designed for SMEs that want to manage faster and better.",
+                ["Fast"] = "Fast",
+                ["FastText"] = "Modern interface, clear navigation and quickly accessible data.",
+                ["CloudReady"] = "Cloud ready",
+                ["CloudText"] = "Ready for server deployment, secure API and connected mobile app.",
+                ["Decision"] = "Decision",
+                ["DecisionText"] = "CEO Dashboard, health score, alerts, recommendations and analytics.",
+                ["OffersTitle"] = "Simple plans",
+                ["OffersText"] = "Start for free, then scale EnterpriseERP according to your business needs.",
+                ["Free"] = "Free",
+                ["StarterText"] = "Testing, demonstration, local use and first configuration.",
+                ["ToDefine"] = "To define",
+                ["BusinessText"] = "Complete ERP, mobile, AI, reports, security and support.",
+                ["QuoteOnly"] = "On quote",
+                ["EnterpriseText"] = "Multi-company, customization, deployment and guidance.",
+                ["FooterText"] = "Smart Business Suite to manage customers, finance, stock, HR, documents, AI and mobile.",
+                ["Product"] = "Product",
+                ["Access"] = "Access",
+                ["Support"] = "Support",
+                ["Rights"] = "All rights reserved.",
+                ["Powered"] = "Powered by Enterprise AI"
+            },
+            ["sv"] = new()
+            {
+                ["Title"] = "EnterpriseERP - ERP för webb, mobil och AI",
+                ["Features"] = "Funktioner",
+                ["Modules"] = "Moduler",
+                ["Downloads"] = "Nedladdningar",
+                ["Pricing"] = "Priser",
+                ["Demo"] = "Demo",
+                ["Contact"] = "Kontakt",
+                ["Login"] = "Logga in",
+                ["TryFree"] = "Prova gratis",
+                ["CreateAccount"] = "Skapa konto",
+                ["DownloadMobile"] = "Ladda ner mobil",
+                ["Badge"] = "ERP Webb + Mobil + AI",
+                ["HeroTitle"] = "Nästa generations ERP för att hantera ditt företag",
+                ["HeroAccent"] = "med AI.",
+                ["HeroText"] = "EnterpriseERP samlar kunder, leverantörer, produkter, offerter, fakturor, betalningar, närvaro, rapporter, säkerhetskopior och revisioner i en modern plattform. AI-assistenten och CEO Dashboard hjälper dig att förstå dina prioriteringar på några sekunder.",
+                ["StatModules"] = "ERP-moduler",
+                ["StatAi"] = "Smart assistent",
+                ["StatPdf"] = "Professionella dokument",
+                ["StatMobile"] = "Android och Windows",
+                ["CompanyHealth"] = "Företagshälsa: 84/100",
+                ["Priority"] = "Prioritet: följ upp obetalda fakturor.",
+                ["Profit"] = "Vinst",
+                ["UnpaidInvoices"] = "Obetalda fakturor",
+                ["LowStock"] = "Lågt lager",
+                ["Clients"] = "Kunder",
+                ["ModulesTitle"] = "Ett komplett ERP för hela företaget",
+                ["ModulesText"] = "EnterpriseERP samlar viktiga verktyg för drift, försäljning, lager, HR, ekonomi och säkerhet.",
+                ["CrmTitle"] = "CRM och kunder",
+                ["CrmText"] = "Kundhantering, historik, order, fakturor, betalningar och sälj uppföljning.",
+                ["StockTitle"] = "Produkter och lager",
+                ["StockText"] = "Katalog, lagerrörelser, bristvarningar och inventering.",
+                ["InvoicesTitle"] = "Offerter och fakturor",
+                ["InvoicesText"] = "Professionella dokument, PDF, Excel, status och betalningsspårning.",
+                ["HrTitle"] = "HR och närvaro",
+                ["HrText"] = "Anställda, incheckning, dagens närvaro, roller och användare.",
+                ["Security"] = "Säkerhet",
+                ["SecurityText"] = "JWT, roller, behörigheter, revision, säkerhetskopior och dataskydd.",
+                ["AiTitle"] = "AI-assistent",
+                ["AiText"] = "Finansiell analys, smarta varningar, rekommendationer och svar på naturligt språk.",
+                ["AiBadge"] = "Enterprise AI Copilot",
+                ["AiSectionTitle"] = "AI som förstår dina ERP-data",
+                ["AiSectionText"] = "Ställ en fråga som \"Vilka kunder ska jag följa upp?\" eller \"Ge mig en ekonomisk sammanfattning\". Assistenten analyserar verkliga data: fakturor, betalningar, utgifter, kunder, lager och närvaro.",
+                ["TryAi"] = "Testa AI-assistenten",
+                ["SeeDemo"] = "Se demo",
+                ["Chat1"] = "Issa: Varför är min vinst låg?",
+                ["Chat2"] = "AI: Din vinst är 10 000 EUR, men 2 fakturor är fortfarande obetalda. Jag rekommenderar en uppföljning idag.",
+                ["Chat3"] = "Issa: Förbered en komplett rapport.",
+                ["Chat4"] = "AI: Jag kan skapa en finansiell PDF-rapport med varningar och rekommendationer.",
+                ["MobileBadge"] = "Mobilapplikation",
+                ["MobileTitle"] = "Ditt företag i fickan",
+                ["MobileText"] = "EnterpriseERP Mobile kopplar ledningen till viktiga data: kunder, fakturor, betalningar, närvaro, rapporter, professionell profil, AI-assistent och CEO Dashboard.",
+                ["AndroidText"] = "APK ansluten till EnterpriseERP API.",
+                ["WindowsText"] = "MAUI Windows-applikation.",
+                ["Download"] = "Ladda ner",
+                ["WhyTitle"] = "Varför välja EnterpriseERP?",
+                ["WhyText"] = "En modern och utbyggbar lösning för små och medelstora företag som vill arbeta snabbare och bättre.",
+                ["Fast"] = "Snabbt",
+                ["FastText"] = "Modernt gränssnitt, tydlig navigering och snabbt tillgängliga data.",
+                ["CloudReady"] = "Molnredo",
+                ["CloudText"] = "Redo för serverdrift, säker API och ansluten mobilapp.",
+                ["Decision"] = "Beslut",
+                ["DecisionText"] = "CEO Dashboard, hälsopoäng, varningar, rekommendationer och analyser.",
+                ["OffersTitle"] = "Enkla erbjudanden",
+                ["OffersText"] = "Börja gratis och skala EnterpriseERP efter företagets behov.",
+                ["Free"] = "Gratis",
+                ["StarterText"] = "Test, demonstration, lokal användning och första konfiguration.",
+                ["ToDefine"] = "Att definiera",
+                ["BusinessText"] = "Komplett ERP, mobil, AI, rapporter, säkerhet och support.",
+                ["QuoteOnly"] = "På offert",
+                ["EnterpriseText"] = "Flera företag, anpassning, driftsättning och vägledning.",
+                ["FooterText"] = "Smart Business Suite för kunder, ekonomi, lager, HR, dokument, AI och mobil.",
+                ["Product"] = "Produkt",
+                ["Access"] = "Åtkomst",
+                ["Support"] = "Support",
+                ["Rights"] = "Alla rättigheter förbehållna.",
+                ["Powered"] = "Drivs av Enterprise AI"
+            },
+            ["es"] = new()
+            {
+                ["Title"] = "EnterpriseERP - ERP web, móvil e IA",
+                ["Features"] = "Funcionalidades",
+                ["Modules"] = "Módulos",
+                ["Downloads"] = "Descargas",
+                ["Pricing"] = "Precios",
+                ["Demo"] = "Demo",
+                ["Contact"] = "Contacto",
+                ["Login"] = "Iniciar sesión",
+                ["TryFree"] = "Probar gratis",
+                ["CreateAccount"] = "Crear cuenta",
+                ["DownloadMobile"] = "Descargar móvil",
+                ["Badge"] = "ERP Web + Móvil + IA",
+                ["HeroTitle"] = "El ERP de nueva generación para gestionar tu empresa",
+                ["HeroAccent"] = "con IA.",
+                ["HeroText"] = "EnterpriseERP centraliza clientes, proveedores, productos, presupuestos, facturas, pagos, presencias, informes, copias de seguridad y auditorías en una plataforma moderna. El Asistente IA y el CEO Dashboard te ayudan a entender tus prioridades en segundos.",
+                ["StatModules"] = "Módulos ERP",
+                ["StatAi"] = "Asistente inteligente",
+                ["StatPdf"] = "Documentos profesionales",
+                ["StatMobile"] = "Android y Windows",
+                ["CompanyHealth"] = "Salud de empresa: 84/100",
+                ["Priority"] = "Prioridad: reclamar facturas impagadas.",
+                ["Profit"] = "Beneficio",
+                ["UnpaidInvoices"] = "Facturas impagadas",
+                ["LowStock"] = "Stock bajo",
+                ["Clients"] = "Clientes"
+            },
+            ["de"] = new()
+            {
+                ["Title"] = "EnterpriseERP - ERP für Web, Mobile und KI",
+                ["Features"] = "Funktionen",
+                ["Modules"] = "Module",
+                ["Downloads"] = "Downloads",
+                ["Pricing"] = "Preise",
+                ["Demo"] = "Demo",
+                ["Contact"] = "Kontakt",
+                ["Login"] = "Anmelden",
+                ["TryFree"] = "Kostenlos testen",
+                ["CreateAccount"] = "Konto erstellen",
+                ["DownloadMobile"] = "Mobile herunterladen",
+                ["Badge"] = "ERP Web + Mobile + KI",
+                ["HeroTitle"] = "Das ERP der nächsten Generation für Ihr Unternehmen",
+                ["HeroAccent"] = "mit KI.",
+                ["HeroText"] = "EnterpriseERP bündelt Kunden, Lieferanten, Produkte, Angebote, Rechnungen, Zahlungen, Anwesenheiten, Berichte, Backups und Audits in einer modernen Plattform. Der KI-Assistent und das CEO Dashboard helfen Ihnen, Prioritäten in Sekunden zu verstehen.",
+                ["StatModules"] = "ERP-Module",
+                ["StatAi"] = "Intelligenter Assistent",
+                ["StatPdf"] = "Professionelle Dokumente",
+                ["StatMobile"] = "Android und Windows",
+                ["CompanyHealth"] = "Unternehmenszustand: 84/100",
+                ["Priority"] = "Priorität: unbezahlte Rechnungen nachfassen.",
+                ["Profit"] = "Gewinn",
+                ["UnpaidInvoices"] = "Unbezahlte Rechnungen",
+                ["LowStock"] = "Niedriger Bestand",
+                ["Clients"] = "Kunden"
+            }
+        };
+
+        var french = new Dictionary<string, string>
+        {
+            ["Title"] = "EnterpriseERP - ERP Web, Mobile et AI",
+            ["Features"] = "Fonctionnalités",
+            ["Modules"] = "Modules",
+            ["Downloads"] = "Téléchargements",
+            ["Pricing"] = "Tarifs",
+            ["Demo"] = "Démo",
+            ["Contact"] = "Contact",
+            ["Login"] = "Connexion",
+            ["TryFree"] = "Essayer gratuitement",
+            ["CreateAccount"] = "Créer un compte",
+            ["DownloadMobile"] = "Télécharger mobile",
+            ["Badge"] = "ERP Web + Mobile + AI",
+            ["HeroTitle"] = "L’ERP nouvelle génération pour gérer votre entreprise",
+            ["HeroAccent"] = "avec l’IA.",
+            ["HeroText"] = "EnterpriseERP centralise vos clients, fournisseurs, produits, devis, factures, paiements, présences, rapports, sauvegardes et audits dans une plateforme moderne. L’Assistant AI et le CEO Dashboard vous aident à comprendre vos priorités en quelques secondes.",
+            ["StatModules"] = "Modules ERP",
+            ["StatAi"] = "Assistant intelligent",
+            ["StatPdf"] = "Documents pros",
+            ["StatMobile"] = "Android & Windows",
+            ["CompanyHealth"] = "Santé entreprise : 84/100",
+            ["Priority"] = "Priorité : relancer les factures impayées.",
+            ["Profit"] = "Profit",
+            ["UnpaidInvoices"] = "Factures impayées",
+            ["LowStock"] = "Stock faible",
+            ["Clients"] = "Clients",
+            ["ModulesTitle"] = "Un ERP complet pour piloter toute l’entreprise",
+            ["ModulesText"] = "EnterpriseERP regroupe les outils essentiels pour gérer les opérations, les ventes, le stock, les RH, la finance et la sécurité.",
+            ["CrmTitle"] = "CRM & Clients",
+            ["CrmText"] = "Gestion clients, historique, commandes, factures, paiements et suivi commercial.",
+            ["StockTitle"] = "Produits & Stock",
+            ["StockText"] = "Catalogue, mouvements de stock, alertes de rupture et inventaire.",
+            ["InvoicesTitle"] = "Devis & Factures",
+            ["InvoicesText"] = "Documents professionnels, PDF, Excel, statuts et suivi de paiement.",
+            ["HrTitle"] = "RH & Présences",
+            ["HrText"] = "Employés, pointage, présences du jour, rôles et utilisateurs.",
+            ["Security"] = "Sécurité",
+            ["SecurityText"] = "JWT, rôles, permissions, audit, sauvegardes et protection des données.",
+            ["AiTitle"] = "Assistant AI",
+            ["AiText"] = "Analyse financière, alertes intelligentes, recommandations et réponses en langage naturel.",
+            ["AiBadge"] = "Enterprise AI Copilot",
+            ["AiSectionTitle"] = "L’IA qui comprend vos données ERP",
+            ["AiSectionText"] = "Posez une question comme « Quels clients dois-je relancer ? » ou « Fais-moi un résumé financier ». L’assistant analyse les vraies données : factures, paiements, dépenses, clients, stock et présences.",
+            ["TryAi"] = "Tester l’Assistant AI",
+            ["SeeDemo"] = "Voir la démo",
+            ["Chat1"] = "Issa : Pourquoi mon bénéfice est-il faible ?",
+            ["Chat2"] = "AI : Votre profit est de 10 000 €, mais 2 factures restent impayées. Je recommande une relance aujourd’hui.",
+            ["Chat3"] = "Issa : Prépare un rapport complet.",
+            ["Chat4"] = "AI : Je peux générer un rapport financier PDF avec les alertes et recommandations.",
+            ["MobileBadge"] = "Application mobile",
+            ["MobileTitle"] = "Votre entreprise dans votre poche",
+            ["MobileText"] = "EnterpriseERP Mobile connecte le dirigeant aux données essentielles : clients, factures, paiements, présences, rapports, profil professionnel, Assistant AI et CEO Dashboard.",
+            ["AndroidText"] = "APK connecté à l’API EnterpriseERP.",
+            ["WindowsText"] = "Application MAUI Windows.",
+            ["Download"] = "Télécharger",
+            ["WhyTitle"] = "Pourquoi choisir EnterpriseERP ?",
+            ["WhyText"] = "Une solution moderne, extensible et pensée pour les PME qui veulent gérer plus vite et mieux.",
+            ["Fast"] = "Rapide",
+            ["FastText"] = "Interface moderne, navigation claire et données accessibles rapidement.",
+            ["CloudReady"] = "Cloud ready",
+            ["CloudText"] = "Prêt pour déploiement serveur, API sécurisée, mobile connecté.",
+            ["Decision"] = "Décision",
+            ["DecisionText"] = "CEO Dashboard, score de santé, alertes, recommandations et analyses.",
+            ["OffersTitle"] = "Offres simples",
+            ["OffersText"] = "Commencez gratuitement, puis faites évoluer EnterpriseERP selon les besoins de votre entreprise.",
+            ["Free"] = "Gratuit",
+            ["StarterText"] = "Test, démonstration, usage local et première configuration.",
+            ["ToDefine"] = "À définir",
+            ["BusinessText"] = "ERP complet, mobile, AI, rapports, sécurité et support.",
+            ["QuoteOnly"] = "Sur devis",
+            ["EnterpriseText"] = "Multi-entreprises, personnalisation, déploiement et accompagnement.",
+            ["FooterText"] = "Business Suite intelligente pour gérer clients, finances, stock, RH, documents, AI et mobile.",
+            ["Product"] = "Produit",
+            ["Access"] = "Accès",
+            ["Support"] = "Support",
+            ["Rights"] = "Tous droits réservés.",
+            ["Powered"] = "Powered by Enterprise AI"
+        };
+
+        if (translations.TryGetValue(T.Lang, out var selected) && selected.TryGetValue(key, out var translated))
+            return translated;
+
+        return french.TryGetValue(key, out var fallback) ? fallback : key;
+    }
+
+    ViewData["Title"] = L("Title");
+}
+
+<!DOCTYPE html>
+<html lang="@T.Lang">
+<head>
+    <meta charset="utf-8" />
+    <title>@L("Title")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --bg: #020617;
+            --panel: #0f172a;
+            --panel2: #111827;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --purple: #8b5cf6;
+            --purple2: #7c3aed;
+            --blue: #2563eb;
+            --green: #22c55e;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: rgba(2, 6, 23, .86);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(51,65,85,.55);
+        }
+
+        .brand {
+            font-size: 28px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .brand span { color: var(--purple); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            background: #111827;
+            color: white;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 18px;
+            border-radius: 14px;
+            font-weight: 800;
+            border: 1px solid var(--border);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--purple2), var(--purple));
+            border-color: transparent;
+        }
+
+        .btn-dark { background: #111827; }
+
+        .hero {
+            padding: 95px 7% 80px;
+            background:
+                radial-gradient(circle at top left, rgba(124,58,237,.30), transparent 34%),
+                radial-gradient(circle at top right, rgba(37,99,235,.28), transparent 30%),
+                linear-gradient(135deg, #020617, #0b1228);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            align-items: center;
+            gap: 70px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(124,58,237,.22);
+            color: #c4b5fd;
+            font-weight: 900;
+            margin-bottom: 26px;
+        }
+
+        h1 {
+            font-size: clamp(44px, 5vw, 82px);
+            line-height: 1.03;
+            margin: 0;
+            letter-spacing: -2px;
+        }
+
+        h1 span { color: #a78bfa; }
+
+        .hero p {
+            margin-top: 26px;
+            color: #cbd5e1;
+            font-size: 20px;
+            line-height: 1.8;
+            max-width: 780px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 34px;
+        }
+
+        .stats {
+            margin-top: 44px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .stat {
+            background: rgba(15,23,42,.8);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        .stat strong {
+            font-size: 26px;
+            display: block;
+            color: white;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .mockup {
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            background: rgba(15,23,42,.78);
+            padding: 24px;
+            box-shadow: 0 35px 120px rgba(0,0,0,.5);
+        }
+
+        .mockup-top {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 99px;
+            background: #64748b;
+        }
+
+        .dash-card {
+            background: #111827;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .dash-card h3 {
+            margin: 0 0 14px;
+            color: #a78bfa;
+            font-size: 26px;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .mini {
+            background: #0f172a;
+            border: 1px solid #273449;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .mini strong {
+            display: block;
+            font-size: 22px;
+            margin-top: 6px;
+        }
+
+        .section {
+            padding: 90px 7%;
+        }
+
+        .section-header {
+            max-width: 850px;
+            margin-bottom: 42px;
+        }
+
+        .section h2 {
+            font-size: clamp(34px, 3.5vw, 52px);
+            margin: 0 0 16px;
+            letter-spacing: -1px;
+        }
+
+        .section p {
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 18px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            padding: 26px;
+            min-height: 190px;
+        }
+
+        .card:hover {
+            border-color: var(--purple);
+            transform: translateY(-3px);
+            transition: .2s;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(124,58,237,.22);
+            margin-bottom: 18px;
+            font-size: 24px;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 44px;
+            align-items: center;
+        }
+
+        .ai-box {
+            background:
+                radial-gradient(circle at top right, rgba(124,58,237,.22), transparent 40%),
+                #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 34px;
+        }
+
+        .chat {
+            display: grid;
+            gap: 14px;
+        }
+
+        .msg {
+            padding: 16px;
+            border-radius: 18px;
+            background: #111827;
+            border: 1px solid #334155;
+            color: #e5e7eb;
+        }
+
+        .msg.ai {
+            border-color: rgba(139,92,246,.75);
+        }
+
+        .download {
+            background: linear-gradient(135deg, #111827, #1e1b4b);
+            border-top: 1px solid #1e293b;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .pricing {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .price {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 30px;
+        }
+
+        .price.featured {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 1px rgba(139,92,246,.3);
+        }
+
+        .price h3 { font-size: 26px; }
+        .price h4 { font-size: 34px; margin: 12px 0; }
+
+        .footer {
+            padding: 50px 7%;
+            border-top: 1px solid #1e293b;
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr);
+            gap: 28px;
+            color: var(--muted);
+        }
+
+        .footer h4 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .footer a {
+            display: block;
+            margin: 10px 0;
+            color: #cbd5e1;
+        }
+
+        .bottom {
+            padding: 20px 7%;
+            border-top: 1px solid #1e293b;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        @@media(max-width: 1100px) {
+            .hero-grid, .split { grid-template-columns: 1fr; }
+            .cards, .pricing { grid-template-columns: repeat(2, 1fr); }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .navbar { align-items: flex-start; flex-direction: column; }
+            .nav-actions { flex-wrap: wrap; }
+        }
+
+        @@media(max-width: 720px) {
+            .cards, .pricing, .stats, .dash-grid, .footer { grid-template-columns: 1fr; }
+            .hero, .section { padding-left: 24px; padding-right: 24px; }
+            .navbar { padding-left: 24px; padding-right: 24px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a class="brand" href="/">Enterprise<span>ERP</span></a>
+
+    <nav class="nav-links">
+        <a href="/Home/Features">Fonctionnalités</a>
+        <a href="#modules">Modules</a>
+        <a href="/Home/Downloads">Téléchargements</a>
+        <a href="/Home/Pricing">Tarifs</a>
+        <a href="/Home/Demo">Démo</a>
+        <a href="/Home/Contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+        <form method="get" action="/Language/Set" class="landing-lang-form">
+    <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+    <select name="lang" onchange="this.form.submit()">
+        <option value="fr" selected="@(T.Lang == "fr")">FR</option>
+        <option value="en" selected="@(T.Lang == "en")">EN</option>
+        <option value="sv" selected="@(T.Lang == "sv")">SV</option>
+    </select>
+</form>
+<a class="btn btn-dark" href="/Account/Login">Connexion</a>
+        <a class="btn btn-primary" href="/Account/Register">Essayer gratuitement</a>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-grid">
+        <div>
+            <div class="badge">ERP Web + Mobile + AI</div>
+
+            <h1>L’ERP nouvelle génération pour gérer votre entreprise <span>avec l’IA.</span></h1>
+
+            <p>
+                EnterpriseERP centralise vos clients, fournisseurs, produits, devis, factures,
+                paiements, présences, rapports, sauvegardes et audits dans une plateforme moderne.
+                L’Assistant AI et le CEO Dashboard vous aident à comprendre vos priorités en quelques secondes.
+            </p>
+
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="/Account/Register">Créer un compte</a>
+                <a class="btn btn-dark" href="/Account/Login">Se connecter</a>
+                <a class="btn btn-dark" href="/Home/Downloads">Télécharger mobile</a>
+            </div>
+
+            <div class="stats">
+                <div class="stat"><strong>12+</strong><span>Modules ERP</span></div>
+                <div class="stat"><strong>AI</strong><span>Assistant intelligent</span></div>
+                <div class="stat"><strong>PDF</strong><span>Documents pros</span></div>
+                <div class="stat"><strong>Mobile</strong><span>Android & Windows</span></div>
+            </div>
+        </div>
+
+        <div class="mockup">
+            <div class="mockup-top">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+
+            <div class="dash-card">
+                <h3>CEO Dashboard</h3>
+                <p>Santé entreprise : 84/100</p>
+                <p>Priorité : relancer les factures impayées.</p>
+            </div>
+
+            <div class="dash-grid">
+                <div class="mini">Profit<strong>10 000 €</strong></div>
+                <div class="mini">Factures impayées<strong>2</strong></div>
+                <div class="mini">Stock faible<strong>0</strong></div>
+                <div class="mini">Clients<strong>3</strong></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="modules">
+    <div class="section-header">
+        <h2>Un ERP complet pour piloter toute l’entreprise</h2>
+        <p>EnterpriseERP regroupe les outils essentiels pour gérer les opérations, les ventes, le stock, les RH, la finance et la sécurité.</p>
+    </div>
+
+    <div class="cards">
+        <div class="card"><div class="icon">🤝</div><h3>CRM & Clients</h3><p>Gestion clients, historique, commandes, factures, paiements et suivi commercial.</p></div>
+        <div class="card"><div class="icon">📦</div><h3>Produits & Stock</h3><p>Catalogue, mouvements de stock, alertes de rupture et inventaire.</p></div>
+        <div class="card"><div class="icon">📄</div><h3>Devis & Factures</h3><p>Documents professionnels, PDF, Excel, statuts et suivi de paiement.</p></div>
+        <div class="card"><div class="icon">👥</div><h3>RH & Présences</h3><p>Employés, pointage, présences du jour, rôles et utilisateurs.</p></div>
+        <div class="card"><div class="icon">🔐</div><h3>Sécurité</h3><p>JWT, rôles, permissions, audit, sauvegardes et protection des données.</p></div>
+        <div class="card"><div class="icon">🧠</div><h3>Assistant AI</h3><p>Analyse financière, alertes intelligentes, recommandations et réponses en langage naturel.</p></div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="split">
+        <div>
+            <div class="badge">Enterprise AI Copilot</div>
+            <h2>L’IA qui comprend vos données ERP</h2>
+            <p>
+                Posez une question comme « Quels clients dois-je relancer ? » ou
+                « Fais-moi un résumé financier ». L’assistant analyse les vraies données :
+                factures, paiements, dépenses, clients, stock et présences.
+            </p>
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="/Account/Login">Tester l’Assistant AI</a>
+                <a class="btn btn-dark" href="/Home/Demo">Voir la démo</a>
+            </div>
+        </div>
+
+        <div class="ai-box">
+            <div class="chat">
+                <div class="msg">Issa : Pourquoi mon bénéfice est-il faible ?</div>
+                <div class="msg ai">AI : Votre profit est de 10 000 €, mais 2 factures restent impayées. Je recommande une relance aujourd’hui.</div>
+                <div class="msg">Issa : Prépare un rapport complet.</div>
+                <div class="msg ai">AI : Je peux générer un rapport financier PDF avec les alertes et recommandations.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section download">
+    <div class="split">
+        <div>
+            <div class="badge">Application mobile</div>
+            <h2>Votre entreprise dans votre poche</h2>
+            <p>
+                EnterpriseERP Mobile connecte le dirigeant aux données essentielles :
+                clients, factures, paiements, présences, rapports, profil professionnel,
+                Assistant AI et CEO Dashboard.
+            </p>
+        </div>
+
+        <div class="cards" style="grid-template-columns:1fr 1fr;">
+            <div class="card"><div class="icon">🤖</div><h3>Android</h3><p>APK connecté à l’API EnterpriseERP.</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Télécharger</a></div>
+            <div class="card"><div class="icon">🪟</div><h3>Windows</h3><p>Application MAUI Windows.</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Télécharger</a></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <h2>Pourquoi choisir EnterpriseERP ?</h2>
+        <p>Une solution moderne, extensible et pensée pour les PME qui veulent gérer plus vite et mieux.</p>
+    </div>
+
+    <div class="cards">
+        <div class="card"><div class="icon">⚡</div><h3>Rapide</h3><p>Interface moderne, navigation claire et données accessibles rapidement.</p></div>
+        <div class="card"><div class="icon">☁️</div><h3>Cloud ready</h3><p>Prêt pour déploiement serveur, API sécurisée, mobile connecté.</p></div>
+        <div class="card"><div class="icon">📊</div><h3>Décision</h3><p>CEO Dashboard, score de santé, alertes, recommandations et analyses.</p></div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <h2>Offres simples</h2>
+        <p>Commencez gratuitement, puis faites évoluer EnterpriseERP selon les besoins de votre entreprise.</p>
+    </div>
+
+    <div class="pricing">
+        <div class="price"><h3>Essai gratuit</h3><h4>14 jours</h4><p>Admin complet, 3 utilisateurs, 20 factures et 50 produits. Fin d'essai en lecture seule, paiement obligatoire, données conservées 90 jours.</p></div>
+        <div class="price featured"><h3>Business</h3><h4>À définir</h4><p>ERP complet, mobile, AI, rapports, sécurité et support.</p></div>
+        <div class="price"><h3>Enterprise</h3><h4>Sur devis</h4><p>Multi-entreprises, personnalisation, déploiement et accompagnement.</p></div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div>
+        <h4>EnterpriseERP</h4>
+        <p>Business Suite intelligente pour gérer clients, finances, stock, RH, documents, AI et mobile.</p>
+    </div>
+
+    <div>
+        <h4>Produit</h4>
+        <a href="/Home/Features">Fonctionnalités</a>
+        <a href="/Home/Downloads">Téléchargements</a>
+        <a href="/Home/Pricing">Tarifs</a>
+    </div>
+
+    <div>
+        <h4>Accès</h4>
+        <a href="/Account/Login">Connexion</a>
+        <a href="/Account/Register">Créer un compte</a>
+        <a href="/Home/Demo">Démo</a>
+    </div>
+
+    <div>
+        <h4>Contact</h4>
+        <a href="mailto:bakarii447@gmail.com">bakarii447@gmail.com</a>
+        <a href="/Home/Contact">Support</a>
+    </div>
+</footer>
+
+<div class="bottom">
+    <div>© @DateTime.Now.Year EnterpriseERP. Tous droits réservés.</div>
+    <div>Version 1.0 · Powered by Enterprise AI</div>
+</div>
+
+<script>
+    (() => {
+        const text = {
+            title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Title"))),
+            features: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Features"))),
+            modules: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Modules"))),
+            downloads: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Downloads"))),
+            pricing: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Pricing"))),
+            demo: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Demo"))),
+            contact: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Contact"))),
+            login: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Login"))),
+            tryFree: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("TryFree"))),
+            createAccount: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CreateAccount"))),
+            downloadMobile: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("DownloadMobile"))),
+            badge: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Badge"))),
+            heroTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("HeroTitle"))),
+            heroAccent: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("HeroAccent"))),
+            heroText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("HeroText"))),
+            statModules: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StatModules"))),
+            statAi: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StatAi"))),
+            statPdf: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StatPdf"))),
+            statMobile: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StatMobile"))),
+            companyHealth: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CompanyHealth"))),
+            priority: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Priority"))),
+            profit: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Profit"))),
+            unpaidInvoices: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("UnpaidInvoices"))),
+            lowStock: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("LowStock"))),
+            clients: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Clients"))),
+            modulesTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("ModulesTitle"))),
+            modulesText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("ModulesText"))),
+            crmTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CrmTitle"))),
+            crmText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CrmText"))),
+            stockTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StockTitle"))),
+            stockText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StockText"))),
+            invoicesTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("InvoicesTitle"))),
+            invoicesText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("InvoicesText"))),
+            hrTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("HrTitle"))),
+            hrText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("HrText"))),
+            security: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Security"))),
+            securityText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("SecurityText"))),
+            aiTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AiTitle"))),
+            aiText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AiText"))),
+            aiBadge: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AiBadge"))),
+            aiSectionTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AiSectionTitle"))),
+            aiSectionText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AiSectionText"))),
+            tryAi: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("TryAi"))),
+            seeDemo: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("SeeDemo"))),
+            chat1: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Chat1"))),
+            chat2: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Chat2"))),
+            chat3: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Chat3"))),
+            chat4: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Chat4"))),
+            mobileBadge: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("MobileBadge"))),
+            mobileTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("MobileTitle"))),
+            mobileText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("MobileText"))),
+            androidText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("AndroidText"))),
+            windowsText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("WindowsText"))),
+            download: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Download"))),
+            whyTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("WhyTitle"))),
+            whyText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("WhyText"))),
+            fast: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Fast"))),
+            fastText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("FastText"))),
+            cloudReady: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CloudReady"))),
+            cloudText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("CloudText"))),
+            decision: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Decision"))),
+            decisionText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("DecisionText"))),
+            offersTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("OffersTitle"))),
+            offersText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("OffersText"))),
+            free: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Free"))),
+            starterText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("StarterText"))),
+            toDefine: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("ToDefine"))),
+            businessText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("BusinessText"))),
+            quoteOnly: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("QuoteOnly"))),
+            enterpriseText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("EnterpriseText"))),
+            footerText: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("FooterText"))),
+            product: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Product"))),
+            access: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Access"))),
+            support: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Support"))),
+            rights: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Rights"))),
+            powered: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Powered")))
+        };
+
+        const set = (selector, value) => {
+            const node = document.querySelector(selector);
+            if (node) node.textContent = value;
+        };
+
+        document.documentElement.lang = "@T.Lang";
+        document.title = text.title;
+
+        const navLinks = document.querySelectorAll(".nav-links a");
+        [text.features, text.modules, text.downloads, text.pricing, text.demo, text.contact]
+            .forEach((value, index) => {
+                if (navLinks[index]) navLinks[index].textContent = value;
+            });
+
+        const languageSelect = document.querySelector(".landing-lang-form select");
+        if (languageSelect) {
+            const current = "@T.Lang";
+            const labels = { fr: "FR", en: "EN", sv: "SV", es: "ES", de: "DE" };
+            Object.entries(labels).forEach(([value, label]) => {
+                if (!languageSelect.querySelector(`option[value="${value}"]`)) {
+                    languageSelect.add(new Option(label, value));
+                }
+            });
+            languageSelect.value = current;
+        }
+
+        const actionButtons = document.querySelectorAll(".nav-actions .btn");
+        if (actionButtons[0]) actionButtons[0].textContent = text.login;
+        if (actionButtons[1]) actionButtons[1].textContent = text.tryFree;
+
+        set(".hero .badge", text.badge);
+        const heroTitle = document.querySelector(".hero h1");
+        if (heroTitle) {
+            heroTitle.textContent = "";
+            heroTitle.append(document.createTextNode(`${text.heroTitle} `));
+            const accent = document.createElement("span");
+            accent.textContent = text.heroAccent;
+            heroTitle.append(accent);
+        }
+        set(".hero p", text.heroText);
+
+        const heroButtons = document.querySelectorAll(".hero-buttons .btn");
+        if (heroButtons[0]) heroButtons[0].textContent = text.createAccount;
+        if (heroButtons[1]) heroButtons[1].textContent = text.login;
+        if (heroButtons[2]) heroButtons[2].textContent = text.downloadMobile;
+
+        const stats = document.querySelectorAll(".stats .stat span");
+        [text.statModules, text.statAi, text.statPdf, text.statMobile].forEach((value, index) => {
+            if (stats[index]) stats[index].textContent = value;
+        });
+
+        const dashParagraphs = document.querySelectorAll(".dash-card p");
+        if (dashParagraphs[0]) dashParagraphs[0].textContent = text.companyHealth;
+        if (dashParagraphs[1]) dashParagraphs[1].textContent = text.priority;
+
+        const minis = document.querySelectorAll(".dash-grid .mini");
+        [text.profit, text.unpaidInvoices, text.lowStock, text.clients].forEach((value, index) => {
+            const mini = minis[index];
+            if (!mini) return;
+            const strong = mini.querySelector("strong");
+            mini.textContent = value;
+            if (strong) mini.append(strong);
+        });
+
+        const sections = document.querySelectorAll(".section");
+        if (sections[0]) {
+            set("#modules .section-header h2", text.modulesTitle);
+            set("#modules .section-header p", text.modulesText);
+            const moduleCards = sections[0].querySelectorAll(".card");
+            [
+                [text.crmTitle, text.crmText],
+                [text.stockTitle, text.stockText],
+                [text.invoicesTitle, text.invoicesText],
+                [text.hrTitle, text.hrText],
+                [text.security, text.securityText],
+                [text.aiTitle, text.aiText]
+            ].forEach(([title, body], index) => {
+                if (moduleCards[index]) {
+                    const heading = moduleCards[index].querySelector("h3");
+                    const paragraph = moduleCards[index].querySelector("p");
+                    if (heading) heading.textContent = title;
+                    if (paragraph) paragraph.textContent = body;
+                }
+            });
+        }
+
+        if (sections[1]) {
+            const aiButtons = sections[1].querySelectorAll(".hero-buttons .btn");
+            set(".section:nth-of-type(3) .badge", text.aiBadge);
+            set(".section:nth-of-type(3) h2", text.aiSectionTitle);
+            set(".section:nth-of-type(3) p", text.aiSectionText);
+            if (aiButtons[0]) aiButtons[0].textContent = text.tryAi;
+            if (aiButtons[1]) aiButtons[1].textContent = text.seeDemo;
+            const messages = sections[1].querySelectorAll(".msg");
+            [text.chat1, text.chat2, text.chat3, text.chat4].forEach((value, index) => {
+                if (messages[index]) messages[index].textContent = value;
+            });
+        }
+
+        if (sections[2]) {
+            const downloadCards = sections[2].querySelectorAll(".card");
+            const downloadButtons = sections[2].querySelectorAll(".btn");
+            set(".download .badge", text.mobileBadge);
+            set(".download h2", text.mobileTitle);
+            set(".download .split > div > p", text.mobileText);
+            if (downloadCards[0]?.querySelector("p")) downloadCards[0].querySelector("p").textContent = text.androidText;
+            if (downloadCards[1]?.querySelector("p")) downloadCards[1].querySelector("p").textContent = text.windowsText;
+            downloadButtons.forEach(button => button.textContent = text.download);
+        }
+
+        if (sections[3]) {
+            set(".section:nth-of-type(5) .section-header h2", text.whyTitle);
+            set(".section:nth-of-type(5) .section-header p", text.whyText);
+            const whyCards = sections[3].querySelectorAll(".card");
+            [[text.fast, text.fastText], [text.cloudReady, text.cloudText], [text.decision, text.decisionText]]
+                .forEach(([title, body], index) => {
+                    if (whyCards[index]) {
+                        const heading = whyCards[index].querySelector("h3");
+                        const paragraph = whyCards[index].querySelector("p");
+                        if (heading) heading.textContent = title;
+                        if (paragraph) paragraph.textContent = body;
+                    }
+                });
+        }
+
+        if (sections[4]) {
+            set(".section:nth-of-type(6) .section-header h2", text.offersTitle);
+            set(".section:nth-of-type(6) .section-header p", text.offersText);
+            const prices = sections[4].querySelectorAll(".price");
+            [[text.free, text.starterText], [text.toDefine, text.businessText], [text.quoteOnly, text.enterpriseText]]
+                .forEach(([price, body], index) => {
+                    if (prices[index]) {
+                        const heading = prices[index].querySelector("h4");
+                        const paragraph = prices[index].querySelector("p");
+                        if (heading) heading.textContent = price;
+                        if (paragraph) paragraph.textContent = body;
+                    }
+                });
+        }
+
+        const footerColumns = document.querySelectorAll(".footer > div");
+        if (footerColumns[0]?.querySelector("p")) footerColumns[0].querySelector("p").textContent = text.footerText;
+        if (footerColumns[1]?.querySelector("h4")) footerColumns[1].querySelector("h4").textContent = text.product;
+        if (footerColumns[2]?.querySelector("h4")) footerColumns[2].querySelector("h4").textContent = text.access;
+        if (footerColumns[3]?.querySelector("h4")) footerColumns[3].querySelector("h4").textContent = text.contact;
+
+        const footerProductLinks = footerColumns[1]?.querySelectorAll("a") ?? [];
+        [text.features, text.downloads, text.pricing].forEach((value, index) => {
+            if (footerProductLinks[index]) footerProductLinks[index].textContent = value;
+        });
+        const footerAccessLinks = footerColumns[2]?.querySelectorAll("a") ?? [];
+        [text.login, text.createAccount, text.demo].forEach((value, index) => {
+            if (footerAccessLinks[index]) footerAccessLinks[index].textContent = value;
+        });
+        const supportLink = footerColumns[3]?.querySelectorAll("a")[1];
+        if (supportLink) supportLink.textContent = text.support;
+
+        const bottom = document.querySelectorAll(".bottom div");
+        if (bottom[0]) bottom[0].textContent = `© ${new Date().getFullYear()} EnterpriseERP. ${text.rights}`;
+        if (bottom[1]) bottom[1].textContent = `Version 1.0 · ${text.powered}`;
+    })();
+</script>
+</body>
+</html>

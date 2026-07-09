@@ -1,0 +1,75 @@
+@model EnterpriseERP.Models.User
+
+@{
+    ViewData["Title"] = "Modifier profil";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Modifier profil</h1>
+        <p>Mettre à jour vos informations personnelles</p>
+    </div>
+
+    <a href="/Profile/Index" class="btn-secondary">
+        ← Retour profil
+    </a>
+</div>
+
+<div class="form-card">
+    <form method="post" action="/Profile/Edit">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label>Nom complet</label>
+            <input value="@Model.FullName" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input value="@Model.Email" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone</label>
+            <input name="Phone" value="@Model.Phone" />
+        </div>
+
+        <div class="form-group">
+            <label>Adresse</label>
+            <input name="Address" value="@Model.Address" />
+        </div>
+
+        <div class="form-group">
+            <label>Département</label>
+            <input name="Department" value="@Model.Department" placeholder="Ex: Comptabilité, Stock, RH..." />
+        </div>
+
+        <div class="form-group">
+            <label>Poste</label>
+            <input name="Position" value="@Model.Position" placeholder="Ex: Manager, Comptable..." />
+        </div>
+
+        <div class="form-group">
+            <label>Langue préférée</label>
+            <select name="PreferredLanguage">
+                <option value="fr" selected="@(Model.PreferredLanguage == "fr")">Français</option>
+                <option value="en" selected="@(Model.PreferredLanguage == "en")">English</option>
+                <option value="sv" selected="@(Model.PreferredLanguage == "sv")">Svenska</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Thème préféré</label>
+            <select name="Theme">
+                <option value="Dark" selected="@(Model.Theme == "Dark")">Mode sombre</option>
+                <option value="Light" selected="@(Model.Theme == "Light")">Mode clair</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Enregistrer les modifications
+        </button>
+    </form>
+</div>

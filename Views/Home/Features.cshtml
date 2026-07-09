@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Fonctionnalités - EnterpriseERP";
+}
+
+<div class="container py-5">
+    <h1 class="display-4 fw-bold">Fonctionnalités EnterpriseERP</h1>
+    <p class="lead">Un ERP complet : Web, Mobile, AI, PDF, Excel, sécurité et CEO Dashboard.</p>
+
+    <div class="row g-4 mt-4">
+        @{
+            var modules = new[]
+            {
+                "Clients & CRM", "Produits & Stock", "Devis & Factures",
+                "Paiements", "Employés & Présences", "Dépenses",
+                "Rapports PDF/Excel", "Audit & Sécurité", "Backup Center",
+                "Assistant AI", "CEO Dashboard", "Application Mobile"
+            };
+        }
+
+        @foreach (var item in modules)
+        {
+            <div class="col-md-4">
+                <div class="card bg-dark text-white border-secondary h-100 p-3">
+                    <h4>@item</h4>
+                    <p class="text-secondary">Module professionnel intégré dans EnterpriseERP.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

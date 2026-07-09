@@ -1,0 +1,108 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Payment>
+
+@{
+    ViewData["Title"] = T.T("Payments");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Payments")</h1>
+        <p>@T.T("PaymentsDescription")</p>
+    </div>
+
+    <a href="/Payments/Create" class="btn-primary">
+        @T.T("AddPayment")
+    </a>
+</div>
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <h2>@T.T("PaymentsHistory")</h2>
+
+        <span class="badge">
+            @((Model ?? new()).Count)
+            @T.T("RegisteredPayments")
+        </span>
+
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+
+            <thead>
+                <tr>
+                    <th>@T.T("Invoice")</th>
+                    <th>@T.T("Client")</th>
+                    <th>@T.T("Amount")</th>
+                    <th>@T.T("Method")</th>
+                    <th>@T.T("Reference")</th>
+                    <th>@T.T("Date")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach (var payment in Model)
+            {
+                <tr>
+
+                    <td>
+                        <strong>#@payment.InvoiceId</strong>
+                    </td>
+
+                    <td>
+                        @payment.Invoice?.Client?.FullName
+                    </td>
+
+                    <td>
+                        @payment.Amount.ToString("N2") €
+                    </td>
+
+                    <td>
+                        <span class="status-badge">
+                            @payment.Method
+                        </span>
+                    </td>
+
+                    <td>
+                        @payment.Reference
+                    </td>
+
+                    <td>
+                        @payment.PaymentDate.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+
+                </tr>
+            }
+
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                💳
+            </div>
+
+            <h3>@T.T("NoPayments")</h3>
+
+            <p>@T.T("NoPaymentsText")</p>
+
+            <a href="/Payments/Create"
+               class="btn-primary">
+
+                @T.T("AddFirstPayment")
+
+            </a>
+
+        </div>
+    }
+
+</div>

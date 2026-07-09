@@ -1,0 +1,308 @@
+@model EnterpriseERP.Models.Quote
+@using EnterpriseERP.Models
+
+@{
+    ViewData["Title"] = "Modifier le devis";
+    var products = ViewBag.Products as List<Product> ?? new List<Product>();
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Modifier le devis</h2>
+            <p class="text-muted">@Model.QuoteNumber</p>
+        </div>
+
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+            Retour
+        </a>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="QuoteNumber" />
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="QuoteNumber" class="form-label">Numéro</label>
+                        <input asp-for="QuoteNumber" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="QuoteDate" class="form-label">Date</label>
+                        <input asp-for="QuoteDate" type="date" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="ValidUntil" class="form-label">Valable jusqu’au</label>
+                        <input asp-for="ValidUntil" type="date" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Status" class="form-label">Statut</label>
+                        <select asp-for="Status" class="form-select">
+                            <option>Brouillon</option>
+                            <option>Envoyé</option>
+                            <option>Accepté</option>
+                            <option>Refusé</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ClientId" class="form-label">Client</label>
+                        <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-select">
+                            <option value="">-- Sélectionner un client --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PaymentTerms" class="form-label">Conditions de paiement</label>
+                        <input asp-for="PaymentTerms" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>Lignes du devis</h5>
+
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addLine()">
+                        + Ajouter une ligne
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width:30%">Produit</th>
+                                <th>Qté</th>
+                                <th>Prix unitaire</th>
+                                <th>Remise %</th>
+                                <th>TVA %</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="quoteLinesBody">
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            <select name="productIds" class="form-select">
+                                                <option value="">-- Produit --</option>
+                                                @foreach (var product in products)
+                                                {
+                                                    if (product.Id == item.ProductId)
+                                                    {
+                                                        <option value="@product.Id" selected>@product.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@product.Id">@product.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+
+                                        <td>
+                                            <input name="quantities" type="number" class="form-control qty" value="@item.Quantity" min="1" oninput="calculateTotals()" />
+                                        </td>
+
+                                        <td>
+                                            <input name="unitPrices" type="number" class="form-control price" value="@item.UnitPrice" step="0.01" oninput="calculateTotals()" />
+                                        </td>
+
+                                        <td>
+                                            <input name="discountRates" type="number" class="form-control discount" value="@item.DiscountRate" step="0.01" oninput="calculateTotals()" />
+                                        </td>
+
+                                        <td>
+                                            <input name="taxRates" type="number" class="form-control tax" value="@item.TaxRate" step="0.01" oninput="calculateTotals()" />
+                                        </td>
+
+                                        <td>
+                                            <strong class="line-total">@item.LineTotal.ToString("N2") €</strong>
+                                        </td>
+
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                                                X
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <select name="productIds" class="form-select">
+                                            <option value="">-- Produit --</option>
+                                            @foreach (var product in products)
+                                            {
+                                                <option value="@product.Id">@product.Name</option>
+                                            }
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input name="quantities" type="number" class="form-control qty" value="1" min="1" oninput="calculateTotals()" />
+                                    </td>
+
+                                    <td>
+                                        <input name="unitPrices" type="number" class="form-control price" value="0" step="0.01" oninput="calculateTotals()" />
+                                    </td>
+
+                                    <td>
+                                        <input name="discountRates" type="number" class="form-control discount" value="0" step="0.01" oninput="calculateTotals()" />
+                                    </td>
+
+                                    <td>
+                                        <input name="taxRates" type="number" class="form-control tax" value="0" step="0.01" oninput="calculateTotals()" />
+                                    </td>
+
+                                    <td>
+                                        <strong class="line-total">0,00 €</strong>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Notes" class="form-label">Notes visibles client</label>
+                        <textarea asp-for="Notes" rows="4" class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="InternalNotes" class="form-label">Notes internes</label>
+                        <textarea asp-for="InternalNotes" rows="4" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="text-end">
+                    <p><strong>Sous-total HT :</strong> <span id="subtotal">0,00 €</span></p>
+                    <p><strong>Remise :</strong> <span id="discountTotal">0,00 €</span></p>
+                    <p><strong>TVA :</strong> <span id="taxTotal">0,00 €</span></p>
+                    <h4><strong>Total TTC :</strong> <span id="grandTotal">0,00 €</span></h4>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Enregistrer les modifications
+        </button>
+
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+            Annuler
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function formatCurrency(value) {
+            return value.toLocaleString('fr-FR', {
+                style: 'currency',
+                currency: 'EUR'
+            });
+        }
+
+        function calculateTotals() {
+            let subtotal = 0;
+            let discountTotal = 0;
+            let taxTotal = 0;
+            let grandTotal = 0;
+
+            document.querySelectorAll("#quoteLinesBody tr").forEach(row => {
+                const qty = parseFloat(row.querySelector(".qty")?.value || 0);
+                const price = parseFloat(row.querySelector(".price")?.value || 0);
+                const discountRate = parseFloat(row.querySelector(".discount")?.value || 0);
+                const taxRate = parseFloat(row.querySelector(".tax")?.value || 0);
+
+                const lineBase = qty * price;
+                const lineDiscount = lineBase * discountRate / 100;
+                const taxable = lineBase - lineDiscount;
+                const lineTax = taxable * taxRate / 100;
+                const lineTotal = taxable + lineTax;
+
+                subtotal += lineBase;
+                discountTotal += lineDiscount;
+                taxTotal += lineTax;
+                grandTotal += lineTotal;
+
+                row.querySelector(".line-total").textContent = formatCurrency(lineTotal);
+            });
+
+            document.getElementById("subtotal").textContent = formatCurrency(subtotal);
+            document.getElementById("discountTotal").textContent = formatCurrency(discountTotal);
+            document.getElementById("taxTotal").textContent = formatCurrency(taxTotal);
+            document.getElementById("grandTotal").textContent = formatCurrency(grandTotal);
+        }
+
+        function addLine() {
+            const tbody = document.getElementById("quoteLinesBody");
+            const firstRow = tbody.querySelector("tr");
+            const newRow = firstRow.cloneNode(true);
+
+            newRow.querySelectorAll("input").forEach(input => {
+                if (input.classList.contains("qty")) input.value = 1;
+                else input.value = 0;
+            });
+
+            newRow.querySelector("select").value = "";
+            newRow.querySelector(".line-total").textContent = "0,00 €";
+
+            tbody.appendChild(newRow);
+            calculateTotals();
+        }
+
+        function removeLine(button) {
+            const tbody = document.getElementById("quoteLinesBody");
+
+            if (tbody.querySelectorAll("tr").length > 1) {
+                button.closest("tr").remove();
+                calculateTotals();
+            }
+        }
+
+        calculateTotals();
+    </script>
+}

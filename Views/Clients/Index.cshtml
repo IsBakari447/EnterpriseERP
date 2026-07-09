@@ -1,0 +1,84 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Client>
+
+@{
+    ViewData["Title"] = T.T("Clients");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Clients")</h1>
+        <p>@T.T("ClientsDescription")</p>
+    </div>
+
+    <a href="/Clients/Create" class="btn-primary">
+        @T.T("AddClient")
+    </a>
+</div>
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <h2>@T.T("ClientsList")</h2>
+
+        <span class="badge">
+            @Model.Count @T.T("RegisteredClients")
+        </span>
+
+    </div>
+
+    @if (Model.Any())
+    {
+        <table>
+
+            <thead>
+                <tr>
+                    <th>@T.T("Name")</th>
+                    <th>@T.T("Company")</th>
+                    <th>@T.T("Email")</th>
+                    <th>@T.T("Phone")</th>
+                    <th>@T.T("Address")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach (var client in Model)
+            {
+                <tr>
+                    <td>@client.FullName</td>
+                    <td>@client.CompanyName</td>
+                    <td>@client.Email</td>
+                    <td>@client.Phone</td>
+                    <td>@client.Address</td>
+                </tr>
+            }
+
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                👥
+            </div>
+
+            <h3>@T.T("NoClients")</h3>
+
+            <p>@T.T("NoClientsText")</p>
+
+            <a href="/Clients/Create"
+               class="btn-primary">
+
+                @T.T("AddFirstClient")
+
+            </a>
+
+        </div>
+    }
+
+</div>

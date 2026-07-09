@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Bienvenue</value></data>
+  <data name="Total revenue" xml:space="preserve"><value>Revenus totaux</value></data>
+  <data name="Total expenses" xml:space="preserve"><value>Dépenses totales</value></data>
+  <data name="Net profit" xml:space="preserve"><value>Bénéfice net</value></data>
+  <data name="Stock alerts" xml:space="preserve"><value>Alertes stock</value></data>
+  <data name="Invoices" xml:space="preserve"><value>Factures</value></data>
+  <data name="Payments" xml:space="preserve"><value>Paiements</value></data>
+  <data name="Clients" xml:space="preserve"><value>Clients</value></data>
+  <data name="Products" xml:space="preserve"><value>Produits</value></data>
+  <data name="Login" xml:space="preserve"><value>Connexion</value></data>
+  <data name="Create account" xml:space="preserve"><value>Créer un compte</value></data>
+</root>

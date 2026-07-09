@@ -1,0 +1,86 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.Supplier>
+
+@{
+    ViewData["Title"] = T.T("Suppliers");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Suppliers")</h1>
+        <p>@T.T("SuppliersDescription")</p>
+    </div>
+
+    <a href="/Suppliers/Create" class="btn-primary">
+        @T.T("AddSupplier")
+    </a>
+</div>
+
+<div class="panel">
+
+    <div class="panel-header">
+        <h2>@T.T("SuppliersList")</h2>
+
+        <span class="badge">
+            @Model.Count @T.T("RegisteredSuppliers")
+        </span>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+
+            <thead>
+                <tr>
+                    <th>@T.T("Name")</th>
+                    <th>@T.T("Contact")</th>
+                    <th>@T.T("Email")</th>
+                    <th>@T.T("Phone")</th>
+                    <th>@T.T("Category")</th>
+                    <th>@T.T("Address")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach (var supplier in Model)
+            {
+                <tr>
+
+                    <td>@supplier.Name</td>
+                    <td>@supplier.ContactPerson</td>
+                    <td>@supplier.Email</td>
+                    <td>@supplier.Phone</td>
+                    <td>@supplier.Category</td>
+                    <td>@supplier.Address</td>
+
+                </tr>
+            }
+
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🏢
+            </div>
+
+            <h3>@T.T("NoSuppliers")</h3>
+
+            <p>@T.T("NoSuppliersText")</p>
+
+            <a href="/Suppliers/Create"
+               class="btn-primary">
+
+                @T.T("AddFirstSupplier")
+
+            </a>
+
+        </div>
+    }
+
+</div>

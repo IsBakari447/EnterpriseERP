@@ -1,0 +1,187 @@
+@model EnterpriseERP.Models.Quote
+
+@{
+    ViewData["Title"] = "Détails du devis";
+}
+
+<div class="quote-page">
+
+    <div class="quote-header">
+        <div>
+            <h1>Devis @Model.QuoteNumber</h1>
+            <p>Détails complets du devis client.</p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Retour
+        </a>
+    </div>
+
+    <div class="quote-action-bar">
+
+        <div class="quote-action-left">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil-square"></i>
+                Modifier
+            </a>
+
+            <button type="button" class="btn btn-outline-light" onclick="window.print()">
+                <i class="bi bi-printer"></i>
+                Imprimer
+            </button>
+        </div>
+
+        <div class="quote-action-right">
+            <a asp-action="Pdf" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                <i class="bi bi-file-earmark-pdf"></i>
+                PDF
+            </a>
+
+            <a asp-action="SendEmail" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                <i class="bi bi-envelope"></i>
+                Envoyer
+            </a>
+
+            <a asp-action="ConvertToInvoice" asp-route-id="@Model.Id" class="btn btn-outline-warning">
+                <i class="bi bi-receipt"></i>
+                Convertir en facture
+            </a>
+
+            <a asp-action="ConvertToOrder" asp-route-id="@Model.Id" class="btn btn-outline-success">
+                <i class="bi bi-box-seam"></i>
+                Convertir en commande
+            </a>
+        </div>
+
+    </div>
+
+    <div class="erp-card mb-4">
+        <div class="erp-card-header">
+            <h5>Informations du devis</h5>
+            <span>@Model.Status</span>
+        </div>
+
+        <div class="erp-card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <strong>Client</strong>
+                    <p>@Model.Client?.CompanyName</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <strong>Date du devis</strong>
+                    <p>@Model.QuoteDate.ToString("dd/MM/yyyy")</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <strong>Valable jusqu’au</strong>
+                    <p>@Model.ValidUntil.ToString("dd/MM/yyyy")</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <strong>Conditions de paiement</strong>
+                    <p>@(Model.PaymentTerms ?? "-")</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <strong>Créé par</strong>
+                    <p>@(Model.CreatedBy ?? "-")</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <strong>Créé le</strong>
+                    <p>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="erp-card mb-4">
+        <div class="erp-card-header">
+            <h5>Produits du devis</h5>
+            <span>@Model.Items.Count ligne(s)</span>
+        </div>
+
+        <div class="erp-card-body">
+            <div class="table-responsive">
+                <table class="table quote-table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Qté</th>
+                            <th>Prix unitaire</th>
+                            <th>Remise</th>
+                            <th>TVA</th>
+                            <th class="text-end">Total ligne</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Product?.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("N2") €</td>
+                                <td>@item.DiscountAmount.ToString("N2") € (@item.DiscountRate.ToString("N2") %)</td>
+                                <td>@item.TaxAmount.ToString("N2") € (@item.TaxRate.ToString("N2") %)</td>
+                                <td class="text-end">
+                                    <strong>@item.LineTotal.ToString("N2") €</strong>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="quote-summary">
+                <div>
+                    <span>Sous-total HT</span>
+                    <strong>@Model.SubTotal.ToString("N2") €</strong>
+                </div>
+
+                <div>
+                    <span>Remise</span>
+                    <strong>@Model.DiscountAmount.ToString("N2") €</strong>
+                </div>
+
+                <div>
+                    <span>TVA</span>
+                    <strong>@Model.TaxAmount.ToString("N2") €</strong>
+                </div>
+
+                <div class="grand-total">
+                    <span>Total TTC</span>
+                    <strong>@Model.TotalAmount.ToString("N2") €</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+    {
+        <div class="erp-card mb-4">
+            <div class="erp-card-header">
+                <h5>Notes client</h5>
+            </div>
+
+            <div class="erp-card-body">
+                <p>@Model.Notes</p>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.InternalNotes))
+    {
+        <div class="erp-card mb-4">
+            <div class="erp-card-header">
+                <h5>Notes internes</h5>
+            </div>
+
+            <div class="erp-card-body">
+                <p>@Model.InternalNotes</p>
+            </div>
+        </div>
+    }
+
+</div>

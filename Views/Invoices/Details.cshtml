@@ -1,0 +1,48 @@
+@model EnterpriseERP.Models.Invoice
+
+@{
+    ViewData["Title"] = "Détails facture";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Facture #@Model.Id</h1>
+        <p>Détails de la facture</p>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+        <a href="/Invoices/Print/@Model.Id" class="btn-primary">
+            Imprimer
+        </a>
+
+    <a href="/Invoices/Index" class="btn-secondary">
+            ← Retour
+        </a>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Informations</h2>
+
+    <table>
+        <tr>
+            <th>Client</th>
+            <td>@Model.Client?.FullName</td>
+        </tr>
+
+        <tr>
+            <th>Date</th>
+            <td>@Model.InvoiceDate.ToString("dd/MM/yyyy")</td>
+        </tr>
+
+        <tr>
+            <th>Total</th>
+            <td>@Model.TotalAmount €</td>
+        </tr>
+
+        <tr>
+            <th>Statut</th>
+            <td>@Model.Status</td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,101 @@
+@model EnterpriseERP.Models.AuditLog
+
+@{
+    ViewData["Title"] = "Détails audit";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Détails audit</h1>
+        <p>Analyse complète d'une action enregistrée</p>
+    </div>
+
+    <a href="/Audit/Index" class="btn-secondary">
+        ← Retour audit
+    </a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Informations principales</h2>
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <td>@Model.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+            </tr>
+            <tr>
+                <th>Utilisateur</th>
+                <td>@Model.UserName</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>@Model.UserEmail</td>
+            </tr>
+            <tr>
+                <th>Rôle</th>
+                <td>@Model.UserRole</td>
+            </tr>
+            <tr>
+                <th>Module</th>
+                <td>@Model.Module</td>
+            </tr>
+            <tr>
+                <th>Action</th>
+                <td>@Model.Action</td>
+            </tr>
+            <tr>
+                <th>Gravité</th>
+                <td>@Model.Severity</td>
+            </tr>
+            <tr>
+                <th>Succès</th>
+                <td>@(Model.Success ? "Oui" : "Non")</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="panel">
+        <h2>Informations techniques</h2>
+
+        <table>
+            <tr>
+                <th>Adresse IP</th>
+                <td>@Model.IpAddress</td>
+            </tr>
+            <tr>
+                <th>Navigateur</th>
+                <td>@Model.Browser</td>
+            </tr>
+            <tr>
+                <th>Machine</th>
+                <td>@Model.MachineName</td>
+            </tr>
+            <tr>
+                <th>Session</th>
+                <td>@Model.SessionId</td>
+            </tr>
+            <tr>
+                <th>Entité concernée</th>
+                <td>@Model.EntityId</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Description</h2>
+    <p>@Model.Description</p>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Ancienne valeur</h2>
+        <pre>@Model.OldValue</pre>
+    </div>
+
+    <div class="panel">
+        <h2>Nouvelle valeur</h2>
+        <pre>@Model.NewValue</pre>
+    </div>
+</div>

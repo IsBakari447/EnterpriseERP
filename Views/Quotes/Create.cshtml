@@ -1,0 +1,290 @@
+@model EnterpriseERP.Models.Quote
+@using EnterpriseERP.Models
+
+@{
+    ViewData["Title"] = "Nouveau devis";
+    var products = ViewBag.Products as List<Product> ?? new List<Product>();
+}
+
+<div class="quote-page">
+
+    <div class="quote-header">
+        <div>
+            <h1>Nouveau devis</h1>
+            <p>Créer un devis professionnel avec plusieurs produits.</p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Retour
+        </a>
+    </div>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-error">
+                @TempData["Error"]
+            </div>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="alert-error"></div>
+
+        <div class="erp-card mb-4">
+            <div class="erp-card-header">
+                <h5>Informations du devis</h5>
+                <span>@Model.QuoteNumber</span>
+            </div>
+
+            <div class="erp-card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="QuoteNumber" class="form-label">Numéro</label>
+                        <input asp-for="QuoteNumber" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="QuoteDate" class="form-label">Date</label>
+                        <input asp-for="QuoteDate" type="date" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="ValidUntil" class="form-label">Valable jusqu’au</label>
+                        <input asp-for="ValidUntil" type="date" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Status" class="form-label">Statut</label>
+                        <select asp-for="Status" class="form-select">
+                            <option>Brouillon</option>
+                            <option>Envoyé</option>
+                            <option>Accepté</option>
+                            <option>Refusé</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ClientId" class="form-label">Client</label>
+                        <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-select">
+                            <option value="">-- Sélectionner un client --</option>
+                        </select>
+                        <span asp-validation-for="ClientId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PaymentTerms" class="form-label">Conditions de paiement</label>
+                        <input asp-for="PaymentTerms" class="form-control" placeholder="Ex: Paiement sous 30 jours" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="erp-card mb-4">
+            <div class="erp-card-header">
+                <h5>Produits du devis</h5>
+
+                <button type="button" class="btn btn-primary btn-sm" onclick="addLine()">
+                    + Ajouter une ligne
+                </button>
+            </div>
+
+            <div class="erp-card-body">
+                <div class="table-responsive">
+                    <table class="table quote-table">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Qté</th>
+                                <th>Prix unitaire</th>
+                                <th>Remise %</th>
+                                <th>TVA %</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="quoteLinesBody">
+                            <tr>
+                                <td>
+                                    <select name="productIds" class="form-select">
+                                        <option value="">-- Produit --</option>
+                                        @foreach (var product in products)
+                                        {
+                                            <option value="@product.Id">@product.Name</option>
+                                        }
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <input name="quantities" type="number" class="form-control qty" value="1" min="1" oninput="calculateTotals()" />
+                                </td>
+
+                                <td>
+                                    <input name="unitPrices" type="number" class="form-control price" value="0" step="0.01" oninput="calculateTotals()" />
+                                </td>
+
+                                <td>
+                                    <input name="discountRates" type="number" class="form-control discount" value="0" step="0.01" oninput="calculateTotals()" />
+                                </td>
+
+                                <td>
+                                    <input name="taxRates" type="number" class="form-control tax" value="0" step="0.01" oninput="calculateTotals()" />
+                                </td>
+
+                                <td>
+                                    <strong class="line-total">0,00 €</strong>
+                                </td>
+
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeLine(this)">
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="quote-summary">
+                    <div>
+                        <span>Sous-total HT</span>
+                        <strong id="subtotal">0,00 €</strong>
+                    </div>
+
+                    <div>
+                        <span>Remise</span>
+                        <strong id="discountTotal">0,00 €</strong>
+                    </div>
+
+                    <div>
+                        <span>TVA</span>
+                        <strong id="taxTotal">0,00 €</strong>
+                    </div>
+
+                    <div class="grand-total">
+                        <span>Total TTC</span>
+                        <strong id="grandTotal">0,00 €</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="erp-card mb-4">
+            <div class="erp-card-header">
+                <h5>Notes</h5>
+            </div>
+
+            <div class="erp-card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Notes" class="form-label">Notes visibles client</label>
+                        <textarea asp-for="Notes" rows="4" class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="InternalNotes" class="form-label">Notes internes</label>
+                        <textarea asp-for="InternalNotes" rows="4" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-action-bar">
+            <div class="quote-action-left">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-save"></i>
+                    Enregistrer
+                </button>
+
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i>
+                    Annuler
+                </a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function formatCurrency(value) {
+            return value.toLocaleString('fr-FR', {
+                style: 'currency',
+                currency: 'EUR'
+            });
+        }
+
+        function calculateTotals() {
+            let subtotal = 0;
+            let discountTotal = 0;
+            let taxTotal = 0;
+            let grandTotal = 0;
+
+            document.querySelectorAll("#quoteLinesBody tr").forEach(row => {
+                const qty = parseFloat(row.querySelector(".qty")?.value || 0);
+                const price = parseFloat(row.querySelector(".price")?.value || 0);
+                const discountRate = parseFloat(row.querySelector(".discount")?.value || 0);
+                const taxRate = parseFloat(row.querySelector(".tax")?.value || 0);
+
+                const lineBase = qty * price;
+                const lineDiscount = lineBase * discountRate / 100;
+                const taxable = lineBase - lineDiscount;
+                const lineTax = taxable * taxRate / 100;
+                const lineTotal = taxable + lineTax;
+
+                subtotal += lineBase;
+                discountTotal += lineDiscount;
+                taxTotal += lineTax;
+                grandTotal += lineTotal;
+
+                row.querySelector(".line-total").textContent = formatCurrency(lineTotal);
+            });
+
+            document.getElementById("subtotal").textContent = formatCurrency(subtotal);
+            document.getElementById("discountTotal").textContent = formatCurrency(discountTotal);
+            document.getElementById("taxTotal").textContent = formatCurrency(taxTotal);
+            document.getElementById("grandTotal").textContent = formatCurrency(grandTotal);
+        }
+
+        function addLine() {
+            const tbody = document.getElementById("quoteLinesBody");
+            const firstRow = tbody.querySelector("tr");
+            const newRow = firstRow.cloneNode(true);
+
+            newRow.querySelectorAll("input").forEach(input => {
+                if (input.classList.contains("qty")) input.value = 1;
+                else input.value = 0;
+            });
+
+            newRow.querySelector("select").value = "";
+            newRow.querySelector(".line-total").textContent = "0,00 €";
+
+            tbody.appendChild(newRow);
+            calculateTotals();
+        }
+
+        function removeLine(button) {
+            const tbody = document.getElementById("quoteLinesBody");
+
+            if (tbody.querySelectorAll("tr").length > 1) {
+                button.closest("tr").remove();
+                calculateTotals();
+            }
+        }
+
+        calculateTotals();
+    </script>
+}

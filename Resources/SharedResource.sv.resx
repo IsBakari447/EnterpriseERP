@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Dashboard" xml:space="preserve"><value>Översikt</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Välkommen</value></data>
+  <data name="Total revenue" xml:space="preserve"><value>Totala intäkter</value></data>
+  <data name="Total expenses" xml:space="preserve"><value>Totala utgifter</value></data>
+  <data name="Net profit" xml:space="preserve"><value>Nettovinst</value></data>
+  <data name="Stock alerts" xml:space="preserve"><value>Lagerlarm</value></data>
+  <data name="Invoices" xml:space="preserve"><value>Fakturor</value></data>
+  <data name="Payments" xml:space="preserve"><value>Betalningar</value></data>
+  <data name="Clients" xml:space="preserve"><value>Kunder</value></data>
+  <data name="Products" xml:space="preserve"><value>Produkter</value></data>
+  <data name="Login" xml:space="preserve"><value>Logga in</value></data>
+  <data name="Create account" xml:space="preserve"><value>Skapa konto</value></data>
+</root>

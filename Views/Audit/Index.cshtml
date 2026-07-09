@@ -1,0 +1,211 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model List<EnterpriseERP.Models.AuditLog>
+
+@{
+    ViewData["Title"] = T.T("Audit");
+
+    var modules = ViewBag.Modules as List<string>;
+    var severities = ViewBag.Severities as List<string>;
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("AuditCenter")</h1>
+        <p>@T.T("AuditDescription")</p>
+    </div>
+
+    <button type="button"
+            class="btn-secondary"
+            onclick="window.location.href='/Audit/Index'">
+
+        @T.T("Reset")
+
+    </button>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">📜</div>
+        <div>
+            <h3>@ViewBag.TotalLogs</h3>
+            <p>@T.T("TotalLogs")</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div>
+            <h3>@ViewBag.TodayLogs</h3>
+            <p>@T.T("TodayActions")</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⚠️</div>
+        <div>
+            <h3>@ViewBag.WarningLogs</h3>
+            <p>@T.T("Warnings")</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⛔</div>
+        <div>
+            <h3>@ViewBag.ErrorLogs</h3>
+            <p>@T.T("CriticalErrors")</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <h2>@T.T("Filters")</h2>
+
+    <form method="get"
+          action="/Audit/Index"
+          class="search-box"
+          style="max-width:100%;margin-bottom:20px;">
+
+        <input type="text"
+               name="search"
+               placeholder="@T.T("SearchAudit")"
+               value="@ViewBag.Search" />
+
+        <select name="module">
+            <option value="">@T.T("AllModules")</option>
+
+            @if(modules!=null)
+            {
+                foreach(var m in modules)
+                {
+                    <option value="@m" selected="@(ViewBag.Module==m)">
+                        @m
+                    </option>
+                }
+            }
+
+        </select>
+
+        <select name="severity">
+
+            <option value="">
+                @T.T("AllSeverities")
+            </option>
+
+            @if(severities!=null)
+            {
+                foreach(var s in severities)
+                {
+                    <option value="@s" selected="@(ViewBag.Severity==s)">
+                        @s
+                    </option>
+                }
+            }
+
+        </select>
+
+        <button class="btn-primary">
+            @T.T("Filter")
+        </button>
+
+        <a href="/Audit/Index"
+           class="btn-secondary">
+
+            @T.T("Reset")
+
+        </a>
+
+    </form>
+
+</div>
+
+<div class="panel">
+
+    <h2>@T.T("AuditLog")</h2>
+
+@if(Model!=null && Model.Any())
+{
+<table>
+
+<thead>
+
+<tr>
+
+<th>@T.T("Date")</th>
+<th>@T.T("User")</th>
+<th>@T.T("Module")</th>
+<th>@T.T("Action")</th>
+<th>@T.T("Severity")</th>
+<th>IP</th>
+<th>@T.T("Success")</th>
+<th>@T.T("Details")</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+@foreach(var log in Model)
+{
+<tr>
+
+<td>@log.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+
+<td>
+<strong>@log.UserName</strong><br/>
+<small>@log.UserEmail</small>
+</td>
+
+<td>@log.Module</td>
+
+<td>@log.Action</td>
+
+<td>
+<span class="status-badge">
+@log.Severity
+</span>
+</td>
+
+<td>@log.IpAddress</td>
+
+<td>
+@(log.Success ? T.T("Yes") : T.T("No"))
+</td>
+
+<td>
+
+<a href="/Audit/Details/@log.Id"
+class="btn-secondary">
+
+@T.T("View")
+
+</a>
+
+</td>
+
+</tr>
+}
+
+</tbody>
+
+</table>
+}
+else
+{
+
+<div class="empty-state">
+
+<div class="empty-icon">🔎</div>
+
+<h3>@T.T("NoAuditLogs")</h3>
+
+<p>@T.T("NoAuditLogsText")</p>
+
+</div>
+
+}
+
+</div>

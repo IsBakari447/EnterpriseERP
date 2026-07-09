@@ -1,0 +1,142 @@
+@model EnterpriseERP.Models.User
+
+@{
+    ViewData["Title"] = "Profil utilisateur";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Profil utilisateur</h1>
+        <p>Informations complètes du compte connecté</p>
+    </div>
+
+    <div class="header-actions">
+        @if (Context.Session.GetString("IsSuperAdmin") == "true" ||
+             Context.Session.GetString("UserRole") == "Admin")
+        {
+            <a href="/Account/Register" class="btn-primary">
+                + Créer utilisateur
+            </a>
+        }
+
+        <a href="/Dashboard/Index" class="btn-secondary">
+            ← Retour dashboard
+        </a>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="form-card">
+        <div class="user-chip" style="margin-bottom:20px;">
+            <div class="avatar">
+                @((Model.FullName ?? "U").Substring(0, 1).ToUpper())
+            </div>
+
+            <div class="user-info">
+                <strong>@Model.FullName</strong>
+                <span>@Model.Role</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nom complet</label>
+            <input value="@Model.FullName" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input value="@Model.Email" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Rôle</label>
+            <input value="@Model.Role" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Téléphone</label>
+            <input value="@Model.Phone" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Adresse</label>
+            <input value="@Model.Address" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Département</label>
+            <input value="@Model.Department" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Poste</label>
+            <input value="@Model.Position" readonly />
+        </div>
+
+        <div class="dashboard-grid" style="margin-top:20px;">
+            <a href="/Profile/Edit" class="btn-primary">
+                Modifier profil
+            </a>
+
+            <a href="/Account/Logout" class="btn-danger">
+                Se déconnecter
+            </a>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Informations système</h2>
+
+        <table>
+            <tr>
+                <th>Compte actif</th>
+                <td>@(Model.IsActive ? "Oui" : "Non")</td>
+            </tr>
+
+            <tr>
+                <th>Compte approuvé</th>
+                <td>@(Model.IsApproved ? "Oui" : "Non")</td>
+            </tr>
+
+            <tr>
+                <th>SuperAdmin</th>
+                <td>@(Model.IsSuperAdmin ? "Oui" : "Non")</td>
+            </tr>
+
+            <tr>
+                <th>Langue préférée</th>
+                <td>@Model.PreferredLanguage</td>
+            </tr>
+
+            <tr>
+                <th>Thème préféré</th>
+                <td>@Model.Theme</td>
+            </tr>
+
+            <tr>
+                <th>Créé le</th>
+                <td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+
+            <tr>
+                <th>Dernière modification</th>
+                <td>@Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+
+            <tr>
+                <th>Dernière connexion</th>
+                <td>@Model.LastConnection?.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+
+            <tr>
+                <th>Nombre de connexions</th>
+                <td>@Model.LoginCount</td>
+            </tr>
+
+            <tr>
+                <th>Dernière IP</th>
+                <td>@Model.LastIPAddress</td>
+            </tr>
+        </table>
+    </div>
+</div>

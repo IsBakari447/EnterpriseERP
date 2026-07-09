@@ -1,0 +1,96 @@
+@using EnterpriseERP.Models
+
+@{
+    ViewData["Title"] = "Gestion des rôles";
+
+    var roles = ViewBag.Roles as List<string>;
+    var permissions = ViewBag.Permissions as List<Permission>;
+    var rolePermissions = ViewBag.RolePermissions as List<RolePermission>;
+}
+
+<div class="page-header">
+
+    <div>
+        <h1>Gestion des rôles & permissions</h1>
+        <p>Administration complète des droits d'accès de l'ERP</p>
+    </div>
+
+    <a href="/Dashboard/Index" class="btn-secondary">
+        ← Retour Dashboard
+    </a>
+
+</div>
+
+@if (roles != null)
+{
+    foreach (var role in roles)
+    {
+        <div class="panel" style="margin-bottom:35px;">
+
+            <h2>@role</h2>
+
+            <form asp-action="Update" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="role"
+                       value="@role" />
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th style="width:250px;">Module</th>
+                            <th>Action</th>
+                            <th style="width:120px;">Autorisé</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    @foreach (var permission in permissions!)
+                    {
+                        bool allowed = rolePermissions!
+                            .Any(r =>
+                                r.Role == role &&
+                                r.PermissionId == permission.Id);
+
+                        <tr>
+
+                            <td>
+                                @permission.Module
+                            </td>
+
+                            <td>
+                                @permission.Action
+                            </td>
+
+                            <td>
+
+                                <input type="checkbox"
+                                       name="permissionIds"
+                                       value="@permission.Id"
+                                       @(allowed ? "checked" : "") />
+
+                            </td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+
+                </table>
+
+                <button class="btn-primary"
+                        type="submit">
+
+                    💾 Enregistrer les permissions
+
+                </button>
+
+            </form>
+
+        </div>
+    }
+}

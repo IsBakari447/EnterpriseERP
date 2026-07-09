@@ -1,0 +1,53 @@
+@model EnterpriseERP.Models.Product
+@inject EnterpriseERP.Services.TranslationService T
+
+@{
+    ViewData["Title"] = T.T("AddProduct");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("AddProduct")</h1>
+        <p>@T.T("CreateProductRecord")</p>
+    </div>
+
+    <a href="/Products/Index" class="btn-secondary">← @T.T("Back")</a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label>@T.T("ProductName")</label>
+            <input asp-for="Name" required />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Category")</label>
+            <input asp-for="Category" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("PurchasePrice")</label>
+            <input asp-for="PurchasePrice" type="number" step="0.01" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("SalePrice")</label>
+            <input asp-for="SalePrice" type="number" step="0.01" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Quantity")</label>
+            <input asp-for="Quantity" type="number" />
+        </div>
+
+        <button type="submit" class="btn-primary">@T.T("Save")</button>
+    </form>
+</div>

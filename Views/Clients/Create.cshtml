@@ -1,0 +1,53 @@
+@model EnterpriseERP.Models.Client
+@inject EnterpriseERP.Services.TranslationService T
+
+@{
+    ViewData["Title"] = T.T("AddClient");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("AddClient")</h1>
+        <p>@T.T("CreateClientRecord")</p>
+    </div>
+
+    <a href="/Clients/Index" class="btn-secondary">← @T.T("Back")</a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label>@T.T("FullName")</label>
+            <input asp-for="FullName" required />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Company")</label>
+            <input asp-for="CompanyName" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Email")</label>
+            <input asp-for="Email" type="email" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Phone")</label>
+            <input asp-for="Phone" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Address")</label>
+            <input asp-for="Address" />
+        </div>
+
+        <button type="submit" class="btn-primary">@T.T("Save")</button>
+    </form>
+</div>

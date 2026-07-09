@@ -1,0 +1,405 @@
+@model EnterpriseERP.Models.AppSetting
+
+@{
+    ViewData["Title"] = "Settings Center";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Settings Center</h1>
+        <p>Configuration complète de l'entreprise, sécurité, facturation, stock et apparence</p>
+    </div>
+
+    <a href="/Admin/Index" class="btn-secondary">
+        ← Retour Admin Center
+    </a>
+</div>
+
+@if (ViewBag.Success != null)
+{
+    <div class="alert-success">
+        @ViewBag.Success
+    </div>
+}
+
+<form method="post" action="/Settings/Index">
+    @Html.AntiForgeryToken()
+
+    <div class="dashboard-grid">
+
+        <div class="form-card">
+            <h2>🏢 Entreprise</h2>
+
+            <div class="form-group">
+                <label>Nom de l'entreprise</label>
+                <input name="CompanyName" value="@Model.CompanyName" required />
+            </div>
+
+            <div class="form-group">
+                <label>Logo URL / chemin</label>
+                <input name="CompanyLogo" value="@Model.CompanyLogo" />
+            </div>
+
+            <div class="form-group">
+                <label>Email entreprise</label>
+                <input name="CompanyEmail" type="email" value="@Model.CompanyEmail" />
+            </div>
+
+            <div class="form-group">
+                <label>Téléphone entreprise</label>
+                <input name="CompanyPhone" value="@Model.CompanyPhone" />
+            </div>
+
+            <div class="form-group">
+                <label>Adresse</label>
+                <textarea name="CompanyAddress">@Model.CompanyAddress</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Ville</label>
+                <input name="CompanyCity" value="@Model.CompanyCity" />
+            </div>
+
+            <div class="form-group">
+                <label>Pays</label>
+                <input name="CompanyCountry" value="@Model.CompanyCountry" />
+            </div>
+
+            <div class="form-group">
+                <label>Site Web</label>
+                <input name="CompanyWebsite" value="@Model.CompanyWebsite" />
+            </div>
+
+            <div class="form-group">
+                <label>Numéro TVA</label>
+                <input name="VatNumber" value="@Model.VatNumber" />
+            </div>
+
+            <div class="form-group">
+                <label>Numéro d'enregistrement</label>
+                <input name="RegistrationNumber" value="@Model.RegistrationNumber" />
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>🌍 Localisation</h2>
+
+            <div class="form-group">
+                <label>Devise par défaut</label>
+                <select name="DefaultCurrency">
+                    <option value="EUR" selected="@(Model.DefaultCurrency == "EUR")">EUR - Euro</option>
+                    <option value="SEK" selected="@(Model.DefaultCurrency == "SEK")">SEK - Couronne suédoise</option>
+                    <option value="USD" selected="@(Model.DefaultCurrency == "USD")">USD - Dollar</option>
+                    <option value="XAF" selected="@(Model.DefaultCurrency == "XAF")">XAF - Franc CFA</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Langue par défaut</label>
+                <select name="DefaultLanguage">
+                    <option value="fr" selected="@(Model.DefaultLanguage == "fr")">Français</option>
+                    <option value="en" selected="@(Model.DefaultLanguage == "en")">English</option>
+                    <option value="sv" selected="@(Model.DefaultLanguage == "sv")">Svenska</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Fuseau horaire</label>
+                <input name="TimeZone" value="@Model.TimeZone" />
+            </div>
+
+            <div class="form-group">
+                <label>Format date</label>
+                <input name="DateFormat" value="@Model.DateFormat" />
+            </div>
+
+            <div class="form-group">
+                <label>Format montant</label>
+                <input name="AmountFormat" value="@Model.AmountFormat" />
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>💰 Finance</h2>
+
+            <div class="form-group">
+                <label>TVA par défaut (%)</label>
+                <input name="DefaultVatRate" type="number" step="0.01" value="@Model.DefaultVatRate" />
+            </div>
+
+            <div class="form-group">
+                <label>Mode comptable</label>
+                <select name="AccountingMode">
+                    <option value="Simplified" selected="@(Model.AccountingMode == "Simplified")">Simplifié</option>
+                    <option value="Advanced" selected="@(Model.AccountingMode == "Advanced")">Avancé</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="VatIncludedByDefault" value="true" checked="@Model.VatIncludedByDefault" />
+                    TVA incluse par défaut
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>📄 Facturation</h2>
+
+            <div class="form-group">
+                <label>Préfixe facture</label>
+                <input name="InvoicePrefix" value="@Model.InvoicePrefix" />
+            </div>
+
+            <div class="form-group">
+                <label>Prochain numéro facture</label>
+                <input name="NextInvoiceNumber" type="number" value="@Model.NextInvoiceNumber" />
+            </div>
+
+            <div class="form-group">
+                <label>Conditions de paiement</label>
+                <textarea name="PaymentTerms">@Model.PaymentTerms</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Message de remerciement</label>
+                <textarea name="DefaultThankYouMessage">@Model.DefaultThankYouMessage</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Pied de page facture</label>
+                <textarea name="InvoiceFooter">@Model.InvoiceFooter</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="ShowLogoOnInvoice" value="true" checked="@Model.ShowLogoOnInvoice" />
+                    Afficher le logo sur facture
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="ShowQrCodeOnInvoice" value="true" checked="@Model.ShowQrCodeOnInvoice" />
+                    Afficher QR Code sur facture
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>📦 Stock</h2>
+
+            <div class="form-group">
+                <label>Seuil stock faible</label>
+                <input name="LowStockThreshold" type="number" min="1" value="@Model.LowStockThreshold" />
+            </div>
+
+            <div class="form-group">
+                <label>Méthode valorisation stock</label>
+                <select name="StockValuationMethod">
+                    <option value="FIFO" selected="@(Model.StockValuationMethod == "FIFO")">FIFO</option>
+                    <option value="LIFO" selected="@(Model.StockValuationMethod == "LIFO")">LIFO</option>
+                    <option value="PMP" selected="@(Model.StockValuationMethod == "PMP")">PMP</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="AllowNegativeStock" value="true" checked="@Model.AllowNegativeStock" />
+                    Autoriser stock négatif
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>🔐 Sécurité utilisateurs</h2>
+
+            <div class="form-group">
+                <label>Durée session en minutes</label>
+                <input name="SessionTimeoutMinutes" type="number" value="@Model.SessionTimeoutMinutes" />
+            </div>
+
+            <div class="form-group">
+                <label>Expiration mot de passe en jours</label>
+                <input name="PasswordExpirationDays" type="number" value="@Model.PasswordExpirationDays" />
+            </div>
+
+            <div class="form-group">
+                <label>Tentatives de connexion max</label>
+                <input name="MaxLoginAttempts" type="number" value="@Model.MaxLoginAttempts" />
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="ForcePasswordChange" value="true" checked="@Model.ForcePasswordChange" />
+                    Changement obligatoire du mot de passe
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="EnableTwoFactorAuth" value="true" checked="@Model.EnableTwoFactorAuth" />
+                    Activer 2FA
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="AutoLockAccounts" value="true" checked="@Model.AutoLockAccounts" />
+                    Bloquer automatiquement les comptes
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>🔔 Notifications</h2>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="EnableEmailNotifications" value="true" checked="@Model.EnableEmailNotifications" />
+                    Notifications Email
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="EnableSmsNotifications" value="true" checked="@Model.EnableSmsNotifications" />
+                    Notifications SMS
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="EnableInternalNotifications" value="true" checked="@Model.EnableInternalNotifications" />
+                    Notifications internes
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="NotifyLowStock" value="true" checked="@Model.NotifyLowStock" />
+                    Alerte stock faible
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="NotifyUnpaidInvoices" value="true" checked="@Model.NotifyUnpaidInvoices" />
+                    Alerte factures impayées
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="NotifyPendingOrders" value="true" checked="@Model.NotifyPendingOrders" />
+                    Alerte commandes en attente
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="NotifySecurityEvents" value="true" checked="@Model.NotifySecurityEvents" />
+                    Alerte sécurité
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>💾 Sauvegardes</h2>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="EnableAutoBackup" value="true" checked="@Model.EnableAutoBackup" />
+                    Sauvegarde automatique
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Fréquence sauvegarde</label>
+                <select name="BackupFrequency">
+                    <option value="Daily" selected="@(Model.BackupFrequency == "Daily")">Quotidienne</option>
+                    <option value="Weekly" selected="@(Model.BackupFrequency == "Weekly")">Hebdomadaire</option>
+                    <option value="Monthly" selected="@(Model.BackupFrequency == "Monthly")">Mensuelle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Conservation en jours</label>
+                <input name="BackupRetentionDays" type="number" value="@Model.BackupRetentionDays" />
+            </div>
+
+            <div class="form-group">
+                <label>Dossier sauvegarde</label>
+                <input name="BackupPath" value="@Model.BackupPath" />
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2>🎨 Apparence</h2>
+
+            <div class="form-group">
+                <label>Thème</label>
+                <select name="Theme">
+                    <option value="Dark" selected="@(Model.Theme == "Dark")">Sombre</option>
+                    <option value="Light" selected="@(Model.Theme == "Light")">Clair</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Couleur principale</label>
+                <input name="PrimaryColor" type="color" value="@Model.PrimaryColor" />
+            </div>
+
+            <div class="form-group">
+                <label>Taille police</label>
+                <select name="FontSize">
+                    <option value="Small" selected="@(Model.FontSize == "Small")">Petite</option>
+                    <option value="Medium" selected="@(Model.FontSize == "Medium")">Moyenne</option>
+                    <option value="Large" selected="@(Model.FontSize == "Large")">Grande</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Disposition Dashboard</label>
+                <select name="DashboardLayout">
+                    <option value="Default" selected="@(Model.DashboardLayout == "Default")">Défaut</option>
+                    <option value="Compact" selected="@(Model.DashboardLayout == "Compact")">Compact</option>
+                    <option value="Executive" selected="@(Model.DashboardLayout == "Executive")">Executive</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel" style="margin-top:20px;">
+        <button type="submit" class="btn-primary">
+            Enregistrer tous les paramètres
+        </button>
+    </div>
+</form>
+
+<div class="panel" style="margin-top:20px;">
+    <h2>Informations système</h2>
+
+    <table>
+        <tr>
+            <th>Application</th>
+            <td>EnterpriseERP</td>
+        </tr>
+
+        <tr>
+            <th>Framework</th>
+            <td>ASP.NET Core MVC</td>
+        </tr>
+
+        <tr>
+            <th>Base de données</th>
+            <td>SQLite + Entity Framework Core</td>
+        </tr>
+
+       <tr>
+            <th>Dernière modification</th>
+            <td>@(Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "Jamais")</td>
+        </tr>
+    </table>
+</div>

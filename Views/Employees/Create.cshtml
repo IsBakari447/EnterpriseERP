@@ -1,0 +1,53 @@
+@model EnterpriseERP.Models.Employee
+@inject EnterpriseERP.Services.TranslationService T
+
+@{
+    ViewData["Title"] = T.T("AddEmployee");
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("AddEmployee")</h1>
+        <p>@T.T("CreateEmployeeRecord")</p>
+    </div>
+
+    <a href="/Employees/Index" class="btn-secondary">← @T.T("BackToList")</a>
+</div>
+
+<div class="form-card">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form method="post" action="/Employees/Create">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label>@T.T("FullName")</label>
+            <input name="FullName" value="@Model?.FullName" required />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Position")</label>
+            <input name="Position" value="@Model?.Position" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Email")</label>
+            <input name="Email" type="email" value="@Model?.Email" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Phone")</label>
+            <input name="Phone" value="@Model?.Phone" />
+        </div>
+
+        <div class="form-group">
+            <label>@T.T("Salary")</label>
+            <input name="Salary" type="number" step="0.01" value="@Model?.Salary" />
+        </div>
+
+        <button type="submit" class="btn-primary">@T.T("Save")</button>
+    </form>
+</div>

@@ -1,0 +1,50 @@
+@model List<EnterpriseERP.Models.StockMovement>
+
+@{
+    ViewData["Title"] = "Stock";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Stock</h1>
+        <p>Entrées et sorties de stock</p>
+    </div>
+
+    <a href="/Stock/Movement" class="btn-primary">
+        + Mouvement stock
+    </a>
+</div>
+
+<div class="panel">
+    <h2>Historique des mouvements</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Type</th>
+                    <th>Quantité</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var movement in Model)
+                {
+                    <tr>
+                        <td>@movement.Product?.Name</td>
+                        <td>@movement.Type</td>
+                        <td>@movement.Quantity</td>
+                        <td>@movement.Date.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="empty">Aucun mouvement de stock enregistré.</p>
+    }
+</div>

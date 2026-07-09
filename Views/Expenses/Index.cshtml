@@ -1,0 +1,156 @@
+@inject EnterpriseERP.Services.TranslationService T
+@model IEnumerable<EnterpriseERP.Models.Expense>
+
+@{
+    ViewData["Title"] = T.T("Expenses");
+    var expenses = Model?.ToList() ?? new List<EnterpriseERP.Models.Expense>();
+}
+
+<div class="page-header">
+    <div>
+        <h1>@T.T("Expenses")</h1>
+        <p>@T.T("ExpensesDescription")</p>
+    </div>
+
+    <a asp-controller="Expenses"
+       asp-action="Create"
+       class="btn-primary">
+        @T.T("AddExpense")
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">💸</div>
+        <div>
+            <h3>@ViewBag.TotalExpenses.ToString("N2") €</h3>
+            <p>@T.T("TotalExpenses")</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📑</div>
+        <div>
+            <h3>@expenses.Count</h3>
+            <p>@T.T("RegisteredExpenses")</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-header">
+        <h2>@T.T("ExpensesList")</h2>
+
+        <span class="badge">
+            @expenses.Count @T.T("RegisteredExpenses")
+        </span>
+    </div>
+
+    @if (expenses.Any())
+    {
+        <table>
+
+            <thead>
+                <tr>
+                    <th>@T.T("Date")</th>
+                    <th>@T.T("Title")</th>
+                    <th>@T.T("Category")</th>
+                    <th>@T.T("Amount")</th>
+                    <th>@T.T("PaymentMethod")</th>
+                    <th>@T.T("CreatedBy")</th>
+                    <th>@T.T("Actions")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach (var expense in expenses)
+            {
+                <tr>
+
+                    <td>@expense.ExpenseDate.ToString("dd/MM/yyyy")</td>
+
+                    <td>
+                        <strong>@expense.Title</strong>
+                    </td>
+
+                    <td>@expense.Category</td>
+
+                    <td>@expense.Amount.ToString("N2") €</td>
+
+                    <td>
+                        <span class="status-badge">
+                            @expense.PaymentMethod
+                        </span>
+                    </td>
+
+                    <td>@expense.CreatedBy</td>
+
+                    <td>
+
+                        <a asp-action="Edit"
+                           asp-route-id="@expense.Id"
+                           class="btn btn-sm btn-warning">
+                            @T.T("Edit")
+                        </a>
+
+                        <form asp-action="Delete"
+                              asp-route-id="@expense.Id"
+                              method="post"
+                              style="display:inline;">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('@T.T("ConfirmDeleteExpense")');">
+
+                                @T.T("Delete")
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+            }
+
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                💸
+            </div>
+
+            <h3>@T.T("NoExpenses")</h3>
+
+            <p>@T.T("NoExpensesText")</p>
+
+            <a asp-controller="Expenses"
+               asp-action="Create"
+               class="btn-primary">
+
+                @T.T("AddFirstExpense")
+
+            </a>
+
+        </div>
+    }
+
+</div>
