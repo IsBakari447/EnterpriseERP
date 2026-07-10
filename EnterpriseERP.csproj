@@ -24,10 +24,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EnterpriseERP.Shared\EnterpriseERP.Shared.csproj" />
-    <ProjectReference Include="..\EnterpriseERP.Core\EnterpriseERP.Core.csproj" />
-    <ProjectReference Include="..\EnterpriseERP.Infrastructure\EnterpriseERP.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

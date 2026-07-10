@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using EnterpriseERP.ApiModels;
 using EnterpriseERP.Data;
-using EnterpriseERP.Shared.DTOs.Supplier;
+using EnterpriseERP.DTOs.Supplier;
 using EnterpriseERP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
