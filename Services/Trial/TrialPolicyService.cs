@@ -7,11 +7,13 @@ public sealed class TrialPolicyService
 {
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TrialPolicyService(ApplicationDbContext context, IConfiguration configuration)
+    public TrialPolicyService(ApplicationDbContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<TrialStatus> GetStatusAsync(CancellationToken cancellationToken = default)
@@ -24,11 +26,11 @@ public sealed class TrialPolicyService
 
         var startedAt = DateTime.SpecifyKind(firstUserCreatedAt ?? now, DateTimeKind.Local).ToUniversalTime();
         var endsAt = startedAt.AddDays(TrialLimits.DurationDays);
-        var isPaid = _configuration.GetValue("Trial:IsPaid", false);
+        var isPaid = _configuration.GetValue("Trial:IsPaid", false) || IsPrivilegedSession();
         var isExpired = !isPaid && now >= endsAt;
         var daysRemaining = isPaid ? 0 : Math.Max(0, (int)Math.Ceiling((endsAt - now).TotalDays));
 
-        var usersUsed = await _context.Users.CountAsync(cancellationToken);
+        var usersUsed = await _context.Users.CountAsync(u => !u.IsSuperAdmin && u.Role != "SuperAdmin", cancellationToken);
         var invoicesUsed = await _context.Invoices.CountAsync(cancellationToken);
         var productsUsed = await _context.Products.CountAsync(cancellationToken);
 
@@ -45,7 +47,7 @@ public sealed class TrialPolicyService
             InvoicesUsed = invoicesUsed,
             ProductsUsed = productsUsed,
             StatusLabel = isPaid
-                ? "Abonnement actif"
+                ? "Acces complet actif"
                 : isExpired
                     ? "Essai termine - lecture seule"
                     : $"Essai actif - {daysRemaining} jour(s) restant(s)",
@@ -63,6 +65,18 @@ public sealed class TrialPolicyService
             return (false, $"Limite de l'essai atteinte : {TrialLimits.MaxUsers} utilisateurs maximum.");
 
         return (true, "");
+    }
+
+    private bool IsPrivilegedSession()
+    {
+        var session = _httpContextAccessor.HttpContext?.Session;
+        if (session == null)
+            return false;
+
+        var role = session.GetString("UserRole") ?? "";
+        var isSuperAdmin = session.GetString("IsSuperAdmin") == "true";
+
+        return isSuperAdmin || role == "SuperAdmin";
     }
 
     public async Task<(bool Allowed, string Message)> CanCreateInvoiceAsync(CancellationToken cancellationToken = default)

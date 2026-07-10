@@ -4,8 +4,11 @@
     ViewData["Title"] = T.T("RegisterPageTitle");
 
     bool hasUsers = ViewBag.HasUsers == true;
-    string currentRole = ViewBag.CurrentRole as string ?? "";
     string isSuperAdmin = ViewBag.IsSuperAdmin as string ?? "false";
+    int userCount = ViewBag.UserCount is int count ? count : 0;
+    int maxTrialUsers = ViewBag.MaxTrialUsers is int max ? max : 3;
+    bool canCreateUsers = ViewBag.CanCreateUsers == true;
+    int trialPercent = maxTrialUsers <= 0 ? 0 : Math.Min(100, userCount * 100 / maxTrialUsers);
 }
 
 <!DOCTYPE html>
@@ -130,6 +133,39 @@
             font-size: 14px;
         }
 
+        .trial-meter {
+            margin: 0 0 20px;
+            padding: 14px;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            background: rgba(15,23,42,.78);
+        }
+
+        .trial-meter-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .trial-bar {
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #111827;
+            border: 1px solid #334155;
+        }
+
+        .trial-bar div {
+            height: 100%;
+            width: @trialPercent%;
+            background: linear-gradient(90deg, #7c3aed, #22c55e);
+        }
+
         .error {
             background: rgba(127,29,29,.8);
             color: #fecaca;
@@ -243,7 +279,17 @@
         else
         {
             <div class="muted">@T.T("UserCreation")</div>
-            <div class="info">@T.T("AdminOnlyInfo")</div>
+            <div class="info">
+                Pendant l'essai, l'inscription reste ouverte jusqu'a @maxTrialUsers comptes.
+                Roles disponibles : Admin, Manager et Employee.
+            </div>
+            <div class="trial-meter">
+                <div class="trial-meter-top">
+                    <span>Comptes d'essai</span>
+                    <span>@userCount / @maxTrialUsers</span>
+                </div>
+                <div class="trial-bar"><div></div></div>
+            </div>
         }
 
         @if (ViewBag.Error != null)
@@ -273,19 +319,16 @@
             {
                 <label>@T.T("Role")</label>
                 <select name="Role" required>
-                    @if (isSuperAdmin == "true")
+                    @if (isSuperAdmin == "true" || canCreateUsers)
                     {
                         <option value="Admin">@T.T("Admin")</option>
                         <option value="Manager">@T.T("Manager")</option>
                         <option value="Employee" selected>@T.T("Employee")</option>
                     }
-                    else if (currentRole == "Admin")
-                    {
-                        <option value="Manager">@T.T("Manager")</option>
-                        <option value="Employee" selected>@T.T("Employee")</option>
-                    }
                     else
                     {
+                        <option value="Admin">@T.T("Admin")</option>
+                        <option value="Manager">@T.T("Manager")</option>
                         <option value="Employee" selected>@T.T("Employee")</option>
                     }
                 </select>

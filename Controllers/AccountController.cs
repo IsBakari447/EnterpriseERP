@@ -4,7 +4,6 @@ using EnterpriseERP.Models;
 using EnterpriseERP.Services;
 using EnterpriseERP.Services.Trial;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace EnterpriseERP.Controllers
 {
@@ -40,7 +39,7 @@ namespace EnterpriseERP.Controllers
                 return View();
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            var user = _context.Users.FirstOrDefault(u => u.Email == email.Trim());
 
             if (user == null || user.PasswordHash != PasswordHelper.HashPassword(password))
             {
@@ -50,13 +49,13 @@ namespace EnterpriseERP.Controllers
 
             if (!user.IsActive)
             {
-                ViewBag.Error = "Ce compte est désactivé.";
+                ViewBag.Error = "Ce compte est desactive.";
                 return View();
             }
 
             if (!user.IsApproved)
             {
-                ViewBag.Error = "Ce compte n'a pas encore été approuvé.";
+                ViewBag.Error = "Ce compte n'a pas encore ete approuve.";
                 return View();
             }
 
@@ -67,19 +66,14 @@ namespace EnterpriseERP.Controllers
 
             _context.SaveChanges();
 
-            HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("UserName", user.FullName);
-            HttpContext.Session.SetString("UserRole", user.Role);
-            HttpContext.Session.SetString("UserId", user.Id.ToString());
-            HttpContext.Session.SetString("IsSuperAdmin", user.IsSuperAdmin ? "true" : "false");
+            SetSession(user);
 
-            // 🔥 Audit : connexion
             AuditService.Log(
                 _context,
                 HttpContext,
                 "Connexion",
                 "Login",
-                $"{user.FullName} s'est connecté"
+                $"{user.FullName} s'est connecte"
             );
 
             return RedirectToAction("Index", "Dashboard");
@@ -88,13 +82,12 @@ namespace EnterpriseERP.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            bool hasUsers = _context.Users.Any();
+            var hasUsers = _context.Users.Any();
 
-            if (hasUsers && !CanCreateUsers())
+            if (hasUsers && !CanRegisterDuringTrial())
                 return RedirectToAction("Index", "Dashboard");
 
             LoadRegisterViewBags(hasUsers);
-
             return View();
         }
 
@@ -103,15 +96,15 @@ namespace EnterpriseERP.Controllers
         [ActionName("Register")]
         public IActionResult RegisterPost()
         {
-            bool hasUsers = _context.Users.Any();
+            var hasUsers = _context.Users.Any();
 
-            if (hasUsers && !CanCreateUsers())
+            if (hasUsers && !CanRegisterDuringTrial())
                 return RedirectToAction("Index", "Dashboard");
 
-            string fullName = Request.Form["FullName"].ToString();
-            string email = Request.Form["Email"].ToString();
-            string password = Request.Form["Password"].ToString();
-            string requestedRole = Request.Form["Role"].ToString();
+            var fullName = Request.Form["FullName"].ToString().Trim();
+            var email = Request.Form["Email"].ToString().Trim();
+            var password = Request.Form["Password"].ToString();
+            var requestedRole = Request.Form["Role"].ToString();
 
             if (string.IsNullOrWhiteSpace(fullName) ||
                 string.IsNullOrWhiteSpace(email) ||
@@ -124,13 +117,13 @@ namespace EnterpriseERP.Controllers
 
             if (_context.Users.Any(u => u.Email == email))
             {
-                ViewBag.Error = "Cette adresse e-mail est déjà utilisée.";
+                ViewBag.Error = "Cette adresse e-mail est deja utilisee.";
                 LoadRegisterViewBags(hasUsers);
                 return View("Register");
             }
 
             var userLimit = _trialPolicy.CanCreateUserAsync(HttpContext.RequestAborted).GetAwaiter().GetResult();
-            if (!userLimit.Allowed)
+            if (!userLimit.Allowed && !CanCreateUsers())
             {
                 ViewBag.Error = userLimit.Message;
                 LoadRegisterViewBags(hasUsers);
@@ -155,53 +148,26 @@ namespace EnterpriseERP.Controllers
             }
             else
             {
-                bool isSuperAdmin = HttpContext.Session.GetString("IsSuperAdmin") == "true";
-                string currentRole = HttpContext.Session.GetString("UserRole") ?? "";
-
-                if (requestedRole == "SuperAdmin")
-                    requestedRole = "Admin";
-
-                if (requestedRole == "Admin" && !isSuperAdmin)
-                {
-                    ViewBag.Error = "Seul le SuperAdmin peut créer un Admin.";
-                    LoadRegisterViewBags(hasUsers);
-                    return View("Register");
-                }
-
-                if (currentRole == "Admin" && requestedRole == "Admin")
-                {
-                    ViewBag.Error = "Un Admin ne peut pas créer un autre Admin.";
-                    LoadRegisterViewBags(hasUsers);
-                    return View("Register");
-                }
-
-                user.Role = string.IsNullOrWhiteSpace(requestedRole) ? "Employee" : requestedRole;
+                user.Role = NormalizeTrialRole(requestedRole);
                 user.IsSuperAdmin = false;
 
-                if (int.TryParse(HttpContext.Session.GetString("UserId"), out int creatorId))
+                if (int.TryParse(HttpContext.Session.GetString("UserId"), out var creatorId))
                     user.CreatedById = creatorId;
             }
 
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            // 🔥 Audit : création de compte
             AuditService.Log(
                 _context,
                 HttpContext,
                 "Utilisateurs",
-                "Création",
-                $"Création du compte : {user.FullName}"
+                "Creation",
+                $"Creation du compte : {user.FullName}"
             );
 
             if (!hasUsers)
-            {
-                HttpContext.Session.SetString("UserEmail", user.Email);
-                HttpContext.Session.SetString("UserName", user.FullName);
-                HttpContext.Session.SetString("UserRole", user.Role);
-                HttpContext.Session.SetString("UserId", user.Id.ToString());
-                HttpContext.Session.SetString("IsSuperAdmin", "true");
-            }
+                SetSession(user);
 
             return RedirectToAction("Index", "Dashboard");
         }
@@ -215,25 +181,53 @@ namespace EnterpriseERP.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            // 🔥 Audit : déconnexion
             AuditService.Log(
                 _context,
                 HttpContext,
                 "Connexion",
                 "Logout",
-                $"{HttpContext.Session.GetString("UserName")} s'est déconnecté"
+                $"{HttpContext.Session.GetString("UserName")} s'est deconnecte"
             );
 
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Login));
         }
 
+        private void SetSession(User user)
+        {
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserName", user.FullName);
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
+            HttpContext.Session.SetString("IsSuperAdmin", user.IsSuperAdmin ? "true" : "false");
+        }
+
         private bool CanCreateUsers()
         {
-            string role = HttpContext.Session.GetString("UserRole") ?? "";
-            bool isSuperAdmin = HttpContext.Session.GetString("IsSuperAdmin") == "true";
+            var role = HttpContext.Session.GetString("UserRole") ?? "";
+            var isSuperAdmin = HttpContext.Session.GetString("IsSuperAdmin") == "true";
 
-            return isSuperAdmin || role == "Admin";
+            return isSuperAdmin || role == "SuperAdmin" || role == "Admin";
+        }
+
+        private bool CanRegisterDuringTrial()
+        {
+            if (CanCreateUsers())
+                return true;
+
+            var status = _trialPolicy.GetStatusAsync(HttpContext.RequestAborted).GetAwaiter().GetResult();
+            return !status.IsPaid && !status.IsReadOnly && status.UsersUsed < TrialLimits.MaxUsers;
+        }
+
+        private static string NormalizeTrialRole(string role)
+        {
+            return role switch
+            {
+                "Admin" => "Admin",
+                "Manager" => "Manager",
+                "Employee" => "Employee",
+                _ => "Employee"
+            };
         }
 
         private void LoadRegisterViewBags(bool hasUsers)
@@ -241,6 +235,9 @@ namespace EnterpriseERP.Controllers
             ViewBag.HasUsers = hasUsers;
             ViewBag.CurrentRole = HttpContext.Session.GetString("UserRole");
             ViewBag.IsSuperAdmin = HttpContext.Session.GetString("IsSuperAdmin");
+            ViewBag.UserCount = _context.Users.Count(u => !u.IsSuperAdmin && u.Role != "SuperAdmin");
+            ViewBag.MaxTrialUsers = TrialLimits.MaxUsers;
+            ViewBag.CanCreateUsers = CanCreateUsers();
         }
     }
 }

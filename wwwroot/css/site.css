@@ -2350,6 +2350,93 @@ a.icon-btn {
     background: rgba(15, 23, 42, .75);
 }
 
+.dashboard-professional .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    border: 1px solid rgba(167, 139, 250, .35);
+    border-radius: 999px;
+    color: #c4b5fd;
+    background: rgba(124, 58, 237, .14);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.dashboard-professional .dash-symbol {
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 10px;
+    color: #e0e7ff;
+    background: rgba(139, 92, 246, .18);
+    border: 1px solid rgba(139, 92, 246, .34);
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.dashboard-professional .ai-insight-card,
+.dashboard-professional .priority-card,
+.dashboard-professional .forecast-card,
+.dashboard-professional .sales-performance-card,
+.dashboard-professional .stat-card {
+    border-radius: 16px;
+}
+
+.dashboard-professional .panel,
+.dashboard-professional .priority-actions,
+.dashboard-professional .forecast-panel {
+    border-radius: 18px;
+}
+
+.dashboard-professional .panel {
+    overflow: hidden;
+}
+
+.dashboard-professional table {
+    width: 100%;
+}
+
+.dashboard-professional .empty {
+    margin: 0;
+    padding: 18px;
+    border: 1px dashed #334155;
+    border-radius: 14px;
+    color: #94a3b8;
+    background: rgba(15, 23, 42, .52);
+}
+
+@media(max-width: 760px) {
+    .dashboard-professional .page-header {
+        padding: 20px;
+    }
+
+    .dashboard-professional .page-header h1 {
+        font-size: 26px;
+    }
+
+    .dashboard-professional .header-actions,
+    .dashboard-professional .ceo-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .dashboard-professional .chart-panel {
+        min-height: 330px;
+    }
+
+    .dashboard-professional .chart-frame {
+        min-height: 240px;
+        height: 240px;
+    }
+}
+
 /* =====================================================
    DASHBOARD PROFESSIONAL FIX
 ===================================================== */

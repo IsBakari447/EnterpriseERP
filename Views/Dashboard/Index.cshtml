@@ -12,421 +12,231 @@
     var recentPayments = ViewBag.RecentPayments as List<Payment>;
 }
 
-<section class="dashboard-premium-v3">
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">EnterpriseERP Command Center</span>
+            <h1>@T.T("DashboardTitle")</h1>
+            <p>@T.T("Welcome") @ViewBag.UserName - @T.T("Role") : @ViewBag.UserRole<br />@T.T("LastUpdate") : @ViewBag.CurrentDate</p>
+        </div>
 
-<div class="page-header">
-    <div>
-        <h1>@T.T("DashboardTitle")</h1>
-        <p>
-            @T.T("Welcome") @ViewBag.UserName — @T.T("Role") : @ViewBag.UserRole<br />
-            🕒 @T.T("LastUpdate") : @ViewBag.CurrentDate
-        </p>
+        <div class="header-actions">
+            <a href="/Quotes/Create" class="btn-primary">@T.T("AddQuote")</a>
+            <a href="/Invoices/Create" class="btn-secondary">@T.T("AddInvoice")</a>
+            <a href="/Expenses/Create" class="btn-secondary">@T.T("AddExpense")</a>
+        </div>
     </div>
 
-    <div class="header-actions">
-        <a href="/Quotes/Create" class="btn-primary">@T.T("AddQuote")</a>
-        <a href="/Invoices/Create" class="btn-secondary">@T.T("AddInvoice")</a>
-        <a href="/Expenses/Create" class="btn-secondary">@T.T("AddExpense")</a>
+    <div class="ceo-hero">
+        <div>
+            <div class="ceo-badge">@T.T("CeoDashboardAi")</div>
+            <h2>@T.T("Welcome") @ViewBag.UserName</h2>
+            <p>
+                @T.T("BusinessHealthGood").
+                @T.T("NetProfit") : <strong>@ViewBag.NetProfit.ToString("N2") EUR</strong>.
+                @T.T("StockAlerts") : <strong>@ViewBag.LowStock</strong>.
+            </p>
+
+            <div class="ceo-actions">
+                <a href="/Dashboard/Index" class="btn-primary">@T.T("Refresh")</a>
+                <a href="/Home/Index" class="btn-secondary">@T.T("PublicPortal")</a>
+                <a href="/Exports/Index" class="btn-secondary">@T.T("GenerateReport")</a>
+            </div>
+        </div>
+
+        <div class="ceo-hero-right">
+            <div class="ceo-score">88</div>
+            <p>@T.T("AiRecommendations")</p>
+            <strong>3</strong>
+        </div>
     </div>
-</div>
 
-<div class="ceo-hero">
-    <div>
-        <div class="ceo-badge">🧠 @T.T("CeoDashboardAi")</div>
-        <h2>@T.T("Welcome") @ViewBag.UserName 👋</h2>
-        <p>
-            @T.T("BusinessHealthGood").
-            @T.T("NetProfit") : <strong>@ViewBag.NetProfit.ToString("N2") €</strong>.
-            @T.T("StockAlerts") : <strong>@ViewBag.LowStock</strong>.
-        </p>
+    <div class="ai-insights-grid">
+        <div class="ai-insight-card">
+            <span class="dash-symbol">AI</span>
+            <div>
+                <h3>@T.T("AiInsight")</h3>
+                <p>@T.T("AiInsightText")</p>
+            </div>
+        </div>
 
-        <div class="ceo-actions">
-            <a href="/Dashboard/Index" class="btn-primary">@T.T("Refresh")</a>
-            <a href="/Home/Index" class="btn-secondary">@T.T("PublicPortal")</a>
+        <div class="ai-insight-card warning">
+            <span class="dash-symbol">RISK</span>
+            <div>
+                <h3>@T.T("MainRisk")</h3>
+                <p>@T.T("MainRiskText")</p>
+            </div>
+        </div>
+
+        <div class="ai-insight-card success">
+            <span class="dash-symbol">NEXT</span>
+            <div>
+                <h3>@T.T("PriorityAction")</h3>
+                <p>@T.T("PriorityActionText")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">REV</div><div><h3>@ViewBag.TotalRevenue.ToString("N2") EUR</h3><p>@T.T("TotalRevenue")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">EXP</div><div><h3>@ViewBag.TotalExpenses.ToString("N2") EUR</h3><p>@T.T("TotalExpenses")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">NET</div><div><h3>@ViewBag.NetProfit.ToString("N2") EUR</h3><p>@T.T("NetProfit")</p></div></div>
+        <div class="stat-card warning"><div class="stat-icon">STK</div><div><h3>@ViewBag.LowStock</h3><p>@T.T("StockAlerts")</p></div></div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">QUO</div><div><h3>@ViewBag.TotalQuotes</h3><p>@T.T("Quotes")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">OK</div><div><h3>@ViewBag.AcceptedQuotes</h3><p>@T.T("AcceptedQuotes")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">INV</div><div><h3>@ViewBag.TotalInvoices</h3><p>@T.T("Invoices")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">PAY</div><div><h3>@ViewBag.TotalPayments</h3><p>@T.T("Payments")</p></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel chart-panel"><h2>@T.T("MonthlyRevenue")</h2><div class="chart-frame"><canvas id="revenueChart"></canvas></div></div>
+        <div class="panel chart-panel"><h2>@T.T("MonthlyExpenses")</h2><div class="chart-frame"><canvas id="expensesChart"></canvas></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel chart-panel"><h2>@T.T("MonthlyOrders")</h2><div class="chart-frame"><canvas id="ordersChart"></canvas></div></div>
+        <div class="panel chart-panel"><h2>@T.T("PaymentsByMethod")</h2><div class="chart-frame"><canvas id="paymentsChart"></canvas></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel chart-panel"><h2>@T.T("TopProducts")</h2><div class="chart-frame"><canvas id="topProductsChart"></canvas></div></div>
+        <div class="panel chart-panel"><h2>@T.T("PaidUnpaidInvoices")</h2><div class="chart-frame"><canvas id="invoiceChart"></canvas></div></div>
+    </div>
+
+    <div class="priority-actions">
+        <div class="priority-header">
+            <h2>@T.T("PriorityActions")</h2>
+            <p>@T.T("PriorityActionsText")</p>
+        </div>
+
+        <div class="priority-grid">
+            <a href="/Invoices/Index" class="priority-card"><span class="dash-symbol">INV</span><strong>@T.T("FollowInvoices")</strong><small>@T.T("FollowInvoicesText")</small></a>
+            <a href="/Stock/Index" class="priority-card"><span class="dash-symbol">STK</span><strong>@T.T("CheckStock")</strong><small>@T.T("CheckStockText")</small></a>
+            <a href="/Payments/Index" class="priority-card"><span class="dash-symbol">PAY</span><strong>@T.T("ReviewPayments")</strong><small>@T.T("ReviewPaymentsText")</small></a>
+            <a href="/Exports/Index" class="priority-card"><span class="dash-symbol">REP</span><strong>@T.T("GenerateReport")</strong><small>@T.T("GenerateReportText")</small></a>
+        </div>
+    </div>
+
+    <div class="forecast-panel">
+        <div class="forecast-header">
+            <div>
+                <h2>@T.T("AiForecast")</h2>
+                <p>@T.T("AiForecastText")</p>
+            </div>
             <a href="/Exports/Index" class="btn-secondary">@T.T("GenerateReport")</a>
         </div>
-    </div>
 
-    <div class="ceo-hero-right">
-        <div class="ceo-score">88</div>
-        <p>@T.T("AiRecommendations")</p>
-        <strong>3</strong>
-    </div>
-</div>
-
-<div class="ai-insights-grid">
-    <div class="ai-insight-card">
-        <span>💡</span>
-        <div>
-            <h3>@T.T("AiInsight")</h3>
-            <p>@T.T("AiInsightText")</p>
+        <div class="forecast-grid">
+            <div class="forecast-card"><span class="dash-symbol">REV</span><small>@T.T("ForecastSales")</small><strong>@ViewBag.TotalRevenue.ToString("N2") EUR</strong></div>
+            <div class="forecast-card"><span class="dash-symbol">NET</span><small>@T.T("ForecastCashflow")</small><strong>@ViewBag.NetProfit.ToString("N2") EUR</strong></div>
+            <div class="forecast-card warning"><span class="dash-symbol">STK</span><small>@T.T("ForecastStockRisk")</small><strong>@ViewBag.LowStock</strong></div>
+            <div class="forecast-card danger"><span class="dash-symbol">INV</span><small>@T.T("ForecastUnpaidRisk")</small><strong>@ViewBag.UnpaidInvoices</strong></div>
         </div>
     </div>
 
-    <div class="ai-insight-card warning">
-        <span>⚠️</span>
-        <div>
-            <h3>@T.T("MainRisk")</h3>
-            <p>@T.T("MainRiskText")</p>
-        </div>
-    </div>
-
-    <div class="ai-insight-card success">
-        <span>🚀</span>
-        <div>
-            <h3>@T.T("PriorityAction")</h3>
-            <p>@T.T("PriorityActionText")</p>
-        </div>
-    </div>
-</div>
-
-<div class="timeline-panel">
-    <div class="timeline-header">
-        <h2>🕒 @T.T("RecentActivity")</h2>
-        <span>@T.T("LiveOverview")</span>
-    </div>
-
-    <div class="timeline-list">
-        <div class="timeline-item">
-            <span class="timeline-dot success"></span>
-            <div>
-                <strong>@T.T("InvoiceActivity")</strong>
-                <p>@T.T("InvoiceActivityText")</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <span class="timeline-dot warning"></span>
-            <div>
-                <strong>@T.T("StockActivity")</strong>
-                <p>@T.T("StockActivityText")</p>
-            </div>
-        </div>
-
-        <div class="timeline-item">
-            <span class="timeline-dot info"></span>
-            <div>
-                <strong>@T.T("PaymentActivity")</strong>
-                <p>@T.T("PaymentActivityText")</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="priority-actions">
-    <div class="priority-header">
-        <h2>🚀 @T.T("PriorityActions")</h2>
-        <p>@T.T("PriorityActionsText")</p>
-    </div>
-
-    <div class="priority-grid">
-        <a href="/Invoices/Index" class="priority-card">
-            <span>🧾</span>
-            <strong>@T.T("FollowInvoices")</strong>
-            <small>@T.T("FollowInvoicesText")</small>
-        </a>
-
-        <a href="/Stock/Index" class="priority-card">
-            <span>📦</span>
-            <strong>@T.T("CheckStock")</strong>
-            <small>@T.T("CheckStockText")</small>
-        </a>
-
-        <a href="/Payments/Index" class="priority-card">
-            <span>💳</span>
-            <strong>@T.T("ReviewPayments")</strong>
-            <small>@T.T("ReviewPaymentsText")</small>
-        </a>
-
-        <a href="/Exports/Index" class="priority-card">
-            <span>📊</span>
-            <strong>@T.T("GenerateReport")</strong>
-            <small>@T.T("GenerateReportText")</small>
-        </a>
-    </div>
-</div>
-
-<div class="goals-panel">
-    <div class="goals-header">
-        <h2>🎯 @T.T("MonthlyGoals")</h2>
-        <p>@T.T("MonthlyGoalsText")</p>
-    </div>
-
-    <div class="goals-grid">
-        <div class="goal-card">
-            <div class="goal-top"><strong>@T.T("RevenueGoal")</strong><span>78%</span></div>
-            <div class="goal-bar"><div style="width:78%"></div></div>
-        </div>
-
-        <div class="goal-card">
-            <div class="goal-top"><strong>@T.T("PaymentGoal")</strong><span>64%</span></div>
-            <div class="goal-bar"><div style="width:64%"></div></div>
-        </div>
-
-        <div class="goal-card">
-            <div class="goal-top"><strong>@T.T("InvoiceGoal")</strong><span>52%</span></div>
-            <div class="goal-bar"><div style="width:52%"></div></div>
-        </div>
-
-        <div class="goal-card">
-            <div class="goal-top"><strong>@T.T("StockGoal")</strong><span>90%</span></div>
-            <div class="goal-bar"><div style="width:90%"></div></div>
-        </div>
-    </div>
-</div>
-
-<div class="forecast-panel">
-    <div class="forecast-header">
-        <div>
-            <h2>🔮 @T.T("AiForecast")</h2>
-            <p>@T.T("AiForecastText")</p>
-        </div>
-        <a href="/Exports/Index" class="btn-secondary">@T.T("GenerateReport")</a>
-    </div>
-
-    <div class="forecast-grid">
-        <div class="forecast-card">
-            <span>📈</span>
-            <small>@T.T("ForecastSales")</small>
-            <strong>@ViewBag.TotalRevenue.ToString("N2") €</strong>
-        </div>
-
-        <div class="forecast-card">
-            <span>💵</span>
-            <small>@T.T("ForecastCashflow")</small>
-            <strong>@ViewBag.NetProfit.ToString("N2") €</strong>
-        </div>
-
-        <div class="forecast-card warning">
-            <span>📦</span>
-            <small>@T.T("ForecastStockRisk")</small>
-            <strong>@ViewBag.LowStock</strong>
-        </div>
-
-        <div class="forecast-card danger">
-            <span>🧾</span>
-            <small>@T.T("ForecastUnpaidRisk")</small>
-            <strong>@ViewBag.UnpaidInvoices</strong>
-        </div>
-    </div>
-</div>
-
-<div class="sales-performance-panel">
-    <div class="sales-performance-header">
-        <h2>💼 @T.T("SalesPerformance")</h2>
-        <p>@T.T("SalesPerformanceText")</p>
-    </div>
-
-    <div class="sales-performance-grid">
-        <div class="sales-performance-card">
-            <span>🤝</span>
-            <small>@T.T("Clients")</small>
-            <strong>@ViewBag.TotalClients</strong>
-        </div>
-
-        <div class="sales-performance-card">
-            <span>📄</span>
-            <small>@T.T("Quotes")</small>
-            <strong>@ViewBag.TotalQuotes</strong>
-        </div>
-
-        <div class="sales-performance-card">
-            <span>🧾</span>
-            <small>@T.T("Invoices")</small>
-            <strong>@ViewBag.TotalInvoices</strong>
-        </div>
-
-        <div class="sales-performance-card">
-            <span>💳</span>
-            <small>@T.T("Payments")</small>
-            <strong>@ViewBag.TotalPayments</strong>
-        </div>
-    </div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card"><div class="stat-icon">💰</div><div><h3>@ViewBag.TotalRevenue.ToString("N2") €</h3><p>@T.T("TotalRevenue")</p></div></div>
-    <div class="stat-card"><div class="stat-icon">📉</div><div><h3>@ViewBag.TotalExpenses.ToString("N2") €</h3><p>@T.T("TotalExpenses")</p></div></div>
-    <div class="stat-card"><div class="stat-icon">📈</div><div><h3>@ViewBag.NetProfit.ToString("N2") €</h3><p>@T.T("NetProfit")</p></div></div>
-    <div class="stat-card warning"><div class="stat-icon">⚠️</div><div><h3>@ViewBag.LowStock</h3><p>@T.T("StockAlerts")</p></div></div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card"><div class="stat-icon">📄</div><div><h3>@ViewBag.TotalQuotes</h3><p>@T.T("Quotes")</p></div></div>
-    <div class="stat-card"><div class="stat-icon">✅</div><div><h3>@ViewBag.AcceptedQuotes</h3><p>@T.T("AcceptedQuotes")</p></div></div>
-    <div class="stat-card"><div class="stat-icon">🧾</div><div><h3>@ViewBag.TotalInvoices</h3><p>@T.T("Invoices")</p></div></div>
-    <div class="stat-card"><div class="stat-icon">💳</div><div><h3>@ViewBag.TotalPayments</h3><p>@T.T("Payments")</p></div></div>
-</div>
-
-<div class="dashboard-grid">
-    <div class="panel chart-panel"><h2>📈 @T.T("MonthlyRevenue")</h2><div class="chart-frame"><canvas id="revenueChart"></canvas></div></div>
-    <div class="panel chart-panel"><h2>📉 @T.T("MonthlyExpenses")</h2><div class="chart-frame"><canvas id="expensesChart"></canvas></div></div>
-</div>
-
-<div class="dashboard-grid">
-    <div class="panel chart-panel"><h2>🚚 @T.T("MonthlyOrders")</h2><div class="chart-frame"><canvas id="ordersChart"></canvas></div></div>
-    <div class="panel chart-panel"><h2>💳 @T.T("PaymentsByMethod")</h2><div class="chart-frame"><canvas id="paymentsChart"></canvas></div></div>
-</div>
-
-<div class="dashboard-grid">
-    <div class="panel chart-panel"><h2>🏆 @T.T("TopProducts")</h2><div class="chart-frame"><canvas id="topProductsChart"></canvas></div></div>
-    <div class="panel chart-panel"><h2>🧾 @T.T("PaidUnpaidInvoices")</h2><div class="chart-frame"><canvas id="invoiceChart"></canvas></div></div>
-</div>
-
-<div class="dashboard-grid">
-    <div class="panel">
-        <h2>📄 @T.T("LatestQuotes")</h2>
-        @if (latestQuotes != null && latestQuotes.Any())
-        {
-            <table>
-                <thead>
-                    <tr>
-                        <th>@T.T("Number")</th>
-                        <th>@T.T("Client")</th>
-                        <th>@T.T("Date")</th>
-                        <th>@T.T("Total")</th>
-                        <th>@T.T("Status")</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("LatestQuotes")</h2>
+            @if (latestQuotes != null && latestQuotes.Any())
+            {
+                <table>
+                    <thead><tr><th>@T.T("Number")</th><th>@T.T("Client")</th><th>@T.T("Date")</th><th>@T.T("Total")</th><th>@T.T("Status")</th></tr></thead>
+                    <tbody>
                     @foreach (var quote in latestQuotes)
                     {
-                        <tr>
-                            <td>@quote.QuoteNumber</td>
-                            <td>@quote.Client?.CompanyName</td>
-                            <td>@quote.QuoteDate.ToString("dd/MM/yyyy")</td>
-                            <td>@quote.TotalAmount.ToString("N2") €</td>
-                            <td>@quote.Status</td>
-                        </tr>
+                        <tr><td>@quote.QuoteNumber</td><td>@quote.Client?.CompanyName</td><td>@quote.QuoteDate.ToString("dd/MM/yyyy")</td><td>@quote.TotalAmount.ToString("N2") EUR</td><td>@quote.Status</td></tr>
                     }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="empty">@T.T("NoRecentQuotes")</p>
-        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="empty">@T.T("NoRecentQuotes")</p>
+            }
+        </div>
+
+        <div class="panel">
+            <h2>@T.T("StockAlerts")</h2>
+            @if (lowStockProducts != null && lowStockProducts.Any())
+            {
+                <ul class="alert-list">
+                    @foreach (var product in lowStockProducts)
+                    {
+                        <li>@T.T("LowStock") : <strong>@product.Name</strong> (@product.Quantity @T.T("Remaining"))</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="empty">@T.T("NoStockAlert")</p>
+            }
+        </div>
     </div>
 
-    <div class="panel">
-        <h2>⚠️ @T.T("StockAlerts")</h2>
-        @if (lowStockProducts != null && lowStockProducts.Any())
-        {
-            <ul class="alert-list">
-                @foreach (var product in lowStockProducts)
-                {
-                    <li>@T.T("LowStock") : <strong>@product.Name</strong> (@product.Quantity @T.T("Remaining"))</li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p class="empty">@T.T("NoStockAlert")</p>
-        }
-    </div>
-</div>
-
-<div class="dashboard-grid">
-    <div class="panel">
-        <h2>🧾 @T.T("UnpaidInvoices")</h2>
-        @if (unpaidInvoicesList != null && unpaidInvoicesList.Any())
-        {
-            <table>
-                <thead>
-                    <tr>
-                        <th>@T.T("Invoice")</th>
-                        <th>@T.T("Client")</th>
-                        <th>@T.T("Date")</th>
-                        <th>@T.T("Total")</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("UnpaidInvoices")</h2>
+            @if (unpaidInvoicesList != null && unpaidInvoicesList.Any())
+            {
+                <table>
+                    <thead><tr><th>@T.T("Invoice")</th><th>@T.T("Client")</th><th>@T.T("Date")</th><th>@T.T("Total")</th></tr></thead>
+                    <tbody>
                     @foreach (var invoice in unpaidInvoicesList)
                     {
-                        <tr>
-                            <td>@invoice.InvoiceNumber</td>
-                            <td>@invoice.Client?.FullName</td>
-                            <td>@invoice.InvoiceDate.ToString("dd/MM/yyyy")</td>
-                            <td>@invoice.TotalAmount.ToString("N2") €</td>
-                        </tr>
+                        <tr><td>@invoice.InvoiceNumber</td><td>@invoice.Client?.FullName</td><td>@invoice.InvoiceDate.ToString("dd/MM/yyyy")</td><td>@invoice.TotalAmount.ToString("N2") EUR</td></tr>
                     }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="empty">@T.T("NoUnpaidInvoice")</p>
-        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="empty">@T.T("NoUnpaidInvoice")</p>
+            }
+        </div>
+
+        <div class="panel">
+            <h2>@T.T("PendingOrders")</h2>
+            @if (pendingOrders != null && pendingOrders.Any())
+            {
+                <table>
+                    <thead><tr><th>@T.T("Order")</th><th>@T.T("Client")</th><th>@T.T("Product")</th><th>@T.T("Total")</th></tr></thead>
+                    <tbody>
+                    @foreach (var order in pendingOrders)
+                    {
+                        <tr><td>#@order.Id</td><td>@order.Client?.FullName</td><td>@order.Product?.Name</td><td>@order.TotalAmount.ToString("N2") EUR</td></tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="empty">@T.T("NoPendingOrder")</p>
+            }
+        </div>
     </div>
 
     <div class="panel">
-        <h2>🚚 @T.T("PendingOrders")</h2>
-        @if (pendingOrders != null && pendingOrders.Any())
+        <h2>@T.T("RecentPayments")</h2>
+        @if (recentPayments != null && recentPayments.Any())
         {
             <table>
-                <thead>
-                    <tr>
-                        <th>@T.T("Order")</th>
-                        <th>@T.T("Client")</th>
-                        <th>@T.T("Product")</th>
-                        <th>@T.T("Total")</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>@T.T("Client")</th><th>@T.T("Invoice")</th><th>@T.T("Amount")</th><th>@T.T("Method")</th><th>@T.T("Date")</th></tr></thead>
                 <tbody>
-                    @foreach (var order in pendingOrders)
-                    {
-                        <tr>
-                            <td>#@order.Id</td>
-                            <td>@order.Client?.FullName</td>
-                            <td>@order.Product?.Name</td>
-                            <td>@order.TotalAmount.ToString("N2") €</td>
-                        </tr>
-                    }
+                @foreach (var payment in recentPayments)
+                {
+                    <tr><td>@payment.Invoice?.Client?.FullName</td><td>@payment.Invoice?.InvoiceNumber</td><td>@payment.Amount.ToString("N2") EUR</td><td>@payment.Method</td><td>@payment.PaymentDate.ToString("dd/MM/yyyy")</td></tr>
+                }
                 </tbody>
             </table>
         }
         else
         {
-            <p class="empty">@T.T("NoPendingOrder")</p>
+            <p class="empty">@T.T("NoRecentPayment")</p>
         }
     </div>
-</div>
-
-<div class="panel">
-    <h2>💳 @T.T("RecentPayments")</h2>
-
-    @if (recentPayments != null && recentPayments.Any())
-    {
-        <table>
-            <thead>
-                <tr>
-                    <th>@T.T("Client")</th>
-                    <th>@T.T("Invoice")</th>
-                    <th>@T.T("Amount")</th>
-                    <th>@T.T("Method")</th>
-                    <th>@T.T("Date")</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var payment in recentPayments)
-                {
-                    <tr>
-                        <td>@payment.Invoice?.Client?.FullName</td>
-                        <td>@payment.Invoice?.InvoiceNumber</td>
-                        <td>@payment.Amount.ToString("N2") €</td>
-                        <td>@payment.Method</td>
-                        <td>@payment.PaymentDate.ToString("dd/MM/yyyy")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p class="empty">@T.T("NoRecentPayment")</p>
-    }
-</div>
-
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -434,26 +244,20 @@
 <script>
     const monthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthLabels ?? new List<string>()));
     const monthRevenues = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthRevenues ?? new List<decimal>()));
-
     const expenseMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthLabels ?? new List<string>()));
     const expenseMonthTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthTotals ?? new List<decimal>()));
-
     const orderMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthLabels ?? new List<string>()));
     const orderMonthCounts = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthCounts ?? new List<int>()));
-
     const paymentMethods = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethods ?? new List<string>()));
     const paymentMethodTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethodTotals ?? new List<decimal>()));
-
     const topProductNames = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductNames ?? new List<string>()));
     const topProductQuantities = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductQuantities ?? new List<int>()));
-
     const paidInvoices = @ViewBag.PaidInvoices;
     const unpaidInvoices = @ViewBag.UnpaidInvoices;
-
     const chartColors = ['#8b5cf6', '#22c55e', '#38bdf8', '#f59e0b', '#ef4444', '#14b8a6'];
 
     function normalizeChartData(labels, data, fallbackLabel) {
-        const safeLabels = Array.isArray(labels) && labels.length > 0 ? labels : [fallbackLabel || 'Aucune donnée'];
+        const safeLabels = Array.isArray(labels) && labels.length > 0 ? labels : [fallbackLabel || 'Aucune donnee'];
         const safeData = Array.isArray(data) && data.length > 0 ? data.map(value => Number(value || 0)) : [0];
         return { labels: safeLabels, data: safeData };
     }
@@ -471,18 +275,14 @@
         const isCircular = type === 'doughnut' || type === 'pie';
 
         new Chart(element, {
-            type: type,
+            type,
             data: {
                 labels: normalized.labels,
                 datasets: [{
-                    label: label,
+                    label,
                     data: normalized.data,
                     borderColor: '#8b5cf6',
-                    backgroundColor: isCircular
-                        ? chartColors
-                        : type === 'line'
-                            ? 'rgba(139, 92, 246, .22)'
-                            : 'rgba(139, 92, 246, .72)',
+                    backgroundColor: isCircular ? chartColors : type === 'line' ? 'rgba(139, 92, 246, .22)' : 'rgba(139, 92, 246, .72)',
                     fill: type === 'line',
                     borderWidth: 2,
                     tension: 0.35
@@ -493,8 +293,8 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { labels: { color: '#e5e7eb' } } },
                 scales: isCircular ? {} : {
-                    x: { ticks: { color: '#94a3b8' } },
-                    y: { beginAtZero: true, ticks: { color: '#94a3b8' } }
+                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } },
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } }
                 }
             }
         });
