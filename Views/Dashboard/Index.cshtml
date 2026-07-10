@@ -259,18 +259,18 @@
 </div>
 
 <div class="dashboard-grid">
-    <div class="panel"><h2>📈 @T.T("MonthlyRevenue")</h2><canvas id="revenueChart"></canvas></div>
-    <div class="panel"><h2>📉 @T.T("MonthlyExpenses")</h2><canvas id="expensesChart"></canvas></div>
+    <div class="panel chart-panel"><h2>📈 @T.T("MonthlyRevenue")</h2><div class="chart-frame"><canvas id="revenueChart"></canvas></div></div>
+    <div class="panel chart-panel"><h2>📉 @T.T("MonthlyExpenses")</h2><div class="chart-frame"><canvas id="expensesChart"></canvas></div></div>
 </div>
 
 <div class="dashboard-grid">
-    <div class="panel"><h2>🚚 @T.T("MonthlyOrders")</h2><canvas id="ordersChart"></canvas></div>
-    <div class="panel"><h2>💳 @T.T("PaymentsByMethod")</h2><canvas id="paymentsChart"></canvas></div>
+    <div class="panel chart-panel"><h2>🚚 @T.T("MonthlyOrders")</h2><div class="chart-frame"><canvas id="ordersChart"></canvas></div></div>
+    <div class="panel chart-panel"><h2>💳 @T.T("PaymentsByMethod")</h2><div class="chart-frame"><canvas id="paymentsChart"></canvas></div></div>
 </div>
 
 <div class="dashboard-grid">
-    <div class="panel"><h2>🏆 @T.T("TopProducts")</h2><canvas id="topProductsChart"></canvas></div>
-    <div class="panel"><h2>🧾 @T.T("PaidUnpaidInvoices")</h2><canvas id="invoiceChart"></canvas></div>
+    <div class="panel chart-panel"><h2>🏆 @T.T("TopProducts")</h2><div class="chart-frame"><canvas id="topProductsChart"></canvas></div></div>
+    <div class="panel chart-panel"><h2>🧾 @T.T("PaidUnpaidInvoices")</h2><div class="chart-frame"><canvas id="invoiceChart"></canvas></div></div>
 </div>
 
 <div class="dashboard-grid">
@@ -450,27 +450,51 @@
     const paidInvoices = @ViewBag.PaidInvoices;
     const unpaidInvoices = @ViewBag.UnpaidInvoices;
 
+    const chartColors = ['#8b5cf6', '#22c55e', '#38bdf8', '#f59e0b', '#ef4444', '#14b8a6'];
+
+    function normalizeChartData(labels, data, fallbackLabel) {
+        const safeLabels = Array.isArray(labels) && labels.length > 0 ? labels : [fallbackLabel || 'Aucune donnée'];
+        const safeData = Array.isArray(data) && data.length > 0 ? data.map(value => Number(value || 0)) : [0];
+        return { labels: safeLabels, data: safeData };
+    }
+
     function createChart(id, type, labels, data, label) {
         const element = document.getElementById(id);
         if (!element) return;
 
+        if (typeof Chart === 'undefined') {
+            element.closest('.chart-frame')?.classList.add('chart-unavailable');
+            return;
+        }
+
+        const normalized = normalizeChartData(labels, data, label);
+        const isCircular = type === 'doughnut' || type === 'pie';
+
         new Chart(element, {
             type: type,
             data: {
-                labels: labels,
+                labels: normalized.labels,
                 datasets: [{
                     label: label,
-                    data: data,
+                    data: normalized.data,
+                    borderColor: '#8b5cf6',
+                    backgroundColor: isCircular
+                        ? chartColors
+                        : type === 'line'
+                            ? 'rgba(139, 92, 246, .22)'
+                            : 'rgba(139, 92, 246, .72)',
+                    fill: type === 'line',
                     borderWidth: 2,
                     tension: 0.35
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { labels: { color: '#e5e7eb' } } },
-                scales: type === 'doughnut' ? {} : {
+                scales: isCircular ? {} : {
                     x: { ticks: { color: '#94a3b8' } },
-                    y: { ticks: { color: '#94a3b8' } }
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' } }
                 }
             }
         });

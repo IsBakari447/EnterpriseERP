@@ -197,6 +197,15 @@ static void SeedAdminFromConfiguration(ApplicationDbContext db, IConfiguration c
     if (db.Users.Any())
         return;
 
+    var enabled = configuration.GetValue("SeedAdmin:Enabled", false)
+        || string.Equals(Environment.GetEnvironmentVariable("ENTERPRISEERP_SEED_ADMIN"), "true", StringComparison.OrdinalIgnoreCase);
+
+    if (!enabled)
+    {
+        logger.LogInformation("Seed admin is disabled. The first account can be created from /Account/Register.");
+        return;
+    }
+
     var email = configuration["SeedAdmin:Email"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_EMAIL");
     var password = configuration["SeedAdmin:Password"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_PASSWORD");
     var fullName = configuration["SeedAdmin:FullName"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_NAME") ?? "EnterpriseERP Admin";
@@ -212,7 +221,7 @@ static void SeedAdminFromConfiguration(ApplicationDbContext db, IConfiguration c
         FullName = fullName,
         Email = email.Trim(),
         PasswordHash = PasswordHelper.HashPassword(password),
-        Role = TrialLimits.TrialRole,
+        Role = "SuperAdmin",
         IsSuperAdmin = true,
         IsActive = true,
         IsApproved = true,

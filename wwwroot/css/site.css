@@ -2319,6 +2319,37 @@ a.icon-btn {
     max-height:330px;
 }
 
+.dashboard-premium-v3 .chart-panel {
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-premium-v3 .chart-frame {
+    position: relative;
+    min-height: 290px;
+    height: 290px;
+    width: 100%;
+}
+
+.dashboard-premium-v3 .chart-frame canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none;
+}
+
+.dashboard-premium-v3 .chart-frame.chart-unavailable::after {
+    content: "Graphique temporairement indisponible";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #94a3b8;
+    border: 1px dashed #334155;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, .75);
+}
+
 /* =====================================================
    DASHBOARD PROFESSIONAL FIX
 ===================================================== */

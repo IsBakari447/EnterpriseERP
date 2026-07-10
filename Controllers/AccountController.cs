@@ -150,7 +150,7 @@ namespace EnterpriseERP.Controllers
 
             if (!hasUsers)
             {
-                user.Role = TrialLimits.TrialRole;
+                user.Role = "SuperAdmin";
                 user.IsSuperAdmin = true;
             }
             else
