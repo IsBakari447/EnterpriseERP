@@ -1,8 +1,11 @@
 using EnterpriseERP.ApiModels;
+using EnterpriseERP.Data;
 using EnterpriseERP.DTOs.Auth;
+using EnterpriseERP.Helpers;
 using EnterpriseERP.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseERP.Controllers.Api;
 
@@ -10,15 +13,17 @@ namespace EnterpriseERP.Controllers.Api;
 [ApiController]
 public class AuthController : ControllerBase
 {
+    private readonly ApplicationDbContext _context;
     private readonly JwtService _jwtService;
 
-    public AuthController(JwtService jwtService)
+    public AuthController(ApplicationDbContext context, JwtService jwtService)
     {
+        _context = context;
         _jwtService = jwtService;
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequestDto request)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
         {
@@ -31,18 +36,58 @@ public class AuthController : ControllerBase
             });
         }
 
-        var userId = 1;
-        var fullName = "Issa Bakari";
-        var role = "Admin";
+        var email = request.Email.Trim();
+        var passwordHash = PasswordHelper.HashPassword(request.Password);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-        var token = _jwtService.GenerateToken(userId, fullName, request.Email, role);
+        if (user == null || user.PasswordHash != passwordHash)
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Email ou mot de passe incorrect.",
+                Data = null,
+                Errors = new List<string> { "InvalidCredentials" }
+            });
+        }
+
+        if (!user.IsActive)
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Ce compte est desactive.",
+                Data = null,
+                Errors = new List<string> { "AccountDisabled" }
+            });
+        }
+
+        if (!user.IsApproved)
+        {
+            return Unauthorized(new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Ce compte n'a pas encore ete approuve.",
+                Data = null,
+                Errors = new List<string> { "AccountNotApproved" }
+            });
+        }
+
+        user.LastLogin = DateTime.UtcNow;
+        user.LastConnection = DateTime.UtcNow;
+        user.LoginCount += 1;
+        user.LastIPAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+        await _context.SaveChangesAsync();
+
+        var token = _jwtService.GenerateToken(user.Id, user.FullName, user.Email, user.Role);
 
         var response = new LoginResponseDto
         {
-            UserId = userId,
-            FullName = fullName,
-            Email = request.Email,
-            Role = role,
+            UserId = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role,
             Token = token,
             ExpiresAt = DateTime.UtcNow.AddHours(24)
         };

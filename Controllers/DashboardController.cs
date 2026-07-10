@@ -49,7 +49,11 @@ namespace EnterpriseERP.Controllers
             ViewBag.TotalClients = _context.Clients.Count();
             ViewBag.AcceptedQuotes = _context.Quotes.Count(q => q.Status == "Accepté");
             ViewBag.PendingQuotes = _context.Quotes.Count(q => q.Status == "Brouillon" || q.Status == "Envoyé");
-            ViewBag.TotalQuoteAmount = _context.Quotes.Sum(q => (decimal?)q.TotalAmount) ?? 0;
+            ViewBag.TotalQuoteAmount = _context.Quotes
+                .Select(q => q.TotalAmount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
 
             // Factures
             ViewBag.TotalInvoices = _context.Invoices.Count();
@@ -57,28 +61,51 @@ namespace EnterpriseERP.Controllers
             ViewBag.UnpaidInvoices = _context.Invoices.Count(i => i.Status == "Unpaid" || i.Status == "Pending");
             ViewBag.TotalUnpaidAmount = _context.Invoices
                 .Where(i => i.Status == "Unpaid" || i.Status == "Pending")
-                .Sum(i => (decimal?)i.TotalAmount) ?? 0;
+                .Select(i => i.TotalAmount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
 
             // Commandes / Paiements / Dépenses
             ViewBag.TotalOrders = _context.Orders.Count();
             ViewBag.PendingOrdersCount = _context.Orders.Count(o => o.Status == "Pending");
             ViewBag.TotalPayments = _context.Payments.Count();
-            ViewBag.TotalExpenses = _context.Expenses.Sum(e => (decimal?)e.Amount) ?? 0;
+            ViewBag.TotalExpenses = _context.Expenses
+                .Select(e => e.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
             ViewBag.MonthExpenses = _context.Expenses
                 .Where(e => e.ExpenseDate >= monthStart)
-                .Sum(e => (decimal?)e.Amount) ?? 0;
+                .Select(e => e.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
 
             // Revenus
-            ViewBag.TotalRevenue = _context.Payments.Sum(p => (decimal?)p.Amount) ?? 0;
+            ViewBag.TotalRevenue = _context.Payments
+                .Select(p => p.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
             ViewBag.MonthRevenue = _context.Payments
                 .Where(p => p.PaymentDate >= monthStart)
-                .Sum(p => (decimal?)p.Amount) ?? 0;
+                .Select(p => p.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
             ViewBag.YearRevenue = _context.Payments
                 .Where(p => p.PaymentDate >= yearStart)
-                .Sum(p => (decimal?)p.Amount) ?? 0;
+                .Select(p => p.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
             ViewBag.PaymentsToday = _context.Payments
                 .Where(p => p.PaymentDate.Date == today)
-                .Sum(p => (decimal?)p.Amount) ?? 0;
+                .Select(p => p.Amount)
+                .AsEnumerable()
+                .DefaultIfEmpty(0m)
+                .Sum();
 
             ViewBag.NetProfit = ViewBag.TotalRevenue - ViewBag.TotalExpenses;
             ViewBag.MonthNetProfit = ViewBag.MonthRevenue - ViewBag.MonthExpenses;
@@ -140,6 +167,8 @@ namespace EnterpriseERP.Controllers
 
             // Graphiques
             var monthlyRevenue = _context.Payments
+                .Select(p => new { p.PaymentDate, p.Amount })
+                .AsEnumerable()
                 .GroupBy(p => new { p.PaymentDate.Year, p.PaymentDate.Month })
                 .Select(g => new
                 {
@@ -152,6 +181,8 @@ namespace EnterpriseERP.Controllers
             ViewBag.MonthRevenues = monthlyRevenue.Select(x => x.Total).ToList();
 
             var monthlyExpenses = _context.Expenses
+                .Select(e => new { e.ExpenseDate, e.Amount })
+                .AsEnumerable()
                 .GroupBy(e => new { e.ExpenseDate.Year, e.ExpenseDate.Month })
                 .Select(g => new
                 {
@@ -176,6 +207,8 @@ namespace EnterpriseERP.Controllers
             ViewBag.OrderMonthCounts = monthlyOrders.Select(x => x.Total).ToList();
 
             var paymentsByMethod = _context.Payments
+                .Select(p => new { p.Method, p.Amount })
+                .AsEnumerable()
                 .GroupBy(p => p.Method)
                 .Select(g => new
                 {

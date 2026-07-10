@@ -1,6 +1,9 @@
 using System.Text;
+using System.Data.Common;
 using EnterpriseERP.Data;
+using EnterpriseERP.Helpers;
 using EnterpriseERP.Middleware;
+using EnterpriseERP.Models;
 using EnterpriseERP.Services;
 using EnterpriseERP.Services.Trial;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -83,6 +86,17 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseStartup");
+
+    EnsureSqliteDirectoryExists(configuration, logger);
+    db.Database.Migrate();
+    SeedAdminFromConfiguration(db, configuration, logger);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -144,3 +158,68 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static void EnsureSqliteDirectoryExists(IConfiguration configuration, ILogger logger)
+{
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+    if (string.IsNullOrWhiteSpace(connectionString))
+        return;
+
+    try
+    {
+        var builder = new DbConnectionStringBuilder
+        {
+            ConnectionString = connectionString
+        };
+
+        if (!builder.TryGetValue("Data Source", out var dataSourceValue))
+            return;
+
+        var dataSource = dataSourceValue?.ToString();
+
+        if (string.IsNullOrWhiteSpace(dataSource) || dataSource.Equals(":memory:", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var directory = Path.GetDirectoryName(Path.GetFullPath(dataSource));
+
+        if (!string.IsNullOrWhiteSpace(directory))
+            Directory.CreateDirectory(directory);
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Unable to prepare the SQLite database directory.");
+    }
+}
+
+static void SeedAdminFromConfiguration(ApplicationDbContext db, IConfiguration configuration, ILogger logger)
+{
+    if (db.Users.Any())
+        return;
+
+    var email = configuration["SeedAdmin:Email"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_EMAIL");
+    var password = configuration["SeedAdmin:Password"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_PASSWORD");
+    var fullName = configuration["SeedAdmin:FullName"] ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_ADMIN_NAME") ?? "EnterpriseERP Admin";
+
+    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+    {
+        logger.LogInformation("No seed admin configured. The first account can be created from /Account/Register.");
+        return;
+    }
+
+    db.Users.Add(new User
+    {
+        FullName = fullName,
+        Email = email.Trim(),
+        PasswordHash = PasswordHelper.HashPassword(password),
+        Role = TrialLimits.TrialRole,
+        IsSuperAdmin = true,
+        IsActive = true,
+        IsApproved = true,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
+    });
+
+    db.SaveChanges();
+    logger.LogInformation("Seed admin account created for {Email}.", email);
+}
