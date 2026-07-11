@@ -1,0 +1,100 @@
+@using EnterpriseERP.Controllers
+@using EnterpriseERP.Models
+
+@{
+    ViewData["Title"] = "Analytics";
+    var revenueByMethod = ViewBag.RevenueByMethod as List<AnalyticsRow> ?? new();
+    var expensesByCategory = ViewBag.ExpensesByCategory as List<AnalyticsRow> ?? new();
+    var recentInvoices = ViewBag.RecentInvoices as List<Invoice> ?? new();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Analytics</h1>
+        <p>Vue professionnelle des revenus, depenses, factures et indicateurs commerciaux.</p>
+    </div>
+
+    <a href="/Admin/Index" class="btn-secondary">Retour administration</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">REV</div><div><h3>@ViewBag.TotalRevenue.ToString("N2") EUR</h3><p>Revenus totaux</p></div></div>
+    <div class="stat-card"><div class="stat-icon">MON</div><div><h3>@ViewBag.MonthRevenue.ToString("N2") EUR</h3><p>Revenus du mois</p></div></div>
+    <div class="stat-card"><div class="stat-icon">EXP</div><div><h3>@ViewBag.TotalExpenses.ToString("N2") EUR</h3><p>Depenses totales</p></div></div>
+    <div class="stat-card"><div class="stat-icon">NET</div><div><h3>@ViewBag.NetProfit.ToString("N2") EUR</h3><p>Resultat net</p></div></div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon">CLI</div><div><h3>@ViewBag.TotalClients</h3><p>Clients</p></div></div>
+    <div class="stat-card"><div class="stat-icon">PRO</div><div><h3>@ViewBag.TotalProducts</h3><p>Produits</p></div></div>
+    <div class="stat-card"><div class="stat-icon">QUO</div><div><h3>@ViewBag.TotalQuotes</h3><p>Devis</p></div></div>
+    <div class="stat-card warning"><div class="stat-icon">INV</div><div><h3>@ViewBag.UnpaidInvoices</h3><p>Factures a suivre</p></div></div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Revenus par methode</h2>
+        @if (revenueByMethod.Any())
+        {
+            <table>
+                <thead><tr><th>Methode</th><th>Total</th></tr></thead>
+                <tbody>
+                @foreach (var row in revenueByMethod)
+                {
+                    <tr><td>@row.Label</td><td>@row.Value.ToString("N2") EUR</td></tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucun paiement enregistre.</p>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>Depenses par categorie</h2>
+        @if (expensesByCategory.Any())
+        {
+            <table>
+                <thead><tr><th>Categorie</th><th>Total</th></tr></thead>
+                <tbody>
+                @foreach (var row in expensesByCategory)
+                {
+                    <tr><td>@row.Label</td><td>@row.Value.ToString("N2") EUR</td></tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="empty">Aucune depense enregistree.</p>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Dernieres factures</h2>
+    @if (recentInvoices.Any())
+    {
+        <table>
+            <thead><tr><th>Numero</th><th>Client</th><th>Date</th><th>Total</th><th>Statut</th></tr></thead>
+            <tbody>
+            @foreach (var invoice in recentInvoices)
+            {
+                <tr>
+                    <td>@invoice.InvoiceNumber</td>
+                    <td>@invoice.Client?.FullName</td>
+                    <td>@invoice.InvoiceDate.ToString("dd/MM/yyyy")</td>
+                    <td>@invoice.TotalAmount.ToString("N2") EUR</td>
+                    <td>@invoice.Status</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="empty">Aucune facture recente.</p>
+    }
+</div>
