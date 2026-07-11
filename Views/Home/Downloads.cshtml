@@ -1,25 +1,33 @@
 @{
-    ViewData["Title"] = "Téléchargements - EnterpriseERP";
+    ViewData["Title"] = "Telechargement de l'application mobile - EnterpriseERP";
 }
 
 <div class="container py-5">
-    <h1 class="display-4 fw-bold">Télécharger EnterpriseERP</h1>
-    <p class="lead">Installez EnterpriseERP Mobile sur vos appareils.</p>
+    <h1 class="display-4 fw-bold">Telechargement de l'application mobile</h1>
+    <p class="lead">Installez EnterpriseERP Mobile sur Android, iOS ou Windows et connectez vos equipes a votre ERP.</p>
 
     <div class="row g-4 mt-4">
-        <div class="col-md-6">
-            <div class="card bg-dark text-white border-secondary p-4">
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100">
                 <h3>Android</h3>
-                <p>Application mobile Android connectée à l’API EnterpriseERP.</p>
-                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Télécharger APK</a>
+                <p>Application Android connectee a l'API EnterpriseERP pour gerer clients, factures, stock et rapports.</p>
+                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Telecharger APK</a>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card bg-dark text-white border-secondary p-4">
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100" id="ios">
+                <h3>iOS</h3>
+                <p>Version iPhone et iPad preparee pour TestFlight, App Store Connect ou distribution interne.</p>
+                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.ipa">Telecharger iOS</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-dark text-white border-secondary p-4 h-100">
                 <h3>Windows</h3>
                 <p>Version Windows moderne avec interface .NET MAUI.</p>
-                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Télécharger MSIX</a>
+                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Telecharger MSIX</a>
             </div>
         </div>
     </div>

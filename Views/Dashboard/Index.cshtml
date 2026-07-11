@@ -77,6 +77,26 @@
         </div>
     </div>
 
+    <div class="services-panel">
+        <div class="services-header">
+            <div>
+                <span class="eyebrow">@T.T("OurServices")</span>
+                <h2>@T.T("OurServicesTitle")</h2>
+                <p>@T.T("OurServicesText")</p>
+            </div>
+            <a href="/Home/Features" class="btn-secondary">@T.T("ViewAllServices")</a>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card"><span class="dash-symbol">CRM</span><h3>@T.T("ServiceCrmTitle")</h3><p>@T.T("ServiceCrmText")</p></div>
+            <div class="service-card"><span class="dash-symbol">INV</span><h3>@T.T("ServiceBillingTitle")</h3><p>@T.T("ServiceBillingText")</p></div>
+            <div class="service-card"><span class="dash-symbol">STK</span><h3>@T.T("ServiceStockTitle")</h3><p>@T.T("ServiceStockText")</p></div>
+            <div class="service-card"><span class="dash-symbol">FIN</span><h3>@T.T("ServiceFinanceTitle")</h3><p>@T.T("ServiceFinanceText")</p></div>
+            <div class="service-card"><span class="dash-symbol">HR</span><h3>@T.T("ServiceHrTitle")</h3><p>@T.T("ServiceHrText")</p></div>
+            <div class="service-card"><span class="dash-symbol">AI</span><h3>@T.T("ServiceAiTitle")</h3><p>@T.T("ServiceAiText")</p></div>
+        </div>
+    </div>
+
     <div class="stats-grid">
         <div class="stat-card"><div class="stat-icon">REV</div><div><h3>@ViewBag.TotalRevenue.ToString("N2") EUR</h3><p>@T.T("TotalRevenue")</p></div></div>
         <div class="stat-card"><div class="stat-icon">EXP</div><div><h3>@ViewBag.TotalExpenses.ToString("N2") EUR</h3><p>@T.T("TotalExpenses")</p></div></div>
