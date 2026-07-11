@@ -17,21 +17,14 @@
 </div>
 
 <div class="panel">
-
     <div class="panel-header">
-
         <h2>@T.T("ClientsList")</h2>
-
-        <span class="badge">
-            @Model.Count @T.T("RegisteredClients")
-        </span>
-
+        <span class="badge">@Model.Count @T.T("RegisteredClients")</span>
     </div>
 
     @if (Model.Any())
     {
         <table>
-
             <thead>
                 <tr>
                     <th>@T.T("Name")</th>
@@ -41,9 +34,7 @@
                     <th>@T.T("Address")</th>
                 </tr>
             </thead>
-
             <tbody>
-
             @foreach (var client in Model)
             {
                 <tr>
@@ -54,31 +45,16 @@
                     <td>@client.Address</td>
                 </tr>
             }
-
             </tbody>
-
         </table>
     }
     else
     {
         <div class="empty-state">
-
-            <div class="empty-icon">
-                👥
-            </div>
-
+            <div class="empty-icon">CRM</div>
             <h3>@T.T("NoClients")</h3>
-
             <p>@T.T("NoClientsText")</p>
-
-            <a href="/Clients/Create"
-               class="btn-primary">
-
-                @T.T("AddFirstClient")
-
-            </a>
-
+            <a href="/Clients/Create" class="btn-primary">@T.T("AddFirstClient")</a>
         </div>
     }
-
 </div>

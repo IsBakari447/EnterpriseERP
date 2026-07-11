@@ -139,6 +139,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "clients",
+    pattern: "Clients",
+    defaults: new { controller = "Clients", action = "Index" });
+
+app.MapControllerRoute(
+    name: "clientsIndex",
+    pattern: "Clients/Index",
+    defaults: new { controller = "Clients", action = "Index" });
+
+app.MapControllerRoute(
+    name: "clientAlias",
+    pattern: "Client/{action=Index}/{id?}",
+    defaults: new { controller = "Clients" });
+
+app.MapControllerRoute(
+    name: "customersAlias",
+    pattern: "Customers/{action=Index}/{id?}",
+    defaults: new { controller = "Clients" });
+
+app.MapControllerRoute(
     name: "invoices",
     pattern: "Invoices",
     defaults: new { controller = "Invoices", action = "Index" });
