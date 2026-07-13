@@ -14,5 +14,18 @@ namespace EnterpriseERP.Helpers
 
             return Convert.ToBase64String(hash);
         }
+
+        public static bool VerifyPassword(string password, string storedPassword)
+        {
+            if (string.IsNullOrEmpty(storedPassword))
+                return false;
+
+            return storedPassword == HashPassword(password) || storedPassword == password;
+        }
+
+        public static bool NeedsRehash(string password, string storedPassword)
+        {
+            return !string.IsNullOrEmpty(storedPassword) && storedPassword == password;
+        }
     }
 }

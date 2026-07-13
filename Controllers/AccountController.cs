@@ -46,11 +46,14 @@ namespace EnterpriseERP.Controllers
                 u.Email.ToUpper() == normalizedLogin ||
                 u.FullName.ToUpper() == normalizedLogin);
 
-            if (user == null || user.PasswordHash != PasswordHelper.HashPassword(password))
+            if (user == null || !PasswordHelper.VerifyPassword(password, user.PasswordHash))
             {
                 ViewBag.Error = _translation.T("InvalidLogin");
                 return View();
             }
+
+            if (PasswordHelper.NeedsRehash(password, user.PasswordHash))
+                user.PasswordHash = PasswordHelper.HashPassword(password);
 
             if (!user.IsActive)
             {

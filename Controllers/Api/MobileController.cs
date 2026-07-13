@@ -978,8 +978,10 @@ namespace EnterpriseERP.Controllers.Api
             if (string.IsNullOrWhiteSpace(user.Role))
                 user.Role = "Employee";
 
-            if (string.IsNullOrWhiteSpace(user.PasswordHash))
-                user.PasswordHash = user.Password;
+            if (string.IsNullOrWhiteSpace(user.PasswordHash) && !string.IsNullOrWhiteSpace(user.Password))
+                user.PasswordHash = Helpers.PasswordHelper.HashPassword(user.Password);
+            else if (!string.IsNullOrWhiteSpace(user.PasswordHash) && user.PasswordHash == user.Password)
+                user.PasswordHash = Helpers.PasswordHelper.HashPassword(user.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

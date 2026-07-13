@@ -36,11 +36,10 @@ public class AuthController : ControllerBase
             });
         }
 
-        var email = request.Email.Trim();
-        var passwordHash = PasswordHelper.HashPassword(request.Password);
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var email = request.Email.Trim().ToUpperInvariant();
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == email);
 
-        if (user == null || user.PasswordHash != passwordHash)
+        if (user == null || !PasswordHelper.VerifyPassword(request.Password, user.PasswordHash))
         {
             return Unauthorized(new ApiResponse<object>
             {
@@ -50,6 +49,9 @@ public class AuthController : ControllerBase
                 Errors = new List<string> { "InvalidCredentials" }
             });
         }
+
+        if (PasswordHelper.NeedsRehash(request.Password, user.PasswordHash))
+            user.PasswordHash = PasswordHelper.HashPassword(request.Password);
 
         if (!user.IsActive)
         {
