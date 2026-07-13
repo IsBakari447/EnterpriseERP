@@ -322,6 +322,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <link rel="icon" type="image/png" href="~/img/enterpriseerp-icon.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
@@ -372,9 +373,20 @@
         }
 
         .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
             font-size: 28px;
             font-weight: 900;
             white-space: nowrap;
+        }
+
+        .brand img {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: white;
         }
 
         .brand span { color: var(--purple); }
@@ -787,7 +799,10 @@
 </script>
 
 <header class="navbar">
-    <a class="brand" href="/">Enterprise<span>ERP</span></a>
+    <a class="brand" href="/">
+        <img src="/img/enterpriseerp-icon.png" alt="EnterpriseERP" />
+        <span>EnterpriseERP</span>
+    </a>
 
     <nav class="nav-links">
         <a href="/Home/Features">Fonctionnalités</a>
