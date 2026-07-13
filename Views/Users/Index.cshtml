@@ -1,17 +1,198 @@
 @model List<EnterpriseERP.Models.User>
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Users Management";
+    var translations = new Dictionary<string, Dictionary<string, string>>
+    {
+        ["fr"] = new()
+        {
+            ["Title"] = "Gestion des utilisateurs",
+            ["Subtitle"] = "Gestion avancee des comptes utilisateurs, roles et statuts",
+            ["BackAdmin"] = "Retour Admin Center",
+            ["TotalUsers"] = "Total utilisateurs",
+            ["ActiveUsers"] = "Actifs",
+            ["InactiveUsers"] = "Inactifs",
+            ["PendingUsers"] = "En attente",
+            ["Filters"] = "Filtres",
+            ["SearchPlaceholder"] = "Rechercher nom ou email...",
+            ["AllRoles"] = "Tous les roles",
+            ["AllStatuses"] = "Tous les statuts",
+            ["Filter"] = "Filtrer",
+            ["Reset"] = "Reinitialiser",
+            ["UsersList"] = "Liste des utilisateurs",
+            ["CreateUser"] = "Creer utilisateur",
+            ["User"] = "Utilisateur",
+            ["Role"] = "Role",
+            ["Status"] = "Statut",
+            ["LastLogin"] = "Derniere connexion",
+            ["Connections"] = "Connexions",
+            ["Actions"] = "Actions",
+            ["Active"] = "Actif",
+            ["Approved"] = "Approuve",
+            ["Yes"] = "Oui",
+            ["No"] = "Non",
+            ["Never"] = "Jamais",
+            ["Approve"] = "Approuver",
+            ["Disable"] = "Desactiver",
+            ["Enable"] = "Activer",
+            ["Empty"] = "Aucun utilisateur trouve."
+        },
+        ["en"] = new()
+        {
+            ["Title"] = "Users Management",
+            ["Subtitle"] = "Advanced management of user accounts, roles and statuses",
+            ["BackAdmin"] = "Back to Admin Center",
+            ["TotalUsers"] = "Total users",
+            ["ActiveUsers"] = "Active",
+            ["InactiveUsers"] = "Inactive",
+            ["PendingUsers"] = "Pending",
+            ["Filters"] = "Filters",
+            ["SearchPlaceholder"] = "Search name or email...",
+            ["AllRoles"] = "All roles",
+            ["AllStatuses"] = "All statuses",
+            ["Filter"] = "Filter",
+            ["Reset"] = "Reset",
+            ["UsersList"] = "Users list",
+            ["CreateUser"] = "Create user",
+            ["User"] = "User",
+            ["Role"] = "Role",
+            ["Status"] = "Status",
+            ["LastLogin"] = "Last login",
+            ["Connections"] = "Connections",
+            ["Actions"] = "Actions",
+            ["Active"] = "Active",
+            ["Approved"] = "Approved",
+            ["Yes"] = "Yes",
+            ["No"] = "No",
+            ["Never"] = "Never",
+            ["Approve"] = "Approve",
+            ["Disable"] = "Disable",
+            ["Enable"] = "Enable",
+            ["Empty"] = "No users found."
+        },
+        ["sv"] = new()
+        {
+            ["Title"] = "Anvandarhantering",
+            ["Subtitle"] = "Avancerad hantering av anvandarkonton, roller och status",
+            ["BackAdmin"] = "Tillbaka till Admin Center",
+            ["TotalUsers"] = "Totalt antal anvandare",
+            ["ActiveUsers"] = "Aktiva",
+            ["InactiveUsers"] = "Inaktiva",
+            ["PendingUsers"] = "Vantar",
+            ["Filters"] = "Filter",
+            ["SearchPlaceholder"] = "Sok namn eller e-post...",
+            ["AllRoles"] = "Alla roller",
+            ["AllStatuses"] = "Alla statusar",
+            ["Filter"] = "Filtrera",
+            ["Reset"] = "Aterstall",
+            ["UsersList"] = "Anvandarlista",
+            ["CreateUser"] = "Skapa anvandare",
+            ["User"] = "Anvandare",
+            ["Role"] = "Roll",
+            ["Status"] = "Status",
+            ["LastLogin"] = "Senaste inloggning",
+            ["Connections"] = "Inloggningar",
+            ["Actions"] = "Atgarder",
+            ["Active"] = "Aktiv",
+            ["Approved"] = "Godkand",
+            ["Yes"] = "Ja",
+            ["No"] = "Nej",
+            ["Never"] = "Aldrig",
+            ["Approve"] = "Godkann",
+            ["Disable"] = "Inaktivera",
+            ["Enable"] = "Aktivera",
+            ["Empty"] = "Ingen anvandare hittades."
+        },
+        ["es"] = new()
+        {
+            ["Title"] = "Gestion de usuarios",
+            ["Subtitle"] = "Gestion avanzada de cuentas, roles y estados de usuario",
+            ["BackAdmin"] = "Volver al Admin Center",
+            ["TotalUsers"] = "Total usuarios",
+            ["ActiveUsers"] = "Activos",
+            ["InactiveUsers"] = "Inactivos",
+            ["PendingUsers"] = "Pendientes",
+            ["Filters"] = "Filtros",
+            ["SearchPlaceholder"] = "Buscar nombre o email...",
+            ["AllRoles"] = "Todos los roles",
+            ["AllStatuses"] = "Todos los estados",
+            ["Filter"] = "Filtrar",
+            ["Reset"] = "Restablecer",
+            ["UsersList"] = "Lista de usuarios",
+            ["CreateUser"] = "Crear usuario",
+            ["User"] = "Usuario",
+            ["Role"] = "Rol",
+            ["Status"] = "Estado",
+            ["LastLogin"] = "Ultima conexion",
+            ["Connections"] = "Conexiones",
+            ["Actions"] = "Acciones",
+            ["Active"] = "Activo",
+            ["Approved"] = "Aprobado",
+            ["Yes"] = "Si",
+            ["No"] = "No",
+            ["Never"] = "Nunca",
+            ["Approve"] = "Aprobar",
+            ["Disable"] = "Desactivar",
+            ["Enable"] = "Activar",
+            ["Empty"] = "No se encontraron usuarios."
+        },
+        ["de"] = new()
+        {
+            ["Title"] = "Benutzerverwaltung",
+            ["Subtitle"] = "Erweiterte Verwaltung von Benutzerkonten, Rollen und Status",
+            ["BackAdmin"] = "Zuruck zum Admin Center",
+            ["TotalUsers"] = "Benutzer gesamt",
+            ["ActiveUsers"] = "Aktiv",
+            ["InactiveUsers"] = "Inaktiv",
+            ["PendingUsers"] = "Ausstehend",
+            ["Filters"] = "Filter",
+            ["SearchPlaceholder"] = "Name oder E-Mail suchen...",
+            ["AllRoles"] = "Alle Rollen",
+            ["AllStatuses"] = "Alle Status",
+            ["Filter"] = "Filtern",
+            ["Reset"] = "Zurucksetzen",
+            ["UsersList"] = "Benutzerliste",
+            ["CreateUser"] = "Benutzer erstellen",
+            ["User"] = "Benutzer",
+            ["Role"] = "Rolle",
+            ["Status"] = "Status",
+            ["LastLogin"] = "Letzte Anmeldung",
+            ["Connections"] = "Anmeldungen",
+            ["Actions"] = "Aktionen",
+            ["Active"] = "Aktiv",
+            ["Approved"] = "Genehmigt",
+            ["Yes"] = "Ja",
+            ["No"] = "Nein",
+            ["Never"] = "Nie",
+            ["Approve"] = "Genehmigen",
+            ["Disable"] = "Deaktivieren",
+            ["Enable"] = "Aktivieren",
+            ["Empty"] = "Keine Benutzer gefunden."
+        }
+    };
+
+    string L(string key)
+    {
+        var lang = T.Lang;
+        if (translations.TryGetValue(lang, out var values) && values.TryGetValue(key, out var value))
+        {
+            return value;
+        }
+
+        return translations["fr"][key];
+    }
+
+    ViewData["Title"] = L("Title");
 }
 
 <div class="page-header">
     <div>
-        <h1>Users Management</h1>
-        <p>Gestion avancée des comptes utilisateurs, rôles et statuts</p>
+        <h1>@L("Title")</h1>
+        <p>@L("Subtitle")</p>
     </div>
 
     <a href="/Admin/Index" class="btn-secondary">
-        ← Retour Admin Center
+        &larr; @L("BackAdmin")
     </a>
 </div>
 
@@ -25,7 +206,7 @@
         <div class="stat-icon">👥</div>
         <div>
             <h3>@ViewBag.TotalUsers</h3>
-            <p>Total utilisateurs</p>
+            <p>@L("TotalUsers")</p>
         </div>
     </div>
 
@@ -33,7 +214,7 @@
         <div class="stat-icon">✅</div>
         <div>
             <h3>@ViewBag.ActiveUsers</h3>
-            <p>Actifs</p>
+            <p>@L("ActiveUsers")</p>
         </div>
     </div>
 
@@ -41,7 +222,7 @@
         <div class="stat-icon">⛔</div>
         <div>
             <h3>@ViewBag.InactiveUsers</h3>
-            <p>Inactifs</p>
+            <p>@L("InactiveUsers")</p>
         </div>
     </div>
 
@@ -49,40 +230,40 @@
         <div class="stat-icon">⏳</div>
         <div>
             <h3>@ViewBag.PendingUsers</h3>
-            <p>En attente</p>
+            <p>@L("PendingUsers")</p>
         </div>
     </div>
 </div>
 
 <div class="panel">
-    <h2>Filtres</h2>
+    <h2>@L("Filters")</h2>
 
     <form method="get" action="/Users/Index" class="search-box" style="max-width:100%; margin-bottom:20px;">
         <input type="text"
                name="search"
-               placeholder="Rechercher nom ou email..."
+               placeholder="@L("SearchPlaceholder")"
                value="@ViewBag.Search" />
 
         <select name="role">
-            <option value="">Tous les rôles</option>
+            <option value="">@L("AllRoles")</option>
             <option value="Admin" selected="@(ViewBag.Role == "Admin")">Admin</option>
             <option value="Manager" selected="@(ViewBag.Role == "Manager")">Manager</option>
             <option value="Employee" selected="@(ViewBag.Role == "Employee")">Employee</option>
         </select>
 
         <select name="status">
-            <option value="">Tous les statuts</option>
-            <option value="active" selected="@(ViewBag.Status == "active")">Actifs</option>
-            <option value="inactive" selected="@(ViewBag.Status == "inactive")">Inactifs</option>
-            <option value="pending" selected="@(ViewBag.Status == "pending")">En attente</option>
+            <option value="">@L("AllStatuses")</option>
+            <option value="active" selected="@(ViewBag.Status == "active")">@L("ActiveUsers")</option>
+            <option value="inactive" selected="@(ViewBag.Status == "inactive")">@L("InactiveUsers")</option>
+            <option value="pending" selected="@(ViewBag.Status == "pending")">@L("PendingUsers")</option>
         </select>
 
-        <button type="submit" class="btn-primary">Filtrer</button>
+        <button type="submit" class="btn-primary">@L("Filter")</button>
 
         <button type="button"
                 class="btn-secondary"
                 onclick="window.location.href='@Url.Action("Index", "Users")'">
-            Réinitialiser
+            @L("Reset")
         </button>
     </form>
 </div>
@@ -90,11 +271,11 @@
 <div class="panel">
     <div class="page-header" style="margin-bottom:15px;">
         <div>
-            <h2>Liste des utilisateurs</h2>
+            <h2>@L("UsersList")</h2>
         </div>
 
         <a href="/Account/Register" class="btn-primary">
-            + Créer utilisateur
+            + @L("CreateUser")
         </a>
     </div>
 
@@ -103,13 +284,13 @@
         <table>
             <thead>
                 <tr>
-                    <th>Utilisateur</th>
-                    <th>Rôle</th>
-                    <th>Statut</th>
-                    <th>Dernière connexion</th>
+                    <th>@L("User")</th>
+                    <th>@L("Role")</th>
+                    <th>@L("Status")</th>
+                    <th>@L("LastLogin")</th>
                     <th>IP</th>
-                    <th>Connexions</th>
-                    <th>Actions</th>
+                    <th>@L("Connections")</th>
+                    <th>@L("Actions")</th>
                 </tr>
             </thead>
 
@@ -145,11 +326,11 @@
                         </td>
 
                         <td>
-                            <div>Actif : @(user.IsActive ? "Oui" : "Non")</div>
-                            <div>Approuvé : @(user.IsApproved ? "Oui" : "Non")</div>
+                            <div>@L("Active") : @(user.IsActive ? L("Yes") : L("No"))</div>
+                            <div>@L("Approved") : @(user.IsApproved ? L("Yes") : L("No"))</div>
                         </td>
 
-                        <td>@(user.LastConnection?.ToString("dd/MM/yyyy HH:mm") ?? "Jamais")</td>
+                        <td>@(user.LastConnection?.ToString("dd/MM/yyyy HH:mm") ?? L("Never"))</td>
                         <td>@user.LastIPAddress</td>
                         <td>@user.LoginCount</td>
 
@@ -159,7 +340,7 @@
                                 <form method="post" action="/Users/Approve" style="display:inline;">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@user.Id" />
-                                    <button type="submit" class="btn-primary">Approuver</button>
+                                    <button type="submit" class="btn-primary">@L("Approve")</button>
                                 </form>
                             }
 
@@ -169,7 +350,7 @@
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@user.Id" />
                                     <button type="submit" class="btn-danger">
-                                        @(user.IsActive ? "Désactiver" : "Activer")
+                                        @(user.IsActive ? L("Disable") : L("Enable"))
                                     </button>
                                 </form>
                             }
@@ -181,6 +362,6 @@
     }
     else
     {
-        <p class="empty">Aucun utilisateur trouvé.</p>
+        <p class="empty">@L("Empty")</p>
     }
 </div>
