@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using EnterpriseERP.Services;
 
 namespace EnterpriseERP.Middleware;
@@ -54,10 +55,37 @@ public class HtmlLocalizationMiddleware
 
     private static string Replace(string html, IReadOnlyDictionary<string, string> map)
     {
-        foreach (var item in map)
-            html = html.Replace(item.Key, item.Value, StringComparison.OrdinalIgnoreCase);
+        var output = new StringBuilder(html.Length);
+        var insideRawBlock = false;
 
-        return html;
+        foreach (Match match in Regex.Matches(html, @"<[^>]+>|[^<]+", RegexOptions.Singleline))
+        {
+            var chunk = match.Value;
+
+            if (chunk.StartsWith('<'))
+            {
+                output.Append(chunk);
+
+                if (Regex.IsMatch(chunk, @"^<\s*(script|style)\b", RegexOptions.IgnoreCase))
+                    insideRawBlock = true;
+                else if (Regex.IsMatch(chunk, @"^<\s*/\s*(script|style)\s*>", RegexOptions.IgnoreCase))
+                    insideRawBlock = false;
+
+                continue;
+            }
+
+            output.Append(insideRawBlock ? chunk : ReplaceText(chunk, map));
+        }
+
+        return output.ToString();
+    }
+
+    private static string ReplaceText(string text, IReadOnlyDictionary<string, string> map)
+    {
+        foreach (var item in map)
+            text = text.Replace(item.Key, item.Value, StringComparison.OrdinalIgnoreCase);
+
+        return text;
     }
 
     private static readonly Dictionary<string, string> En = new()

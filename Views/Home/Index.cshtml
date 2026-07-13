@@ -319,6 +319,10 @@
     <meta charset="utf-8" />
     <title>@L("Title")</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
         * { box-sizing: border-box; }
@@ -336,14 +340,19 @@
             --green: #22c55e;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            background: #020617 !important;
+            color-scheme: dark;
+        }
 
         body {
             margin: 0;
             font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg) !important;
+            color: var(--text) !important;
             overflow-x: hidden;
+            forced-color-adjust: none;
         }
 
         a { text-decoration: none; color: inherit; }
@@ -710,10 +719,72 @@
             .hero, .section { padding-left: 24px; padding-right: 24px; }
             .navbar { padding-left: 24px; padding-right: 24px; }
         }
+
+        /* Production safety: keep the public page readable even when browser
+           contrast extensions or stale cached CSS try to flatten the theme. */
+        html,
+        body,
+        body.landing-page {
+            background: #020617 !important;
+            color: #f8fafc !important;
+            forced-color-adjust: none !important;
+        }
+
+        .navbar {
+            background: rgba(2, 6, 23, .94) !important;
+        }
+
+        .hero {
+            background:
+                radial-gradient(circle at top left, rgba(124,58,237,.32), transparent 34%),
+                radial-gradient(circle at top right, rgba(37,99,235,.30), transparent 30%),
+                linear-gradient(135deg, #020617, #0b1228) !important;
+        }
+
+        .mockup,
+        .stat,
+        .card,
+        .price,
+        .dash-card,
+        .mini,
+        .ai-box,
+        .msg {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .brand,
+        .stat strong,
+        .mini strong,
+        .footer h4 {
+            color: #ffffff !important;
+        }
+
+        p,
+        .nav-links a,
+        .section p,
+        .footer,
+        .bottom,
+        .card p,
+        .price p,
+        .stat span {
+            color: #cbd5e1 !important;
+        }
     </style>
 </head>
 
-<body>
+<body class="landing-page">
+<script>
+    document.documentElement.style.setProperty("background", "#020617", "important");
+    document.documentElement.style.colorScheme = "dark";
+    document.body.style.setProperty("background", "#020617", "important");
+    document.body.style.setProperty("color", "#f8fafc", "important");
+</script>
 
 <header class="navbar">
     <a class="brand" href="/">Enterprise<span>ERP</span></a>
