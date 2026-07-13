@@ -238,11 +238,11 @@
         <form asp-controller="Account" asp-action="Login" method="post">
             @Html.AntiForgeryToken()
 
-            <label>@T.T("Email")</label>
-            <input type="email" name="email" placeholder="exemple@email.com" required />
+            <label>Email ou nom d'utilisateur</label>
+            <input type="text" name="email" placeholder="email@exemple.com ou nom complet" autocomplete="username" required />
 
             <label>@T.T("Password")</label>
-            <input type="password" name="password" placeholder="@T.T("PasswordPlaceholder")" required />
+            <input type="password" name="password" placeholder="@T.T("PasswordPlaceholder")" autocomplete="current-password" required />
 
             <button class="btn" type="submit">@T.T("SignIn")</button>
         </form>

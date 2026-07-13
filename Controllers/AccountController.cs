@@ -33,13 +33,18 @@ namespace EnterpriseERP.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(string email, string password)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            var login = email?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
                 ViewBag.Error = _translation.T("FillAllFields");
                 return View();
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == email.Trim());
+            var normalizedLogin = login.ToUpperInvariant();
+            var user = _context.Users.FirstOrDefault(u =>
+                u.Email.ToUpper() == normalizedLogin ||
+                u.FullName.ToUpper() == normalizedLogin);
 
             if (user == null || user.PasswordHash != PasswordHelper.HashPassword(password))
             {
