@@ -72,7 +72,27 @@ public static class Common
         ["Download"] = "Telecharger",
         ["Print"] = "Imprimer",
         ["Details"] = "Details",
-        ["User"] = "Utilisateur"
+        ["User"] = "Utilisateur",
+        ["StockDescription"] = "Entrees et sorties de stock",
+        ["AddStockMovement"] = "+ Mouvement stock",
+        ["StockMovement"] = "Mouvement de stock",
+        ["StockMovementDescription"] = "Ajouter une entree ou une sortie de stock",
+        ["StockMovementHistory"] = "Historique des mouvements",
+        ["NoStockMovements"] = "Aucun mouvement de stock enregistre.",
+        ["MovementType"] = "Type de mouvement",
+        ["SelectProduct"] = "-- Selectionner un produit --",
+        ["CurrentStock"] = "stock actuel",
+        ["StockIn"] = "Entree",
+        ["StockOut"] = "Sortie",
+        ["TrialPlan"] = "Essai gratuit",
+        ["TrialActive"] = "Acces complet actif",
+        ["TrialEndedReadOnly"] = "Essai termine - lecture seule",
+        ["TrialActiveDaysRemaining"] = "Essai actif",
+        ["Remaining"] = "restant(s)",
+        ["CompleteRole"] = "complet",
+        ["DataRetention"] = "Donnees conservees",
+        ["Days"] = "jours",
+        ["Suggestions"] = "Suggestions"
     };
 
     public static readonly Dictionary<string,string> Fr = BaseFr();
@@ -147,7 +167,27 @@ public static class Common
         ["Download"] = "Download",
         ["Print"] = "Print",
         ["Details"] = "Details",
-        ["User"] = "User"
+        ["User"] = "User",
+        ["StockDescription"] = "Stock entries and exits",
+        ["AddStockMovement"] = "+ Stock movement",
+        ["StockMovement"] = "Stock movement",
+        ["StockMovementDescription"] = "Add a stock entry or exit",
+        ["StockMovementHistory"] = "Movement history",
+        ["NoStockMovements"] = "No stock movement recorded.",
+        ["MovementType"] = "Movement type",
+        ["SelectProduct"] = "-- Select a product --",
+        ["CurrentStock"] = "current stock",
+        ["StockIn"] = "Entry",
+        ["StockOut"] = "Exit",
+        ["TrialPlan"] = "Free trial",
+        ["TrialActive"] = "Full access active",
+        ["TrialEndedReadOnly"] = "Trial ended - read only",
+        ["TrialActiveDaysRemaining"] = "Trial active",
+        ["Remaining"] = "remaining",
+        ["CompleteRole"] = "full",
+        ["DataRetention"] = "Data retained",
+        ["Days"] = "days",
+        ["Suggestions"] = "Suggestions"
     };
 
     public static readonly Dictionary<string,string> Sv = new()
@@ -220,7 +260,27 @@ public static class Common
         ["Download"] = "Ladda ner",
         ["Print"] = "Skriv ut",
         ["Details"] = "Detaljer",
-        ["User"] = "Anvandare"
+        ["User"] = "Anvandare",
+        ["StockDescription"] = "In- och utleveranser i lager",
+        ["AddStockMovement"] = "+ Lagerrorelse",
+        ["StockMovement"] = "Lagerrorelse",
+        ["StockMovementDescription"] = "Lagg till inleverans eller utleverans",
+        ["StockMovementHistory"] = "Rorelsehistorik",
+        ["NoStockMovements"] = "Ingen lagerrorelse har registrerats.",
+        ["MovementType"] = "Rorelsetyp",
+        ["SelectProduct"] = "-- Valj en produkt --",
+        ["CurrentStock"] = "aktuellt lager",
+        ["StockIn"] = "In",
+        ["StockOut"] = "Ut",
+        ["TrialPlan"] = "Gratis provperiod",
+        ["TrialActive"] = "Full atkomst aktiv",
+        ["TrialEndedReadOnly"] = "Provperioden slut - endast lasning",
+        ["TrialActiveDaysRemaining"] = "Provperiod aktiv",
+        ["Remaining"] = "kvar",
+        ["CompleteRole"] = "full",
+        ["DataRetention"] = "Data sparas",
+        ["Days"] = "dagar",
+        ["Suggestions"] = "Forslag"
     };
 
     public static readonly Dictionary<string,string> Es = new(Fr)
@@ -256,7 +316,27 @@ public static class Common
         ["Back"] = "Volver",
         ["Save"] = "Guardar",
         ["Cancel"] = "Cancelar",
-        ["Export"] = "Exportar"
+        ["Export"] = "Exportar",
+        ["StockDescription"] = "Entradas y salidas de inventario",
+        ["AddStockMovement"] = "+ Movimiento de inventario",
+        ["StockMovement"] = "Movimiento de inventario",
+        ["StockMovementDescription"] = "Anadir una entrada o salida de inventario",
+        ["StockMovementHistory"] = "Historial de movimientos",
+        ["NoStockMovements"] = "No hay movimientos de inventario registrados.",
+        ["MovementType"] = "Tipo de movimiento",
+        ["SelectProduct"] = "-- Seleccionar un producto --",
+        ["CurrentStock"] = "inventario actual",
+        ["StockIn"] = "Entrada",
+        ["StockOut"] = "Salida",
+        ["TrialPlan"] = "Prueba gratuita",
+        ["TrialActive"] = "Acceso completo activo",
+        ["TrialEndedReadOnly"] = "Prueba terminada - solo lectura",
+        ["TrialActiveDaysRemaining"] = "Prueba activa",
+        ["Remaining"] = "restantes",
+        ["CompleteRole"] = "completo",
+        ["DataRetention"] = "Datos conservados",
+        ["Days"] = "dias",
+        ["Suggestions"] = "Sugerencias"
     };
 
     public static readonly Dictionary<string,string> De = new(Fr)
@@ -292,6 +372,26 @@ public static class Common
         ["Back"] = "Zuruck",
         ["Save"] = "Speichern",
         ["Cancel"] = "Abbrechen",
-        ["Export"] = "Exportieren"
+        ["Export"] = "Exportieren",
+        ["StockDescription"] = "Lagerein- und ausgange",
+        ["AddStockMovement"] = "+ Lagerbewegung",
+        ["StockMovement"] = "Lagerbewegung",
+        ["StockMovementDescription"] = "Lagereingang oder Lagerausgang hinzufugen",
+        ["StockMovementHistory"] = "Bewegungshistorie",
+        ["NoStockMovements"] = "Keine Lagerbewegung erfasst.",
+        ["MovementType"] = "Bewegungstyp",
+        ["SelectProduct"] = "-- Produkt auswahlen --",
+        ["CurrentStock"] = "aktueller Bestand",
+        ["StockIn"] = "Eingang",
+        ["StockOut"] = "Ausgang",
+        ["TrialPlan"] = "Kostenlose Testversion",
+        ["TrialActive"] = "Voller Zugriff aktiv",
+        ["TrialEndedReadOnly"] = "Testversion beendet - nur Lesen",
+        ["TrialActiveDaysRemaining"] = "Testversion aktiv",
+        ["Remaining"] = "verbleibend",
+        ["CompleteRole"] = "voll",
+        ["DataRetention"] = "Daten gespeichert",
+        ["Days"] = "Tage",
+        ["Suggestions"] = "Vorschlage"
     };
 }

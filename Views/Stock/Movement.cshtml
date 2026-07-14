@@ -1,18 +1,19 @@
 @model EnterpriseERP.Models.StockMovement
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Mouvement de stock";
+    ViewData["Title"] = T.T("StockMovement");
     var products = ViewBag.Products as List<EnterpriseERP.Models.Product>;
 }
 
 <div class="page-header">
     <div>
-        <h1>Mouvement de stock</h1>
-        <p>Ajouter une entrée ou une sortie de stock</p>
+        <h1>@T.T("StockMovement")</h1>
+        <p>@T.T("StockMovementDescription")</p>
     </div>
 
     <a href="/Stock/Index" class="btn-secondary">
-        ← Retour
+        &larr; @T.T("Back")
     </a>
 </div>
 
@@ -26,16 +27,16 @@
         @Html.AntiForgeryToken()
 
         <div class="form-group">
-            <label>Produit</label>
+            <label>@T.T("Product")</label>
             <select name="ProductId" required>
-                <option value="">-- Sélectionner un produit --</option>
+                <option value="">@T.T("SelectProduct")</option>
 
                 @if (products != null)
                 {
                     foreach (var product in products)
                     {
                         <option value="@product.Id">
-                            @product.Name - stock actuel : @product.Quantity
+                            @product.Name - @T.T("CurrentStock") : @product.Quantity
                         </option>
                     }
                 }
@@ -43,20 +44,20 @@
         </div>
 
         <div class="form-group">
-            <label>Type de mouvement</label>
+            <label>@T.T("MovementType")</label>
             <select name="Type" required>
-                <option value="IN">Entrée</option>
-                <option value="OUT">Sortie</option>
+                <option value="IN">@T.T("StockIn")</option>
+                <option value="OUT">@T.T("StockOut")</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Quantité</label>
+            <label>@T.T("Quantity")</label>
             <input name="Quantity" type="number" min="1" required />
         </div>
 
         <button type="submit" class="btn-primary">
-            Enregistrer
+            @T.T("Save")
         </button>
     </form>
 </div>

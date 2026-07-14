@@ -184,11 +184,11 @@
                 <form method="get" action="/Language/Set" style="display:inline-flex;gap:8px;align-items:center;">
                     <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
                     <select name="lang" onchange="this.form.submit()" aria-label="Language">
-                        <option value="fr" selected="@(T.Lang == "fr")">FR · Français</option>
-                        <option value="en" selected="@(T.Lang == "en")">EN · English</option>
-                        <option value="sv" selected="@(T.Lang == "sv")">SV · Svenska</option>
-                        <option value="es" selected="@(T.Lang == "es")">ES · Español</option>
-                        <option value="de" selected="@(T.Lang == "de")">DE · Deutsch</option>
+                        <option value="fr" selected="@(T.Lang == "fr")">FR - Francais</option>
+                        <option value="en" selected="@(T.Lang == "en")">EN - English</option>
+                        <option value="sv" selected="@(T.Lang == "sv")">SV - Svenska</option>
+                        <option value="es" selected="@(T.Lang == "es")">ES - Espanol</option>
+                        <option value="de" selected="@(T.Lang == "de")">DE - Deutsch</option>
                     </select>
                 </form>
 
@@ -222,18 +222,31 @@
         <main class="content-area">
             <section class="trial-banner @(trial.IsReadOnly ? "trial-banner-danger" : "trial-banner-active")">
                 <div>
-                    <strong>@trial.PlanName</strong>
-                    <span>@trial.StatusLabel</span>
+                    <strong>@T.T("TrialPlan")</strong>
+                    <span>
+                        @if (trial.IsPaid)
+                        {
+                            @T.T("TrialActive")
+                        }
+                        else if (trial.IsExpired)
+                        {
+                            @T.T("TrialEndedReadOnly")
+                        }
+                        else
+                        {
+                            @T.T("TrialActiveDaysRemaining") @: - @trial.DaysRemaining @T.T("Days") @T.T("Remaining")
+                        }
+                    </span>
                 </div>
                 <div class="trial-metrics">
-                    <span>RÃ´le : @trial.Role complet</span>
-                    <span>Utilisateurs @trial.UsersUsed/@trial.MaxUsers</span>
-                    <span>Factures @trial.InvoicesUsed/@trial.MaxInvoices</span>
-                    <span>Produits @trial.ProductsUsed/@trial.MaxProducts</span>
-                    <span>DonnÃ©es conservÃ©es @trial.DataRetentionDays jours</span>
+                    <span>@T.T("Role") : @trial.Role @T.T("CompleteRole")</span>
+                    <span>@T.T("Users") @trial.UsersUsed/@trial.MaxUsers</span>
+                    <span>@T.T("Invoices") @trial.InvoicesUsed/@trial.MaxInvoices</span>
+                    <span>@T.T("Products") @trial.ProductsUsed/@trial.MaxProducts</span>
+                    <span>@T.T("DataRetention") @trial.DataRetentionDays @T.T("Days")</span>
                 </div>
                 <details>
-                    <summary>Suggestions</summary>
+                    <summary>@T.T("Suggestions")</summary>
                     <ul>
                         @foreach (var suggestion in trial.Suggestions)
                         {

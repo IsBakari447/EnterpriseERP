@@ -1,32 +1,33 @@
 @model List<EnterpriseERP.Models.StockMovement>
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Stock";
+    ViewData["Title"] = T.T("Stock");
 }
 
 <div class="page-header">
     <div>
-        <h1>Stock</h1>
-        <p>Entrées et sorties de stock</p>
+        <h1>@T.T("Stock")</h1>
+        <p>@T.T("StockDescription")</p>
     </div>
 
     <a href="/Stock/Movement" class="btn-primary">
-        + Mouvement stock
+        @T.T("AddStockMovement")
     </a>
 </div>
 
 <div class="panel">
-    <h2>Historique des mouvements</h2>
+    <h2>@T.T("StockMovementHistory")</h2>
 
     @if (Model != null && Model.Any())
     {
         <table>
             <thead>
                 <tr>
-                    <th>Produit</th>
+                    <th>@T.T("Product")</th>
                     <th>Type</th>
-                    <th>Quantité</th>
-                    <th>Date</th>
+                    <th>@T.T("Quantity")</th>
+                    <th>@T.T("Date")</th>
                 </tr>
             </thead>
 
@@ -45,6 +46,6 @@
     }
     else
     {
-        <p class="empty">Aucun mouvement de stock enregistré.</p>
+        <p class="empty">@T.T("NoStockMovements")</p>
     }
 </div>
