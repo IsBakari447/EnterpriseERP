@@ -14,8 +14,15 @@ public class BrandingService
 
     public async Task<CompanyBrand> GetBrandAsync()
     {
-        var profile = await _context.CompanyProfiles.FirstOrDefaultAsync();
-        var settings = await _context.AppSettings.FirstOrDefaultAsync();
+        var profile = await _context.CompanyProfiles
+            .AsNoTracking()
+            .OrderBy(profile => profile.Id)
+            .FirstOrDefaultAsync();
+
+        var settings = await _context.AppSettings
+            .AsNoTracking()
+            .OrderBy(settings => settings.Id)
+            .FirstOrDefaultAsync();
 
         return new CompanyBrand
         {

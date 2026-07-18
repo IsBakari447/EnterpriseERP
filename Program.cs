@@ -7,6 +7,7 @@ using EnterpriseERP.Models;
 using EnterpriseERP.Services;
 using EnterpriseERP.Services.Trial;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +22,21 @@ QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EnterpriseERP.Services.Export.BrandingService>();
+
+if (builder.Environment.IsProduction())
+{
+    var keysPath = builder.Configuration["DataProtection:KeysPath"]
+        ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_DATA_PROTECTION_KEYS")
+        ?? "/data/dataprotection-keys";
+
+    Directory.CreateDirectory(keysPath);
+
+    builder.Services
+        .AddDataProtection()
+        .SetApplicationName("EnterpriseERP")
+        .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+}
+
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -59,8 +75,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.Name = ".EnterpriseERP.Session";
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = builder.Environment.IsProduction()
+        ? CookieSecurePolicy.Always
+        : CookieSecurePolicy.SameAsRequest;
+});
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.Name = ".EnterpriseERP.Antiforgery";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = builder.Environment.IsProduction()
+        ? CookieSecurePolicy.Always
+        : CookieSecurePolicy.SameAsRequest;
 });
 
 builder.Services.AddCors(options =>
