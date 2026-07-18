@@ -1,4 +1,5 @@
 using EnterpriseERP.Data;
+using EnterpriseERP.Attributes;
 using EnterpriseERP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,6 +20,7 @@ namespace EnterpriseERP.Controllers
             _context = context;
         }
 
+        [RequirePermission("Devis", "Voir")]
         public async Task<IActionResult> Index()
         {
             var quotes = await _context.Quotes
@@ -32,6 +34,7 @@ namespace EnterpriseERP.Controllers
             return View(quotes);
         }
 
+        [RequirePermission("Devis", "Créer")]
         public async Task<IActionResult> Create()
         {
             await LoadSelectLists();
@@ -49,6 +52,7 @@ namespace EnterpriseERP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequirePermission("Devis", "Créer")]
         public async Task<IActionResult> Create(Quote quote)
         {
             ModelState.Clear();
@@ -149,6 +153,7 @@ namespace EnterpriseERP.Controllers
             return RedirectToAction(nameof(Details), new { id = quote.Id });
         }
 
+        [RequirePermission("Devis", "Voir")]
         public async Task<IActionResult> Details(int id)
         {
             var quote = await _context.Quotes
@@ -165,6 +170,7 @@ namespace EnterpriseERP.Controllers
             return View(quote);
         }
 
+        [RequirePermission("Devis", "Modifier")]
         public async Task<IActionResult> Edit(int id)
         {
             var quote = await _context.Quotes
@@ -183,6 +189,7 @@ namespace EnterpriseERP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequirePermission("Devis", "Modifier")]
         public async Task<IActionResult> Edit(int id, Quote quote)
         {
             if (id != quote.Id)
@@ -296,6 +303,7 @@ namespace EnterpriseERP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequirePermission("Devis", "Supprimer")]
         public async Task<IActionResult> Delete(int id)
         {
             var quote = await _context.Quotes
@@ -314,6 +322,7 @@ namespace EnterpriseERP.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+       [RequirePermission("Devis", "Voir")]
        public async Task<IActionResult> Pdf(int id)
     {
     QuestPDF.Settings.License = LicenseType.Community;
@@ -339,6 +348,7 @@ namespace EnterpriseERP.Controllers
     );
     }
 
+        [RequirePermission("Devis", "Voir")]
         public async Task<IActionResult> SendEmail(int id)
         {
             var quote = await _context.Quotes.FindAsync(id);
@@ -352,6 +362,7 @@ namespace EnterpriseERP.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
+       [RequirePermission("Devis", "Modifier")]
        public async Task<IActionResult> ConvertToInvoice(int id)
 {
     var quote = await _context.Quotes
@@ -438,6 +449,7 @@ namespace EnterpriseERP.Controllers
         new { id = invoice.Id });
 }
 
+        [RequirePermission("Devis", "Modifier")]
         public async Task<IActionResult> ConvertToOrder(int id)
         {
             var quote = await _context.Quotes.FindAsync(id);

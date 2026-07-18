@@ -259,71 +259,75 @@
     </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
 <script>
-    const monthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthLabels ?? new List<string>()));
-    const monthRevenues = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthRevenues ?? new List<decimal>()));
-    const expenseMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthLabels ?? new List<string>()));
-    const expenseMonthTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthTotals ?? new List<decimal>()));
-    const orderMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthLabels ?? new List<string>()));
-    const orderMonthCounts = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthCounts ?? new List<int>()));
-    const paymentMethods = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethods ?? new List<string>()));
-    const paymentMethodTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethodTotals ?? new List<decimal>()));
-    const topProductNames = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductNames ?? new List<string>()));
-    const topProductQuantities = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductQuantities ?? new List<int>()));
-    const paidInvoices = @ViewBag.PaidInvoices;
-    const unpaidInvoices = @ViewBag.UnpaidInvoices;
-    const chartColors = ['#8b5cf6', '#22c55e', '#38bdf8', '#f59e0b', '#ef4444', '#14b8a6'];
+    document.addEventListener('DOMContentLoaded', function () {
+        const monthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthLabels ?? new List<string>()));
+        const monthRevenues = @Html.Raw(JsonSerializer.Serialize(ViewBag.MonthRevenues ?? new List<decimal>()));
+        const expenseMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthLabels ?? new List<string>()));
+        const expenseMonthTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.ExpenseMonthTotals ?? new List<decimal>()));
+        const orderMonthLabels = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthLabels ?? new List<string>()));
+        const orderMonthCounts = @Html.Raw(JsonSerializer.Serialize(ViewBag.OrderMonthCounts ?? new List<int>()));
+        const paymentMethods = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethods ?? new List<string>()));
+        const paymentMethodTotals = @Html.Raw(JsonSerializer.Serialize(ViewBag.PaymentMethodTotals ?? new List<decimal>()));
+        const topProductNames = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductNames ?? new List<string>()));
+        const topProductQuantities = @Html.Raw(JsonSerializer.Serialize(ViewBag.TopProductQuantities ?? new List<int>()));
+        const paidInvoices = @ViewBag.PaidInvoices;
+        const unpaidInvoices = @ViewBag.UnpaidInvoices;
+        const chartColors = ['#8b5cf6', '#22c55e', '#38bdf8', '#f59e0b', '#ef4444', '#14b8a6'];
 
-    function normalizeChartData(labels, data, fallbackLabel) {
-        const safeLabels = Array.isArray(labels) && labels.length > 0 ? labels : [fallbackLabel || 'Aucune donnee'];
-        const safeData = Array.isArray(data) && data.length > 0 ? data.map(value => Number(value || 0)) : [0];
-        return { labels: safeLabels, data: safeData };
-    }
-
-    function createChart(id, type, labels, data, label) {
-        const element = document.getElementById(id);
-        if (!element) return;
-
-        if (typeof Chart === 'undefined') {
-            element.closest('.chart-frame')?.classList.add('chart-unavailable');
-            return;
+        function normalizeChartData(labels, data, fallbackLabel) {
+            const safeLabels = Array.isArray(labels) && labels.length > 0 ? labels : [fallbackLabel || 'Aucune donnee'];
+            const safeData = Array.isArray(data) && data.length > 0 ? data.map(value => Number(value || 0)) : [0];
+            return { labels: safeLabels, data: safeData };
         }
 
-        const normalized = normalizeChartData(labels, data, label);
-        const isCircular = type === 'doughnut' || type === 'pie';
+        function createChart(id, type, labels, data, label) {
+            const element = document.getElementById(id);
+            if (!element) return;
 
-        new Chart(element, {
-            type,
-            data: {
-                labels: normalized.labels,
-                datasets: [{
-                    label,
-                    data: normalized.data,
-                    borderColor: '#8b5cf6',
-                    backgroundColor: isCircular ? chartColors : type === 'line' ? 'rgba(139, 92, 246, .22)' : 'rgba(139, 92, 246, .72)',
-                    fill: type === 'line',
-                    borderWidth: 2,
-                    tension: 0.35
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#e5e7eb' } } },
-                scales: isCircular ? {} : {
-                    x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } },
-                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } }
-                }
+            if (typeof Chart === 'undefined') {
+                element.closest('.chart-frame')?.classList.add('chart-unavailable');
+                return;
             }
-        });
-    }
 
-    createChart('revenueChart', 'line', monthLabels, monthRevenues, '@T.T("MonthlyRevenue")');
-    createChart('expensesChart', 'bar', expenseMonthLabels, expenseMonthTotals, '@T.T("MonthlyExpenses")');
-    createChart('ordersChart', 'bar', orderMonthLabels, orderMonthCounts, '@T.T("MonthlyOrders")');
-    createChart('paymentsChart', 'doughnut', paymentMethods, paymentMethodTotals, '@T.T("Payments")');
-    createChart('topProductsChart', 'bar', topProductNames, topProductQuantities, '@T.T("Products")');
-    createChart('invoiceChart', 'doughnut', ['@T.T("Paid")', '@T.T("Unpaid")'], [paidInvoices, unpaidInvoices], '@T.T("Invoices")');
+            const normalized = normalizeChartData(labels, data, label);
+            const isCircular = type === 'doughnut' || type === 'pie';
+
+            new Chart(element, {
+                type,
+                data: {
+                    labels: normalized.labels,
+                    datasets: [{
+                        label,
+                        data: normalized.data,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: isCircular ? chartColors : type === 'line' ? 'rgba(139, 92, 246, .22)' : 'rgba(139, 92, 246, .72)',
+                        fill: type === 'line',
+                        borderWidth: 2,
+                        tension: 0.35
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    resizeDelay: 120,
+                    plugins: { legend: { labels: { color: '#e5e7eb' } } },
+                    scales: isCircular ? {} : {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } },
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148, 163, 184, .12)' } }
+                    }
+                }
+            });
+        }
+
+        createChart('revenueChart', 'line', monthLabels, monthRevenues, '@T.T("MonthlyRevenue")');
+        createChart('expensesChart', 'bar', expenseMonthLabels, expenseMonthTotals, '@T.T("MonthlyExpenses")');
+        createChart('ordersChart', 'bar', orderMonthLabels, orderMonthCounts, '@T.T("MonthlyOrders")');
+        createChart('paymentsChart', 'doughnut', paymentMethods, paymentMethodTotals, '@T.T("Payments")');
+        createChart('topProductsChart', 'bar', topProductNames, topProductQuantities, '@T.T("Products")');
+        createChart('invoiceChart', 'doughnut', ['@T.T("Paid")', '@T.T("Unpaid")'], [paidInvoices, unpaidInvoices], '@T.T("Invoices")');
+    });
 </script>

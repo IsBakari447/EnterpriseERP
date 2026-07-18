@@ -7,10 +7,12 @@ using EnterpriseERP.Models;
 using EnterpriseERP.Services;
 using EnterpriseERP.Services.Trial;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,27 @@ QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<EnterpriseERP.Services.Export.BrandingService>();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+    {
+        "image/svg+xml",
+        "application/manifest+json"
+    });
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,9 +67,21 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MobileCors", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
+        var allowedOrigins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? Array.Empty<string>();
+
+        policy.AllowAnyHeader()
               .AllowAnyMethod();
+
+        if (allowedOrigins.Length > 0)
+        {
+            policy.WithOrigins(allowedOrigins);
+        }
+        else if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin();
+        }
     });
 });
 
@@ -56,6 +91,11 @@ var secretKey = jwt["Key"] ?? jwtSettings["SecretKey"]
     ?? throw new InvalidOperationException("JWT key is missing. Configure Jwt:Key or JwtSettings:SecretKey in user-secrets or environment variables.");
 var issuer = jwt["Issuer"] ?? jwtSettings["Issuer"] ?? "EnterpriseERP";
 var audience = jwt["Audience"] ?? jwtSettings["Audience"] ?? "EnterpriseERP.Mobile";
+
+if (builder.Environment.IsProduction() && IsWeakJwtSecret(secretKey))
+{
+    throw new InvalidOperationException("Production JWT key is weak or still uses a placeholder. Configure Jwt:Key with a long random secret.");
+}
 
 builder.Services
     .AddAuthentication(options =>
@@ -100,14 +140,23 @@ using (var scope = app.Services.CreateScope())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseResponseCompression();
 }
 else
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseResponseCompression();
 }
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        const int durationInSeconds = 60 * 60 * 24 * 30;
+        context.Context.Response.Headers.CacheControl = $"public,max-age={durationInSeconds}";
+    }
+});
 
 app.UseRouting();
 
@@ -251,4 +300,20 @@ static void SeedAdminFromConfiguration(ApplicationDbContext db, IConfiguration c
 
     db.SaveChanges();
     logger.LogInformation("Seed admin account created for {Email}.", email);
+}
+
+static bool IsWeakJwtSecret(string secretKey)
+{
+    if (secretKey.Length < 32)
+        return true;
+
+    var weakMarkers = new[]
+    {
+        "CHANGE_THIS",
+        "ChangeThis",
+        "SuperSecret",
+        "EnterpriseERP_2026"
+    };
+
+    return weakMarkers.Any(marker => secretKey.Contains(marker, StringComparison.OrdinalIgnoreCase));
 }

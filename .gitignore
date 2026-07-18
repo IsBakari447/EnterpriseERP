@@ -1,9 +1,14 @@
 bin/
 obj/
 *.db
+*.db-shm
+*.db-wal
 *.dll
 *.exe
 *.pdb
 *.cache
 *.log
-
+*.tmp
+*.bak
+wwwroot/uploads/
+Backups/

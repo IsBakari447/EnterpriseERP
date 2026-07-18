@@ -98,6 +98,7 @@ namespace EnterpriseERP.Controllers
                 "Paiements",
                 "Présences",
                 "Exports",
+                "Devis",
                 "Notifications",
                 "Paramètres",
                 "Audit",

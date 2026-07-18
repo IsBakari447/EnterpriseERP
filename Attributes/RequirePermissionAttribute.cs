@@ -19,6 +19,17 @@ namespace EnterpriseERP.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            if (string.IsNullOrWhiteSpace(context.HttpContext.Session.GetString("UserEmail")))
+            {
+                context.Result = new RedirectToActionResult(
+                    "Login",
+                    "Account",
+                    new { returnUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString }
+                );
+
+                return;
+            }
+
             var db = context.HttpContext.RequestServices
                 .GetService(typeof(ApplicationDbContext)) as ApplicationDbContext;
 

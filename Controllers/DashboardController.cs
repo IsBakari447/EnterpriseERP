@@ -18,198 +18,194 @@ namespace EnterpriseERP.Controllers
         }
 
         [RequirePermission("Dashboard", "Voir")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("UserEmail") == null)
-                return RedirectToAction("Login", "Account");
-
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
             ViewBag.UserRole = HttpContext.Session.GetString("UserRole");
 
             var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
             var monthStart = new DateTime(today.Year, today.Month, 1);
             var yearStart = new DateTime(today.Year, 1, 1);
 
-            int lowStockThreshold = _context.AppSettings
+            var lowStockThreshold = await _context.AppSettings
+                .AsNoTracking()
                 .Select(s => s.LowStockThreshold)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (lowStockThreshold <= 0)
                 lowStockThreshold = 5;
 
-            // Base
-            ViewBag.TotalEmployees = _context.Employees.Count();
-            ViewBag.TotalClients = _context.Clients.Count();
-            ViewBag.TotalProducts = _context.Products.Count();
-            ViewBag.TotalSuppliers = _context.Suppliers.Count();
-            ViewBag.TotalStock = _context.Products.Sum(p => (int?)p.Quantity) ?? 0;
+            ViewBag.TotalEmployees = await _context.Employees.AsNoTracking().CountAsync();
+            ViewBag.TotalClients = await _context.Clients.AsNoTracking().CountAsync();
+            ViewBag.TotalProducts = await _context.Products.AsNoTracking().CountAsync();
+            ViewBag.TotalSuppliers = await _context.Suppliers.AsNoTracking().CountAsync();
+            ViewBag.TotalStock = await _context.Products.AsNoTracking().SumAsync(p => (int?)p.Quantity) ?? 0;
 
-            // Devis
-            ViewBag.TotalQuotes = _context.Quotes.Count();
-            ViewBag.TotalClients = _context.Clients.Count();
-            ViewBag.AcceptedQuotes = _context.Quotes.Count(q => q.Status == "Accepté");
-            ViewBag.PendingQuotes = _context.Quotes.Count(q => q.Status == "Brouillon" || q.Status == "Envoyé");
-            ViewBag.TotalQuoteAmount = _context.Quotes
-                .Select(q => q.TotalAmount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
+            ViewBag.TotalQuotes = await _context.Quotes.AsNoTracking().CountAsync();
+            ViewBag.AcceptedQuotes = await _context.Quotes.AsNoTracking().CountAsync(q => q.Status == "Accepte" || q.Status == "Accepté");
+            ViewBag.PendingQuotes = await _context.Quotes.AsNoTracking().CountAsync(q => q.Status == "Brouillon" || q.Status == "Envoye" || q.Status == "Envoyé");
+            ViewBag.TotalQuoteAmount = await _context.Quotes.AsNoTracking().SumAsync(q => (decimal?)q.TotalAmount) ?? 0m;
 
-            // Factures
-            ViewBag.TotalInvoices = _context.Invoices.Count();
-            ViewBag.PaidInvoices = _context.Invoices.Count(i => i.Status == "Paid");
-            ViewBag.UnpaidInvoices = _context.Invoices.Count(i => i.Status == "Unpaid" || i.Status == "Pending");
-            ViewBag.TotalUnpaidAmount = _context.Invoices
+            ViewBag.TotalInvoices = await _context.Invoices.AsNoTracking().CountAsync();
+            ViewBag.PaidInvoices = await _context.Invoices.AsNoTracking().CountAsync(i => i.Status == "Paid");
+            ViewBag.UnpaidInvoices = await _context.Invoices.AsNoTracking().CountAsync(i => i.Status == "Unpaid" || i.Status == "Pending");
+            ViewBag.TotalUnpaidAmount = await _context.Invoices
+                .AsNoTracking()
                 .Where(i => i.Status == "Unpaid" || i.Status == "Pending")
-                .Select(i => i.TotalAmount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
+                .SumAsync(i => (decimal?)i.TotalAmount) ?? 0m;
 
-            // Commandes / Paiements / Dépenses
-            ViewBag.TotalOrders = _context.Orders.Count();
-            ViewBag.PendingOrdersCount = _context.Orders.Count(o => o.Status == "Pending");
-            ViewBag.TotalPayments = _context.Payments.Count();
-            ViewBag.TotalExpenses = _context.Expenses
-                .Select(e => e.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
-            ViewBag.MonthExpenses = _context.Expenses
+            ViewBag.TotalOrders = await _context.Orders.AsNoTracking().CountAsync();
+            ViewBag.PendingOrdersCount = await _context.Orders.AsNoTracking().CountAsync(o => o.Status == "Pending");
+            ViewBag.TotalPayments = await _context.Payments.AsNoTracking().CountAsync();
+            ViewBag.TotalExpenses = await _context.Expenses.AsNoTracking().SumAsync(e => (decimal?)e.Amount) ?? 0m;
+            ViewBag.MonthExpenses = await _context.Expenses
+                .AsNoTracking()
                 .Where(e => e.ExpenseDate >= monthStart)
-                .Select(e => e.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
+                .SumAsync(e => (decimal?)e.Amount) ?? 0m;
 
-            // Revenus
-            ViewBag.TotalRevenue = _context.Payments
-                .Select(p => p.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
-            ViewBag.MonthRevenue = _context.Payments
+            ViewBag.TotalRevenue = await _context.Payments.AsNoTracking().SumAsync(p => (decimal?)p.Amount) ?? 0m;
+            ViewBag.MonthRevenue = await _context.Payments
+                .AsNoTracking()
                 .Where(p => p.PaymentDate >= monthStart)
-                .Select(p => p.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
-            ViewBag.YearRevenue = _context.Payments
+                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
+            ViewBag.YearRevenue = await _context.Payments
+                .AsNoTracking()
                 .Where(p => p.PaymentDate >= yearStart)
-                .Select(p => p.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
-            ViewBag.PaymentsToday = _context.Payments
-                .Where(p => p.PaymentDate.Date == today)
-                .Select(p => p.Amount)
-                .AsEnumerable()
-                .DefaultIfEmpty(0m)
-                .Sum();
+                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
+            ViewBag.PaymentsToday = await _context.Payments
+                .AsNoTracking()
+                .Where(p => p.PaymentDate >= today && p.PaymentDate < tomorrow)
+                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
 
             ViewBag.NetProfit = ViewBag.TotalRevenue - ViewBag.TotalExpenses;
             ViewBag.MonthNetProfit = ViewBag.MonthRevenue - ViewBag.MonthExpenses;
+            ViewBag.LowStock = await _context.Products.AsNoTracking().CountAsync(p => p.Quantity <= lowStockThreshold);
+            ViewBag.TodayPresences = await _context.Presences.AsNoTracking().CountAsync(p => p.Date == today);
 
-            // Alertes
-            ViewBag.LowStock = _context.Products.Count(p => p.Quantity <= lowStockThreshold);
-            ViewBag.TodayPresences = _context.Presences.Count(p => p.Date == today);
-
-            ViewBag.LowStockProducts = _context.Products
+            ViewBag.LowStockProducts = await _context.Products
+                .AsNoTracking()
                 .Where(p => p.Quantity <= lowStockThreshold)
                 .OrderBy(p => p.Quantity)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            // Listes récentes
-            ViewBag.LatestQuotes = _context.Quotes
+            ViewBag.LatestQuotes = await _context.Quotes
+                .AsNoTracking()
                 .Include(q => q.Client)
                 .OrderByDescending(q => q.QuoteDate)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.LatestInvoices = _context.Invoices
+            ViewBag.LatestInvoices = await _context.Invoices
+                .AsNoTracking()
                 .Include(i => i.Client)
                 .OrderByDescending(i => i.InvoiceDate)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.UnpaidInvoicesList = _context.Invoices
+            ViewBag.UnpaidInvoicesList = await _context.Invoices
+                .AsNoTracking()
                 .Include(i => i.Client)
                 .Where(i => i.Status == "Unpaid" || i.Status == "Pending")
                 .OrderByDescending(i => i.InvoiceDate)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.PendingOrders = _context.Orders
+            ViewBag.PendingOrders = await _context.Orders
+                .AsNoTracking()
                 .Include(o => o.Client)
                 .Include(o => o.Product)
                 .Where(o => o.Status == "Pending")
                 .OrderByDescending(o => o.OrderDate)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.RecentPayments = _context.Payments
+            ViewBag.RecentPayments = await _context.Payments
+                .AsNoTracking()
                 .Include(p => p.Invoice)
                 .ThenInclude(i => i!.Client)
                 .OrderByDescending(p => p.PaymentDate)
                 .Take(10)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.LatestEmployees = _context.Employees
+            ViewBag.LatestEmployees = await _context.Employees
+                .AsNoTracking()
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(5)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.LatestClients = _context.Clients
+            ViewBag.LatestClients = await _context.Clients
+                .AsNoTracking()
                 .OrderByDescending(c => c.CreatedAt)
                 .Take(5)
-                .ToList();
+                .ToListAsync();
 
-            // Graphiques
-            var monthlyRevenue = _context.Payments
-                .Select(p => new { p.PaymentDate, p.Amount })
-                .AsEnumerable()
+            var paymentRows = await _context.Payments
+                .AsNoTracking()
+                .Select(p => new { p.PaymentDate, p.Amount, p.Method })
+                .ToListAsync();
+
+            var expenseRows = await _context.Expenses
+                .AsNoTracking()
+                .Select(e => new { e.ExpenseDate, e.Amount })
+                .ToListAsync();
+
+            var orderRows = await _context.Orders
+                .AsNoTracking()
+                .Select(o => new { o.OrderDate })
+                .ToListAsync();
+
+            var monthlyRevenue = paymentRows
                 .GroupBy(p => new { p.PaymentDate.Year, p.PaymentDate.Month })
                 .Select(g => new
                 {
-                    Label = g.Key.Month + "/" + g.Key.Year,
+                    g.Key.Year,
+                    g.Key.Month,
+                    Label = $"{g.Key.Month}/{g.Key.Year}",
                     Total = g.Sum(p => p.Amount)
                 })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
                 .ToList();
 
             ViewBag.MonthLabels = monthlyRevenue.Select(x => x.Label).ToList();
             ViewBag.MonthRevenues = monthlyRevenue.Select(x => x.Total).ToList();
 
-            var monthlyExpenses = _context.Expenses
-                .Select(e => new { e.ExpenseDate, e.Amount })
-                .AsEnumerable()
+            var monthlyExpenses = expenseRows
                 .GroupBy(e => new { e.ExpenseDate.Year, e.ExpenseDate.Month })
                 .Select(g => new
                 {
-                    Label = g.Key.Month + "/" + g.Key.Year,
+                    g.Key.Year,
+                    g.Key.Month,
+                    Label = $"{g.Key.Month}/{g.Key.Year}",
                     Total = g.Sum(e => e.Amount)
                 })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
                 .ToList();
 
             ViewBag.ExpenseMonthLabels = monthlyExpenses.Select(x => x.Label).ToList();
             ViewBag.ExpenseMonthTotals = monthlyExpenses.Select(x => x.Total).ToList();
 
-            var monthlyOrders = _context.Orders
+            var monthlyOrders = orderRows
                 .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
                 .Select(g => new
                 {
-                    Label = g.Key.Month + "/" + g.Key.Year,
+                    g.Key.Year,
+                    g.Key.Month,
+                    Label = $"{g.Key.Month}/{g.Key.Year}",
                     Total = g.Count()
                 })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
                 .ToList();
 
             ViewBag.OrderMonthLabels = monthlyOrders.Select(x => x.Label).ToList();
             ViewBag.OrderMonthCounts = monthlyOrders.Select(x => x.Total).ToList();
 
-            var paymentsByMethod = _context.Payments
-                .Select(p => new { p.Method, p.Amount })
-                .AsEnumerable()
-                .GroupBy(p => p.Method)
+            var paymentsByMethod = paymentRows
+                .GroupBy(p => string.IsNullOrWhiteSpace(p.Method) ? "Autre" : p.Method)
                 .Select(g => new
                 {
                     Method = g.Key,
@@ -220,17 +216,20 @@ namespace EnterpriseERP.Controllers
             ViewBag.PaymentMethods = paymentsByMethod.Select(x => x.Method).ToList();
             ViewBag.PaymentMethodTotals = paymentsByMethod.Select(x => x.Total).ToList();
 
-            ViewBag.ProductNames = _context.Products
+            ViewBag.ProductNames = await _context.Products
+                .AsNoTracking()
                 .OrderBy(p => p.Name)
                 .Select(p => p.Name)
-                .ToList();
+                .ToListAsync();
 
-            ViewBag.ProductQuantities = _context.Products
+            ViewBag.ProductQuantities = await _context.Products
+                .AsNoTracking()
                 .OrderBy(p => p.Name)
                 .Select(p => p.Quantity)
-                .ToList();
+                .ToListAsync();
 
-            var topProducts = _context.Orders
+            var topProducts = await _context.Orders
+                .AsNoTracking()
                 .Include(o => o.Product)
                 .Where(o => o.Product != null)
                 .GroupBy(o => o.Product!.Name)
@@ -241,26 +240,15 @@ namespace EnterpriseERP.Controllers
                 })
                 .OrderByDescending(x => x.Quantity)
                 .Take(5)
-                .ToList();
+                .ToListAsync();
 
             ViewBag.TopProductNames = topProducts.Select(x => x.Product).ToList();
             ViewBag.TopProductQuantities = topProducts.Select(x => x.Quantity).ToList();
-
-            AuditService.Log(
-                _context,
-                HttpContext,
-                "Dashboard",
-                "Consultation",
-                "Consultation du dashboard Enterprise 2.0"
-            );
-
             ViewBag.CurrentDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-
             ViewBag.CurrentLanguage =
                 HttpContext.Session.GetString("Language")
-                ?? _context.AppSettings.Select(s => s.DefaultLanguage).FirstOrDefault()
+                ?? await _context.AppSettings.AsNoTracking().Select(s => s.DefaultLanguage).FirstOrDefaultAsync()
                 ?? "fr";
-
             ViewBag.TitleTranslated = _translator.T("Dashboard");
 
             return View();
