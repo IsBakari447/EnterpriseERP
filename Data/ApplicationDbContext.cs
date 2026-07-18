@@ -34,6 +34,9 @@ namespace EnterpriseERP.Data
         public DbSet<DataImportJob> DataImportJobs => Set<DataImportJob>();
         public DbSet<DynamicReport> DynamicReports => Set<DynamicReport>();
         public DbSet<CollaborationComment> CollaborationComments => Set<CollaborationComment>();
+        public DbSet<Feedback> Feedbacks => Set<Feedback>();
+        public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<SocialLike> SocialLikes => Set<SocialLike>();
         public DbSet<DataVersion> DataVersions => Set<DataVersion>();
         public DbSet<TenantAccount> TenantAccounts => Set<TenantAccount>();
         public DbSet<MarketplaceExtension> MarketplaceExtensions => Set<MarketplaceExtension>();
@@ -133,6 +136,19 @@ namespace EnterpriseERP.Data
 
             modelBuilder.Entity<CollaborationComment>()
                 .HasIndex(c => new { c.EntityType, c.EntityId });
+
+            modelBuilder.Entity<Feedback>()
+                .HasIndex(f => new { f.Status, f.CreatedAt });
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.Module, r.IsApproved, r.CreatedAt });
+
+            modelBuilder.Entity<SocialLike>()
+                .HasIndex(l => new { l.TargetType, l.TargetId });
+
+            modelBuilder.Entity<SocialLike>()
+                .HasIndex(l => new { l.TargetType, l.TargetId, l.UserEmail })
+                .IsUnique();
 
             modelBuilder.Entity<DataVersion>()
                 .HasIndex(v => new { v.EntityType, v.EntityId, v.VersionNumber });

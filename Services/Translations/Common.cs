@@ -92,7 +92,8 @@ public static class Common
         ["CompleteRole"] = "complet",
         ["DataRetention"] = "Donnees conservees",
         ["Days"] = "jours",
-        ["Suggestions"] = "Suggestions"
+        ["Suggestions"] = "Suggestions",
+        ["SocialFeatures"] = "Social"
     };
 
     public static readonly Dictionary<string,string> Fr = BaseFr();
@@ -187,7 +188,8 @@ public static class Common
         ["CompleteRole"] = "full",
         ["DataRetention"] = "Data retained",
         ["Days"] = "days",
-        ["Suggestions"] = "Suggestions"
+        ["Suggestions"] = "Suggestions",
+        ["SocialFeatures"] = "Social"
     };
 
     public static readonly Dictionary<string,string> Sv = new()
@@ -280,7 +282,8 @@ public static class Common
         ["CompleteRole"] = "full",
         ["DataRetention"] = "Data sparas",
         ["Days"] = "dagar",
-        ["Suggestions"] = "Forslag"
+        ["Suggestions"] = "Forslag",
+        ["SocialFeatures"] = "Socialt"
     };
 
     public static readonly Dictionary<string,string> Es = new(Fr)
@@ -336,7 +339,8 @@ public static class Common
         ["CompleteRole"] = "completo",
         ["DataRetention"] = "Datos conservados",
         ["Days"] = "dias",
-        ["Suggestions"] = "Sugerencias"
+        ["Suggestions"] = "Sugerencias",
+        ["SocialFeatures"] = "Social"
     };
 
     public static readonly Dictionary<string,string> De = new(Fr)
@@ -392,6 +396,7 @@ public static class Common
         ["CompleteRole"] = "voll",
         ["DataRetention"] = "Daten gespeichert",
         ["Days"] = "Tage",
-        ["Suggestions"] = "Vorschlage"
+        ["Suggestions"] = "Vorschlage",
+        ["SocialFeatures"] = "Social"
     };
 }

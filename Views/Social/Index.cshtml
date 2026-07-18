@@ -1,0 +1,261 @@
+@using EnterpriseERP.Models
+@{
+    ViewData["Title"] = "Social";
+
+    var feedbacks = ViewBag.Feedbacks as List<Feedback> ?? new();
+    var reviews = ViewBag.Reviews as List<Review> ?? new();
+    var likes = ViewBag.Likes as List<SocialLike> ?? new();
+    var averageRating = (double)(ViewBag.AverageRating ?? 0d);
+    var platformLikes = (int)(ViewBag.PlatformLikes ?? 0);
+    var userLikedPlatform = (bool)(ViewBag.UserLikedPlatform ?? false);
+}
+
+<section class="dashboard-premium-v3 social-page">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">EnterpriseERP Social Center</span>
+            <h1>Feedback, avis et interactions</h1>
+            <p>Centralisez les retours utilisateurs, les notes de satisfaction et les likes sur vos services EnterpriseERP.</p>
+        </div>
+        <div class="header-actions">
+            <a href="/Dashboard/Index" class="btn-secondary">Retour dashboard</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">FB</div>
+            <div>
+                <h3>@feedbacks.Count</h3>
+                <p>Feedbacks recus</p>
+            </div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon">OPEN</div>
+            <div>
+                <h3>@ViewBag.OpenFeedbackCount</h3>
+                <p>Feedbacks ouverts</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">STAR</div>
+            <div>
+                <h3>@averageRating.ToString("0.0")/5</h3>
+                <p>Note moyenne</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">LIKE</div>
+            <div>
+                <h3>@platformLikes</h3>
+                <p>Likes EnterpriseERP</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="social-like-panel">
+        <div>
+            <span class="badge success">Service EnterpriseERP</span>
+            <h2>Aimez ce service</h2>
+            <p>Ce signal aide votre equipe a identifier les services les plus utiles et les modules a prioriser.</p>
+        </div>
+        <form method="post" action="/Social/ToggleLike">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="targetType" value="Service" />
+            <input type="hidden" name="targetId" value="EnterpriseERP" />
+            <button class="btn-primary" type="submit">
+                <i class="bi @(userLikedPlatform ? "bi-heart-fill" : "bi-heart")"></i>
+                @(userLikedPlatform ? "Retirer le like" : "Liker le service")
+            </button>
+        </form>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Nouveau feedback</h2>
+                <span class="badge">Experience</span>
+            </div>
+            <p>Collectez les demandes, bugs, ameliorations et idees internes.</p>
+
+            <form method="post" action="/Social/CreateFeedback" class="form-grid">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input name="Title" maxlength="140" required placeholder="Ex: Simplifier la creation de facture" />
+                </div>
+                <div class="form-group">
+                    <label>Categorie</label>
+                    <select name="Category">
+                        <option>General</option>
+                        <option>Bug</option>
+                        <option>Amelioration</option>
+                        <option>Design</option>
+                        <option>Performance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Priorite</label>
+                    <select name="Priority">
+                        <option>Normale</option>
+                        <option>Haute</option>
+                        <option>Critique</option>
+                        <option>Basse</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Visibilite</label>
+                    <select name="IsPublic">
+                        <option value="false">Interne</option>
+                        <option value="true">Public</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Message</label>
+                    <textarea name="Message" rows="5" maxlength="3000" required placeholder="Expliquez le besoin, le contexte et l'impact attendu."></textarea>
+                </div>
+                <button class="btn-primary" type="submit">Envoyer feedback</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Nouvel avis</h2>
+                <span class="badge success">Rating</span>
+            </div>
+            <p>Mesurez la satisfaction sur EnterpriseERP, un module ou un service.</p>
+
+            <form method="post" action="/Social/CreateReview" class="form-grid">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input name="Title" maxlength="140" required placeholder="Ex: Dashboard tres utile" />
+                </div>
+                <div class="form-group">
+                    <label>Module</label>
+                    <input name="Module" maxlength="80" value="EnterpriseERP" />
+                </div>
+                <div class="form-group">
+                    <label>Note</label>
+                    <select name="Rating">
+                        <option value="5">5 - Excellent</option>
+                        <option value="4">4 - Tres bien</option>
+                        <option value="3">3 - Correct</option>
+                        <option value="2">2 - A ameliorer</option>
+                        <option value="1">1 - Bloquant</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Commentaire</label>
+                    <textarea name="Comment" rows="5" maxlength="3000" required placeholder="Partagez votre avis concret."></textarea>
+                </div>
+                <button class="btn-primary" type="submit">Publier avis</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Feedbacks recents</h2>
+                <span class="badge">@feedbacks.Count</span>
+            </div>
+
+            <div class="social-list">
+                @if (!feedbacks.Any())
+                {
+                    <p>Aucun feedback pour le moment.</p>
+                }
+                @foreach (var feedback in feedbacks)
+                {
+                    var badgeClass = feedback.Status == "Traite" || feedback.Status == "Ferme" ? "success" : feedback.Priority == "Critique" ? "danger" : "warning";
+                    <article class="social-item">
+                        <div class="social-item-header">
+                            <div>
+                                <h3>@feedback.Title</h3>
+                                <p>@feedback.Category - @feedback.CreatedByName - @feedback.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                            <span class="status-badge @badgeClass">@feedback.Status</span>
+                        </div>
+                        <p>@feedback.Message</p>
+                        @if (!string.IsNullOrWhiteSpace(feedback.AdminResponse))
+                        {
+                            <div class="social-response">
+                                <strong>Reponse admin</strong>
+                                <p>@feedback.AdminResponse</p>
+                            </div>
+                        }
+                        <form method="post" action="/Social/UpdateFeedbackStatus" class="social-inline-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@feedback.Id" />
+                            <select name="status">
+                                <option selected="@(feedback.Status == "Nouveau")">Nouveau</option>
+                                <option selected="@(feedback.Status == "En cours")">En cours</option>
+                                <option selected="@(feedback.Status == "Traite")">Traite</option>
+                                <option selected="@(feedback.Status == "Ferme")">Ferme</option>
+                            </select>
+                            <input name="adminResponse" maxlength="2000" placeholder="Reponse admin optionnelle" />
+                            <button class="btn-secondary" type="submit">Mettre a jour</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Avis et notes</h2>
+                <span class="badge success">@reviews.Count</span>
+            </div>
+
+            <div class="social-list">
+                @if (!reviews.Any())
+                {
+                    <p>Aucun avis pour le moment.</p>
+                }
+                @foreach (var review in reviews)
+                {
+                    var stars = new string('*', review.Rating);
+                    <article class="social-item">
+                        <div class="social-item-header">
+                            <div>
+                                <h3>@review.Title</h3>
+                                <p>@review.Module - @review.CreatedByName - @review.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                            <span class="rating-stars">@stars</span>
+                        </div>
+                        <p>@review.Comment</p>
+                        <form method="post" action="/Social/ToggleReviewApproval" class="social-inline-form compact">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@review.Id" />
+                            <span class="status-badge @(review.IsApproved ? "success" : "warning")">@(review.IsApproved ? "Approuve" : "Masque")</span>
+                            <button class="btn-secondary" type="submit">Basculer moderation</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Dernieres interactions sociales</h2>
+            <span class="badge">@likes.Count likes</span>
+        </div>
+        <div class="social-like-grid">
+            @if (!likes.Any())
+            {
+                <p>Aucun like enregistre pour le moment.</p>
+            }
+            @foreach (var like in likes)
+            {
+                <div class="social-like-card">
+                    <i class="bi bi-heart-fill"></i>
+                    <strong>@like.TargetId</strong>
+                    <span>@like.UserName</span>
+                    <small>@like.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                </div>
+            }
+        </div>
+    </div>
+</section>

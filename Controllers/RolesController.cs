@@ -100,6 +100,7 @@ namespace EnterpriseERP.Controllers
                 "Exports",
                 "Devis",
                 "Notifications",
+                "Social",
                 "Paramètres",
                 "Audit",
                 "Utilisateurs"

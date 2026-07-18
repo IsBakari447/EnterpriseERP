@@ -3671,3 +3671,123 @@ body.landing-page .bottom {
         font-size: 34px;
     }
 }
+
+.social-page .form-group.full {
+    grid-column: 1 / -1;
+}
+
+.social-like-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    margin: 20px 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.social-like-panel h2 {
+    margin: 10px 0 8px;
+    color: var(--text);
+}
+
+.social-like-panel p {
+    margin: 0;
+    color: var(--text-soft);
+}
+
+.social-list {
+    display: grid;
+    gap: 16px;
+}
+
+.social-item {
+    padding: 18px;
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.social-item-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.social-item h3 {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-size: 1.05rem;
+}
+
+.social-item p {
+    color: var(--text-soft);
+}
+
+.social-response {
+    padding: 12px;
+    margin: 12px 0;
+    border-left: 3px solid var(--primary);
+    background: rgba(124, 58, 237, .08);
+    border-radius: 8px;
+}
+
+.social-inline-form {
+    display: grid;
+    grid-template-columns: minmax(120px, 160px) 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.social-inline-form.compact {
+    grid-template-columns: auto auto;
+    justify-content: start;
+}
+
+.rating-stars {
+    color: #f59e0b;
+    font-weight: 900;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+.social-like-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.social-like-card {
+    display: grid;
+    gap: 4px;
+    padding: 14px;
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.social-like-card i {
+    color: #ef4444;
+}
+
+.social-like-card small,
+.social-like-card span {
+    color: var(--text-soft);
+}
+
+@media (max-width: 820px) {
+    .social-like-panel,
+    .social-item-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .social-inline-form {
+        grid-template-columns: 1fr;
+    }
+}
