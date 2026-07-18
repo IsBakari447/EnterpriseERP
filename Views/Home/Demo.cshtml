@@ -1,14 +1,48 @@
 @{
-    ViewData["Title"] = "Démo - EnterpriseERP";
+    ViewData["Title"] = "Demo - EnterpriseERP";
+
+    var demoItems = new[]
+    {
+        "Dashboard CEO",
+        "Assistant AI",
+        "Creation de factures",
+        "Gestion du stock",
+        "Application mobile",
+        "Rapports intelligents"
+    };
 }
 
-<div class="container py-5">
-    <h1 class="display-4 fw-bold">Essayer EnterpriseERP</h1>
-    <p class="lead">Testez l’ERP avec un compte de démonstration.</p>
+@await Html.PartialAsync("_PublicProductStyles")
 
-    <div class="card bg-dark text-white border-secondary p-4 mt-4">
-        <p><strong>Email démo :</strong> demo@enterpriseerp.com</p>
-        <p><strong>Mot de passe :</strong> demo123</p>
-        <a class="btn btn-primary" href="/Account/Login">Ouvrir la connexion</a>
+<section class="public-page">
+    <div class="public-hero compact">
+        <div>
+            <span class="eyebrow">Demonstration</span>
+            <h1>Decouvrez EnterpriseERP en action.</h1>
+            <p>La demonstration presente les flux essentiels pour comprendre comment l'ERP aide une entreprise au quotidien.</p>
+        </div>
     </div>
-</div>
+
+    <div class="demo-layout">
+        <div class="video-placeholder">
+            <i class="bi bi-play-circle"></i>
+            <strong>Video de demonstration</strong>
+            <span>Bientot disponible</span>
+        </div>
+
+        <div class="feature-card">
+            <h2>La demo couvre</h2>
+            <ul>
+                @foreach (var item in demoItems)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+            <div class="demo-access">
+                <p><strong>Email demo :</strong> demo@enterpriseerp.com</p>
+                <p><strong>Mot de passe :</strong> demo123</p>
+                <a class="btn btn-primary" href="/Account/Login">Ouvrir la connexion</a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,6 +1,64 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+@{
+    ViewData["Title"] = "FAQ et roadmap - EnterpriseERP";
 
-<p>Use this page to detail your site's privacy policy.</p>
+    var faqs = new Dictionary<string, string>
+    {
+        ["EnterpriseERP fonctionne-t-il hors ligne ?"] = "Oui, la version Windows peut fonctionner hors ligne selon le mode de deploiement choisi.",
+        ["Puis-je migrer mes donnees Excel ?"] = "Oui, l'importation CSV et Excel est disponible pour accelerer la mise en place.",
+        ["Puis-je gerer plusieurs entreprises ?"] = "Oui, l'offre Enterprise permet la gestion multi-entreprises.",
+        ["Quels moyens de paiement sont acceptes ?"] = "Orange Money, MTN MoMo, carte bancaire et virement peuvent etre integres.",
+        ["L'ERP est-il securise ?"] = "Oui, avec JWT, roles, permissions, audit, sauvegardes et chiffrement des donnees."
+    };
+
+    var roadmap = new[]
+    {
+        "Comptabilite complete : journal, grand livre, bilan",
+        "POS caisse",
+        "Gestion de production",
+        "Multi-devises",
+        "Chat interne",
+        "Automatisation avancee",
+        "Integration bancaire",
+        "API publique"
+    };
+}
+
+@await Html.PartialAsync("_PublicProductStyles")
+
+<section class="public-page">
+    <div class="public-hero compact">
+        <div>
+            <span class="eyebrow">FAQ &amp; Roadmap 2026</span>
+            <h1>Les prochaines evolutions et les reponses aux questions importantes.</h1>
+        </div>
+    </div>
+
+    <div class="faq-grid">
+        <div class="section-block">
+            <div class="section-title">
+                <h2>FAQ</h2>
+            </div>
+            <div class="faq-list">
+                @foreach (var item in faqs)
+                {
+                    <details>
+                        <summary>@item.Key</summary>
+                        <p>@item.Value</p>
+                    </details>
+                }
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">
+                <h2>Roadmap 2026</h2>
+            </div>
+            <ul class="roadmap-list">
+                @foreach (var item in roadmap)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    </div>
+</section>

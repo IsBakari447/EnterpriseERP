@@ -1,34 +1,38 @@
 @{
-    ViewData["Title"] = "Telechargement de l'application mobile - EnterpriseERP";
+    ViewData["Title"] = "Applications mobiles et desktop - EnterpriseERP";
 }
 
-<div class="container py-5">
-    <h1 class="display-4 fw-bold">Telechargement de l'application mobile</h1>
-    <p class="lead">Installez EnterpriseERP Mobile sur Android, iOS ou Windows et connectez vos equipes a votre ERP.</p>
+@await Html.PartialAsync("_PublicProductStyles")
 
-    <div class="row g-4 mt-4">
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-secondary p-4 h-100">
-                <h3>Android</h3>
-                <p>Application Android connectee a l'API EnterpriseERP pour gerer clients, factures, stock et rapports.</p>
-                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Telecharger APK</a>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-secondary p-4 h-100" id="ios">
-                <h3>iOS</h3>
-                <p>Version iPhone et iPad preparee pour TestFlight, App Store Connect ou distribution interne.</p>
-                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.ipa">Telecharger iOS</a>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-secondary p-4 h-100">
-                <h3>Windows</h3>
-                <p>Version Windows moderne avec interface .NET MAUI.</p>
-                <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Telecharger MSIX</a>
-            </div>
+<section class="public-page">
+    <div class="public-hero compact">
+        <div>
+            <span class="eyebrow">Applications</span>
+            <h1>EnterpriseERP sur Web, Android, iOS et Windows.</h1>
+            <p>Une experience adaptee aux dirigeants, commerciaux, gestionnaires de stock, equipes RH et administrateurs.</p>
         </div>
     </div>
-</div>
+
+    <div class="platform-grid">
+        <article class="platform-card">
+            <i class="bi bi-android2"></i>
+            <h2>Android</h2>
+            <p>Application complete pour gerer clients, factures, stock, dashboard mobile et Assistant AI integre.</p>
+            <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Telecharger APK</a>
+        </article>
+
+        <article class="platform-card">
+            <i class="bi bi-phone"></i>
+            <h2>iOS</h2>
+            <p>Version optimisee iPhone et iPad avec interface fluide, synchronisation temps reel et notifications intelligentes.</p>
+            <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.ipa">Telecharger iOS</a>
+        </article>
+
+        <article class="platform-card">
+            <i class="bi bi-windows"></i>
+            <h2>Windows MAUI</h2>
+            <p>Application desktop professionnelle avec acces rapide aux modules et fonctionnement hors ligne optionnel.</p>
+            <a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Telecharger MSIX</a>
+        </article>
+    </div>
+</section>

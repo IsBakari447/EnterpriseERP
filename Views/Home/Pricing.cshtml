@@ -2,34 +2,54 @@
     ViewData["Title"] = "Tarifs - EnterpriseERP";
 }
 
-<div class="container py-5">
-    <h1 class="display-4 fw-bold">Tarifs EnterpriseERP</h1>
-    <p class="lead">Des offres simples pour PME, entrepreneurs et equipes.</p>
+@await Html.PartialAsync("_PublicProductStyles")
 
-    <div class="row g-4 mt-4">
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-secondary p-4 h-100">
-                <h3>Essai gratuit</h3>
-                <h2>14 jours</h2>
-                <p>Admin complet, 3 utilisateurs, 20 factures et 50 produits.</p>
-                <p class="text-warning mb-0">Fin d'essai : lecture seule, paiement obligatoire. Donnees conservees 90 jours.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-primary p-4 h-100">
-                <h3>Business</h3>
-                <h2>A definir</h2>
-                <p>ERP complet + Mobile + AI, sans limites d'essai.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-dark text-white border-secondary p-4 h-100">
-                <h3>Enterprise</h3>
-                <h2>Sur devis</h2>
-                <p>Multi-entreprises, support, personnalisation, deploiement et accompagnement.</p>
-            </div>
+<section class="public-page">
+    <div class="public-hero compact">
+        <div>
+            <span class="eyebrow">Tarifs</span>
+            <h1>Des offres simples pour demarrer vite puis grandir avec votre entreprise.</h1>
+            <p>Chaque plan est pense pour transformer EnterpriseERP en outil de gestion quotidien, pas seulement en demo.</p>
         </div>
     </div>
-</div>
+
+    <div class="pricing-table">
+        <article class="price-card">
+            <span class="plan-badge">Essai gratuit</span>
+            <h2>0 FCFA</h2>
+            <p>Acces complet a toutes les fonctionnalites pour tester EnterpriseERP dans de vraies conditions.</p>
+            <ul>
+                <li>Test illimite pendant la periode d'essai</li>
+                <li>Premiere configuration incluse</li>
+                <li>CRM, stock, facturation, RH et AI Assistant</li>
+            </ul>
+            <a class="btn btn-secondary" href="/Account/Register">Commencer l'essai</a>
+        </article>
+
+        <article class="price-card highlighted">
+            <span class="plan-badge">Business</span>
+            <h2>10 000 FCFA <small>/ utilisateur / mois</small></h2>
+            <p>Le plan recommande pour les PME qui veulent piloter toute leur activite depuis une plateforme unique.</p>
+            <ul>
+                <li>CRM, stock, facturation et RH</li>
+                <li>AI Assistant et rapports PDF</li>
+                <li>Applications mobiles</li>
+                <li>Securite avancee et support standard</li>
+            </ul>
+            <a class="btn btn-primary" href="/Home/Contact">Demander une activation</a>
+        </article>
+
+        <article class="price-card">
+            <span class="plan-badge">Enterprise</span>
+            <h2>Sur devis</h2>
+            <p>Pour les organisations qui demandent personnalisation, multi-entreprises et infrastructure dediee.</p>
+            <ul>
+                <li>Multi-entreprises</li>
+                <li>Personnalisation complete</li>
+                <li>Deploiement serveur dedie</li>
+                <li>Support premium et integrations avancees</li>
+            </ul>
+            <a class="btn btn-secondary" href="/Home/Contact">Parler a l'equipe</a>
+        </article>
+    </div>
+</section>

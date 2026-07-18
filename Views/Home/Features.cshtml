@@ -1,30 +1,145 @@
 @{
-    ViewData["Title"] = "Fonctionnalités - EnterpriseERP";
+    ViewData["Title"] = "Fonctionnalites - EnterpriseERP";
+
+    var crm = new[]
+    {
+        "Pipeline de ventes visuel",
+        "Historique complet des interactions",
+        "Relance automatique des clients",
+        "Segmentation et scoring intelligent",
+        "Gestion des prospects, opportunites et conversions"
+    };
+
+    var stock = new[]
+    {
+        "Suivi des entrees et sorties",
+        "Alertes de stock bas",
+        "Gestion des variantes et categories",
+        "Mouvements de stock automatises",
+        "Prevision intelligente des ruptures"
+    };
+
+    var finance = new[]
+    {
+        "Creation de devis et factures",
+        "Suivi des paiements",
+        "Export PDF et Excel",
+        "Gestion des impayes",
+        "Rapports financiers automatiques"
+    };
+
+    var hr = new[]
+    {
+        "Pointage et presences",
+        "Gestion des roles et permissions",
+        "Suivi des employes",
+        "Historique des activites",
+        "Tableau de bord RH"
+    };
+
+    var ai = new[]
+    {
+        "Analyse automatique des performances",
+        "Recommandations pour ameliorer le profit",
+        "Resume intelligent des ventes et depenses",
+        "Detection des anomalies financieres",
+        "Relance automatique des clients en retard",
+        "Generation de rapports PDF intelligents"
+    };
+
+    var security = new[]
+    {
+        "Authentification securisee JWT",
+        "Roles et permissions granulaires",
+        "Audit complet des actions",
+        "Sauvegardes automatiques",
+        "Chiffrement des donnees",
+        "Conformite RGPD"
+    };
+
+    var integrations = new[] { "WhatsApp Business", "Orange Money / MTN MoMo", "Email SMTP", "API REST", "Excel / CSV", "Power BI", "Services cloud" };
 }
 
-<div class="container py-5">
-    <h1 class="display-4 fw-bold">Fonctionnalités EnterpriseERP</h1>
-    <p class="lead">Un ERP complet : Web, Mobile, AI, PDF, Excel, sécurité et CEO Dashboard.</p>
+@await Html.PartialAsync("_PublicProductStyles")
 
-    <div class="row g-4 mt-4">
-        @{
-            var modules = new[]
-            {
-                "Clients & CRM", "Produits & Stock", "Devis & Factures",
-                "Paiements", "Employés & Présences", "Dépenses",
-                "Rapports PDF/Excel", "Audit & Sécurité", "Backup Center",
-                "Assistant AI", "CEO Dashboard", "Application Mobile"
-            };
-        }
-
-        @foreach (var item in modules)
-        {
-            <div class="col-md-4">
-                <div class="card bg-dark text-white border-secondary h-100 p-3">
-                    <h4>@item</h4>
-                    <p class="text-secondary">Module professionnel intégré dans EnterpriseERP.</p>
-                </div>
-            </div>
-        }
+<section class="public-page">
+    <div class="public-hero">
+        <div>
+            <span class="eyebrow">EnterpriseERP Business Suite</span>
+            <h1>Un SaaS ERP complet pour piloter clients, ventes, stock, finance, RH et IA.</h1>
+            <p>
+                EnterpriseERP regroupe les modules essentiels d'une entreprise moderne dans une plateforme
+                web, mobile et desktop, avec assistant AI, securite avancee, exports professionnels et API.
+            </p>
+        </div>
+        <div class="hero-proof">
+            <strong>Couverture fonctionnelle</strong>
+            <span>CRM, Stock, Facturation, RH, AI Assistant, Securite, Integrations</span>
+        </div>
     </div>
-</div>
+
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-kanban"></i></div>
+            <h2>CRM - Gestion de la relation client</h2>
+            <ul>@foreach (var item in crm) { <li>@item</li> }</ul>
+        </article>
+
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-box-seam"></i></div>
+            <h2>Stock &amp; Inventaire</h2>
+            <ul>@foreach (var item in stock) { <li>@item</li> }</ul>
+        </article>
+
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-receipt"></i></div>
+            <h2>Facturation &amp; comptabilite legere</h2>
+            <ul>@foreach (var item in finance) { <li>@item</li> }</ul>
+        </article>
+
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-people"></i></div>
+            <h2>Ressources humaines</h2>
+            <ul>@foreach (var item in hr) { <li>@item</li> }</ul>
+        </article>
+
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-cpu"></i></div>
+            <h2>AI Assistant integre</h2>
+            <ul>@foreach (var item in ai) { <li>@item</li> }</ul>
+        </article>
+
+        <article class="feature-card">
+            <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+            <h2>Securite avancee</h2>
+            <ul>@foreach (var item in security) { <li>@item</li> }</ul>
+        </article>
+    </div>
+
+    <div class="section-block">
+        <div class="section-title">
+            <span class="eyebrow">Ecosysteme</span>
+            <h2>Integrations pretes pour la croissance</h2>
+            <p>Connectez EnterpriseERP aux outils de paiement, communication, reporting et import de donnees.</p>
+        </div>
+        <div class="integration-strip">
+            @foreach (var item in integrations)
+            {
+                <span>@item</span>
+            }
+        </div>
+    </div>
+
+    <div class="section-block">
+        <div class="section-title">
+            <span class="eyebrow">Pourquoi EnterpriseERP</span>
+            <h2>Une solution moderne, intelligente et multi-plateforme</h2>
+        </div>
+        <div class="value-grid">
+            <div><strong>Interface moderne</strong><p>Navigation claire, rapide et intuitive pour dirigeants et equipes operationnelles.</p></div>
+            <div><strong>Intelligence artificielle</strong><p>Analyse des donnees et propositions d'actions concretes pour ameliorer les resultats.</p></div>
+            <div><strong>Multi-plateforme</strong><p>Web, Android, iOS et Windows pour travailler au bureau, en mobilite ou sur le terrain.</p></div>
+            <div><strong>Support professionnel</strong><p>Accompagnement, documentation, tutoriels et assistance pour chaque etape.</p></div>
+        </div>
+    </div>
+</section>
