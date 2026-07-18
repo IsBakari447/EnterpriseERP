@@ -218,6 +218,8 @@ app.UseMiddleware<TrialReadOnlyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllers();
+
 app.MapControllerRoute(
     name: "clients",
     pattern: "Clients",
