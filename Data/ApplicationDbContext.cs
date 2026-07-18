@@ -29,6 +29,15 @@ namespace EnterpriseERP.Data
         public DbSet<Quote> Quotes => Set<Quote>();
         public DbSet<QuoteItem> QuoteItems => Set<QuoteItem>();
         public DbSet<CompanyProfile> CompanyProfiles => Set<CompanyProfile>();
+        public DbSet<AutomationRule> AutomationRules => Set<AutomationRule>();
+        public DbSet<ExternalIntegration> ExternalIntegrations => Set<ExternalIntegration>();
+        public DbSet<DataImportJob> DataImportJobs => Set<DataImportJob>();
+        public DbSet<DynamicReport> DynamicReports => Set<DynamicReport>();
+        public DbSet<CollaborationComment> CollaborationComments => Set<CollaborationComment>();
+        public DbSet<DataVersion> DataVersions => Set<DataVersion>();
+        public DbSet<TenantAccount> TenantAccounts => Set<TenantAccount>();
+        public DbSet<MarketplaceExtension> MarketplaceExtensions => Set<MarketplaceExtension>();
+        public DbSet<CustomFieldDefinition> CustomFieldDefinitions => Set<CustomFieldDefinition>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -109,6 +118,35 @@ namespace EnterpriseERP.Data
                 FooterMessage = "Merci pour votre confiance. Nous restons à votre disposition pour vous accompagner.",
                 LogoPath = ""
             });
+
+            modelBuilder.Entity<AutomationRule>()
+                .HasIndex(a => a.Name);
+
+            modelBuilder.Entity<ExternalIntegration>()
+                .HasIndex(i => i.Provider);
+
+            modelBuilder.Entity<DataImportJob>()
+                .HasIndex(i => i.Module);
+
+            modelBuilder.Entity<DynamicReport>()
+                .HasIndex(r => r.Module);
+
+            modelBuilder.Entity<CollaborationComment>()
+                .HasIndex(c => new { c.EntityType, c.EntityId });
+
+            modelBuilder.Entity<DataVersion>()
+                .HasIndex(v => new { v.EntityType, v.EntityId, v.VersionNumber });
+
+            modelBuilder.Entity<TenantAccount>()
+                .HasIndex(t => t.Slug)
+                .IsUnique();
+
+            modelBuilder.Entity<MarketplaceExtension>()
+                .HasIndex(e => e.Category);
+
+            modelBuilder.Entity<CustomFieldDefinition>()
+                .HasIndex(f => new { f.EntityType, f.FieldKey })
+                .IsUnique();
         }
     }
 }

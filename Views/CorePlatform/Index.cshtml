@@ -1,0 +1,408 @@
+@using EnterpriseERP.Models
+@{
+    ViewData["Title"] = "Core Platform";
+    var featureStatus = ViewBag.FeatureStatus as List<(string Feature, string Status, string Details)> ?? new();
+    var automations = ViewBag.AutomationRules as List<AutomationRule> ?? new();
+    var integrations = ViewBag.ExternalIntegrations as List<ExternalIntegration> ?? new();
+    var imports = ViewBag.ImportJobs as List<DataImportJob> ?? new();
+    var advancedStatus = ViewBag.AdvancedFeatureStatus as List<(string Feature, string Status, string Details)> ?? new();
+    var reports = ViewBag.DynamicReports as List<DynamicReport> ?? new();
+    var comments = ViewBag.CollaborationComments as List<CollaborationComment> ?? new();
+    var versions = ViewBag.DataVersions as List<DataVersion> ?? new();
+    var tenants = ViewBag.TenantAccounts as List<TenantAccount> ?? new();
+    var extensions = ViewBag.MarketplaceExtensions as List<MarketplaceExtension> ?? new();
+    var customFields = ViewBag.CustomFields as List<CustomFieldDefinition> ?? new();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Core Platform</h1>
+        <p>Fonctionnalites SaaS essentielles, automatisations, imports et integrations tierces.</p>
+    </div>
+
+    <a href="/Admin/Index" class="btn-secondary">&larr; Retour Admin Center</a>
+</div>
+
+<div class="panel">
+    <h2>Couverture des fonctionnalites avancees</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fonctionnalite</th>
+                <th>Statut</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in advancedStatus)
+            {
+                var badgeClass = item.Status == "Actif" ? "success" : item.Status == "Nouveau" ? "warning" : "";
+                <tr>
+                    <td><strong>@item.Feature</strong></td>
+                    <td><span class="status-badge @badgeClass">@item.Status</span></td>
+                    <td>@item.Details</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="panel">
+    <h2>Couverture des fonctionnalites core</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fonctionnalite</th>
+                <th>Statut</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in featureStatus)
+            {
+                var badgeClass = item.Status == "Actif" ? "success" : item.Status == "Nouveau" ? "warning" : "";
+                <tr>
+                    <td><strong>@item.Feature</strong></td>
+                    <td><span class="status-badge @badgeClass">@item.Status</span></td>
+                    <td>@item.Details</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Automatisations</h2>
+        <p>Workflows configurables par trigger, conditions JSON et action.</p>
+
+        <form method="post" action="/CorePlatform/SaveAutomation" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Nom</label>
+                <input name="Name" placeholder="Ex: Alerte stock critique" required />
+            </div>
+            <div class="form-group">
+                <label>Trigger</label>
+                <select name="Trigger">
+                    <option value="LowStock">Stock faible</option>
+                    <option value="InvoiceOverdue">Facture impayee</option>
+                    <option value="NewOrder">Nouvelle commande</option>
+                    <option value="SecurityEvent">Evenement securite</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Action</label>
+                <select name="Action">
+                    <option value="CreateNotification">Notification in-app</option>
+                    <option value="SendEmail">Email</option>
+                    <option value="CallWebhook">Webhook</option>
+                    <option value="CreateAuditLog">Audit log</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Conditions JSON</label>
+                <textarea name="ConditionsJson" rows="3">{ "threshold": 5 }</textarea>
+            </div>
+            <div class="form-group">
+                <label>Action payload JSON</label>
+                <textarea name="ActionPayloadJson" rows="3">{ "message": "Action requise" }</textarea>
+            </div>
+            <label class="checkbox-line">
+                <input type="checkbox" name="IsEnabled" value="true" checked />
+                Active
+            </label>
+            <button type="submit" class="btn-primary">Ajouter workflow</button>
+        </form>
+
+        @if (automations.Any())
+        {
+            <table>
+                <thead><tr><th>Nom</th><th>Trigger</th><th>Action</th><th>Statut</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var rule in automations)
+                    {
+                        <tr>
+                            <td>@rule.Name</td>
+                            <td>@rule.Trigger</td>
+                            <td>@rule.Action</td>
+                            <td>@(rule.IsEnabled ? "Actif" : "Inactif")</td>
+                            <td>
+                                <form method="post" action="/CorePlatform/DeleteAutomation" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@rule.Id" />
+                                    <button type="submit" class="btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>Integrations tierces</h2>
+        <p>Registre pour Zapier, Slack, Google, Microsoft, Stripe et webhooks.</p>
+
+        <form method="post" action="/CorePlatform/SaveIntegration" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Provider</label>
+                <select name="Provider">
+                    <option>Zapier</option>
+                    <option>Slack</option>
+                    <option>Google</option>
+                    <option>Microsoft</option>
+                    <option>Stripe</option>
+                    <option>Webhook</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nom</label>
+                <input name="Name" placeholder="Ex: Slack alertes ventes" required />
+            </div>
+            <div class="form-group">
+                <label>Webhook URL</label>
+                <input name="WebhookUrl" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+                <label>Reference cle API</label>
+                <input name="ApiKeyReference" placeholder="ENV:SLACK_WEBHOOK_URL" />
+            </div>
+            <div class="form-group">
+                <label>Settings JSON</label>
+                <textarea name="SettingsJson" rows="3">{ "channel": "alerts" }</textarea>
+            </div>
+            <label class="checkbox-line">
+                <input type="checkbox" name="IsEnabled" value="true" />
+                Active
+            </label>
+            <button type="submit" class="btn-primary">Ajouter integration</button>
+        </form>
+
+        @if (integrations.Any())
+        {
+            <table>
+                <thead><tr><th>Provider</th><th>Nom</th><th>Statut</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var integration in integrations)
+                    {
+                        <tr>
+                            <td>@integration.Provider</td>
+                            <td>@integration.Name</td>
+                            <td>@(integration.IsEnabled ? "Actif" : "Inactif")</td>
+                            <td>
+                                <form method="post" action="/CorePlatform/DeleteIntegration" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@integration.Id" />
+                                    <button type="submit" class="btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Reporting dynamique</h2>
+        <p>Rapports configurables avec metriques, filtres, partage et rafraichissement.</p>
+        <form method="post" action="/CorePlatform/SaveReport" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Nom</label><input name="Name" required placeholder="Ex: Performance ventes" /></div>
+            <div class="form-group">
+                <label>Module</label>
+                <select name="Module">
+                    <option>Dashboard</option><option>Sales</option><option>Finance</option><option>Stock</option><option>HR</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Metriques JSON</label><textarea name="MetricsJson" rows="3">{ "metrics": ["revenue", "profit"] }</textarea></div>
+            <div class="form-group"><label>Filtres JSON</label><textarea name="FiltersJson" rows="3">{ "period": "month" }</textarea></div>
+            <div class="form-group">
+                <label>Refresh</label>
+                <select name="RefreshMode"><option>Manual</option><option>RealTime</option><option>Hourly</option><option>Daily</option></select>
+            </div>
+            <label class="checkbox-line"><input type="checkbox" name="IsShared" value="true" /> Partage</label>
+            <button class="btn-primary" type="submit">Ajouter rapport</button>
+        </form>
+        @if (reports.Any())
+        {
+            <table><thead><tr><th>Nom</th><th>Module</th><th>Refresh</th><th></th></tr></thead><tbody>
+            @foreach (var report in reports)
+            {
+                <tr><td>@report.Name</td><td>@report.Module</td><td>@report.RefreshMode</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="report" /><input type="hidden" name="id" value="@report.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>Collaboration</h2>
+        <p>Commentaires, mentions et partage par entite metier.</p>
+        <form method="post" action="/CorePlatform/SaveComment" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Entite</label><input name="EntityType" placeholder="Invoice, Client, Product..." required /></div>
+            <div class="form-group"><label>ID entite</label><input name="EntityId" placeholder="global ou ID" /></div>
+            <div class="form-group"><label>Mentions</label><input name="Mentions" placeholder="@@admin,@@finance" /></div>
+            <div class="form-group"><label>Commentaire</label><textarea name="Body" rows="3" required></textarea></div>
+            <label class="checkbox-line"><input type="checkbox" name="IsSharedExternally" value="true" /> Partage externe</label>
+            <button class="btn-primary" type="submit">Ajouter commentaire</button>
+        </form>
+        @if (comments.Any())
+        {
+            <table><thead><tr><th>Entite</th><th>Commentaire</th><th>Mentions</th><th></th></tr></thead><tbody>
+            @foreach (var comment in comments)
+            {
+                <tr><td>@comment.EntityType/@comment.EntityId</td><td>@comment.Body</td><td>@comment.Mentions</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="comment" /><input type="hidden" name="id" value="@comment.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Versioning des donnees</h2>
+        <p>Snapshots JSON pour historiser les changements importants.</p>
+        <form method="post" action="/CorePlatform/SaveVersion" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Entite</label><input name="EntityType" required placeholder="Invoice" /></div>
+            <div class="form-group"><label>ID entite</label><input name="EntityId" required placeholder="FAC-0001" /></div>
+            <div class="form-group"><label>Version</label><input name="VersionNumber" type="number" min="1" value="1" /></div>
+            <div class="form-group"><label>Resume</label><input name="ChangeSummary" placeholder="Modification prix" /></div>
+            <div class="form-group"><label>Snapshot JSON</label><textarea name="SnapshotJson" rows="3">{}</textarea></div>
+            <button class="btn-primary" type="submit">Ajouter version</button>
+        </form>
+        @if (versions.Any())
+        {
+            <table><thead><tr><th>Entite</th><th>Version</th><th>Resume</th><th></th></tr></thead><tbody>
+            @foreach (var version in versions)
+            {
+                <tr><td>@version.EntityType/@version.EntityId</td><td>@version.VersionNumber</td><td>@version.ChangeSummary</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="version" /><input type="hidden" name="id" value="@version.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>Multi-tenant</h2>
+        <p>Registre de tenants pour preparer la separation des clients SaaS.</p>
+        <form method="post" action="/CorePlatform/SaveTenant" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Nom tenant</label><input name="Name" required placeholder="Entreprise client" /></div>
+            <div class="form-group"><label>Slug</label><input name="Slug" placeholder="entreprise-client" /></div>
+            <div class="form-group"><label>Plan</label><select name="Plan"><option>Basic</option><option>Pro</option><option>Enterprise</option><option>Custom</option></select></div>
+            <label class="checkbox-line"><input type="checkbox" name="IsActive" value="true" checked /> Actif</label>
+            <button class="btn-primary" type="submit">Ajouter tenant</button>
+        </form>
+        @if (tenants.Any())
+        {
+            <table><thead><tr><th>Nom</th><th>Slug</th><th>Plan</th><th></th></tr></thead><tbody>
+            @foreach (var tenant in tenants)
+            {
+                <tr><td>@tenant.Name</td><td>@tenant.Slug</td><td>@tenant.Plan</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="tenant" /><input type="hidden" name="id" value="@tenant.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="panel">
+        <h2>Marketplace d'extensions</h2>
+        <p>Catalogue interne pour extensions, connecteurs et add-ons.</p>
+        <form method="post" action="/CorePlatform/SaveExtension" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Nom</label><input name="Name" required placeholder="Stripe Connector" /></div>
+            <div class="form-group"><label>Categorie</label><input name="Category" value="Integration" /></div>
+            <div class="form-group"><label>Description</label><textarea name="Description" rows="3"></textarea></div>
+            <div class="form-group"><label>Install URL</label><input name="InstallUrl" placeholder="https://..." /></div>
+            <label class="checkbox-line"><input type="checkbox" name="IsInstalled" value="true" /> Installee</label>
+            <button class="btn-primary" type="submit">Ajouter extension</button>
+        </form>
+        @if (extensions.Any())
+        {
+            <table><thead><tr><th>Nom</th><th>Categorie</th><th>Statut</th><th></th></tr></thead><tbody>
+            @foreach (var extension in extensions)
+            {
+                <tr><td>@extension.Name</td><td>@extension.Category</td><td>@(extension.IsInstalled ? "Installee" : "Disponible")</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="extension" /><input type="hidden" name="id" value="@extension.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+
+    <div class="panel">
+        <h2>Personnalisation profonde</h2>
+        <p>Champs custom par module, types de donnees et options JSON.</p>
+        <form method="post" action="/CorePlatform/SaveCustomField" class="form-grid">
+            @Html.AntiForgeryToken()
+            <div class="form-group"><label>Entite</label><select name="EntityType"><option>Client</option><option>Product</option><option>Invoice</option><option>Order</option><option>Supplier</option></select></div>
+            <div class="form-group"><label>Cle</label><input name="FieldKey" required placeholder="customer_segment" /></div>
+            <div class="form-group"><label>Label</label><input name="Label" required placeholder="Segment client" /></div>
+            <div class="form-group"><label>Type</label><select name="FieldType"><option>Text</option><option>Number</option><option>Date</option><option>Select</option><option>Boolean</option></select></div>
+            <div class="form-group"><label>Options JSON</label><textarea name="OptionsJson" rows="3">[]</textarea></div>
+            <label class="checkbox-line"><input type="checkbox" name="IsRequired" value="true" /> Obligatoire</label>
+            <button class="btn-primary" type="submit">Ajouter champ</button>
+        </form>
+        @if (customFields.Any())
+        {
+            <table><thead><tr><th>Entite</th><th>Cle</th><th>Type</th><th></th></tr></thead><tbody>
+            @foreach (var field in customFields)
+            {
+                <tr><td>@field.EntityType</td><td>@field.FieldKey</td><td>@field.FieldType</td><td>
+                    <form method="post" action="/CorePlatform/DeleteEntity" style="display:inline;">@Html.AntiForgeryToken()<input type="hidden" name="type" value="field" /><input type="hidden" name="id" value="@field.Id" /><button class="btn-danger btn-sm">Supprimer</button></form>
+                </td></tr>
+            }
+            </tbody></table>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <h2>Import CSV</h2>
+    <p>Import de donnees metier. Formats: Clients = nom;entreprise;email;telephone;adresse. Produits = nom;categorie;prix achat;prix vente;quantite.</p>
+
+    <form method="post" action="/CorePlatform/ImportCsv" enctype="multipart/form-data" class="search-box" style="width:100%;height:auto;padding:14px;gap:12px;">
+        @Html.AntiForgeryToken()
+        <select name="module" required>
+            <option value="Clients">Clients</option>
+            <option value="Products">Produits</option>
+        </select>
+        <input type="file" name="file" accept=".csv,text/csv" required />
+        <button type="submit" class="btn-primary">Importer</button>
+    </form>
+
+    @if (imports.Any())
+    {
+        <table>
+            <thead><tr><th>Date</th><th>Module</th><th>Fichier</th><th>Importees</th><th>Statut</th><th>Erreur</th></tr></thead>
+            <tbody>
+                @foreach (var job in imports)
+                {
+                    <tr>
+                        <td>@job.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@job.Module</td>
+                        <td>@job.FileName</td>
+                        <td>@job.RowsImported</td>
+                        <td>@job.Status</td>
+                        <td>@job.ErrorSummary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
