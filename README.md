@@ -249,12 +249,6 @@ git commit -m "Clear message"
 git push origin main
 ```
 
-If Render does not redeploy automatically, use:
-
-```text
-Render Dashboard -> Manual Deploy -> Deploy latest commit
-```
-
 ## Author
 
 Project developed by Issa Bakari.
