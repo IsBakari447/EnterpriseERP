@@ -1,17 +1,18 @@
+@inject EnterpriseERP.Services.TranslationService T
 @model List<System.IO.FileInfo>
 
 @{
-    ViewData["Title"] = "Backup Center";
+    ViewData["Title"] = T.T("BackupCenter");
 }
 
 <div class="page-header">
     <div>
-        <h1>Backup Center</h1>
-        <p>Sauvegarde manuelle de la base de données EnterpriseERP</p>
+        <h1>@T.T("BackupCenter")</h1>
+        <p>@T.T("BackupDescription")</p>
     </div>
 
     <a href="/Admin/Index" class="btn-secondary">
-        ← Retour Admin Center
+        &larr; @T.T("BackToAdminCenter")
     </a>
 </div>
 
@@ -26,30 +27,30 @@
 }
 
 <div class="panel">
-    <h2>Créer une sauvegarde</h2>
-    <p>Cette action crée un fichier ZIP contenant la base SQLite actuelle.</p>
+    <h2>@T.T("CreateBackup")</h2>
+    <p>@T.T("CreateBackupDescription")</p>
 
     <form method="post" action="/Backup/Create">
         @Html.AntiForgeryToken()
 
         <button type="submit" class="btn-primary">
-            Créer une sauvegarde maintenant
+            @T.T("CreateBackupNow")
         </button>
     </form>
 </div>
 
 <div class="panel" style="margin-top:20px;">
-    <h2>Sauvegardes disponibles</h2>
+    <h2>@T.T("AvailableBackups")</h2>
 
     @if (Model != null && Model.Any())
     {
         <table>
             <thead>
                 <tr>
-                    <th>Fichier</th>
-                    <th>Date</th>
-                    <th>Taille</th>
-                    <th>Actions</th>
+                    <th>@T.T("File")</th>
+                    <th>@T.T("Date")</th>
+                    <th>@T.T("Size")</th>
+                    <th>@T.T("Actions")</th>
                 </tr>
             </thead>
 
@@ -62,17 +63,17 @@
                         <td>@Math.Round(backup.Length / 1024.0, 2) KB</td>
                         <td>
                             <a href="/Backup/Download?file=@backup.Name" class="btn-secondary">
-                                Télécharger
+                                @T.T("Download")
                             </a>
 
                             <form method="post"
                                   action="/Backup/Delete"
                                   style="display:inline;"
-                                  onsubmit="return confirm('Supprimer cette sauvegarde ?');">
+                                  onsubmit="return confirm('@T.T("ConfirmDeleteBackup")');">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="file" value="@backup.Name" />
                                 <button type="submit" class="btn-danger">
-                                    Supprimer
+                                    @T.T("Delete")
                                 </button>
                             </form>
                         </td>
@@ -83,6 +84,6 @@
     }
     else
     {
-        <p class="empty">Aucune sauvegarde disponible.</p>
+        <p class="empty">@T.T("NoBackups")</p>
     }
 </div>

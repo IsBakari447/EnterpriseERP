@@ -11,15 +11,18 @@ namespace EnterpriseERP.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
+        private readonly TranslationService _translations;
 
         public BackupController(
             ApplicationDbContext context,
             IWebHostEnvironment env,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            TranslationService translations)
         {
             _context = context;
             _env = env;
             _configuration = configuration;
+            _translations = translations;
         }
 
         [RequirePermission("Paramètres", "Voir")]
@@ -53,7 +56,7 @@ namespace EnterpriseERP.Controllers
 
             if (!System.IO.File.Exists(dbPath))
             {
-                TempData["Error"] = "Base de données introuvable.";
+                TempData["Error"] = _translations.T("DatabaseNotFound");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -80,7 +83,7 @@ namespace EnterpriseERP.Controllers
                 severity: "Information"
             );
 
-            TempData["Success"] = "Sauvegarde créée avec succès.";
+            TempData["Success"] = _translations.T("BackupCreatedSuccess");
 
             return RedirectToAction(nameof(Index));
         }
@@ -142,7 +145,7 @@ namespace EnterpriseERP.Controllers
                     severity: "Warning"
                 );
 
-                TempData["Success"] = "Sauvegarde supprimée.";
+                TempData["Success"] = _translations.T("BackupDeletedSuccess");
             }
 
             return RedirectToAction(nameof(Index));

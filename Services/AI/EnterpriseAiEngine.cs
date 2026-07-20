@@ -113,9 +113,9 @@ public class EnterpriseAiEngine
 
     private async Task<string> FinanceAnalysisAsync()
     {
-        var invoicesTotal = await _context.Invoices.SumAsync(i => (decimal?)i.TotalAmount) ?? 0;
-        var paymentsTotal = await _context.Payments.SumAsync(p => (decimal?)p.Amount) ?? 0;
-        var expensesTotal = await _context.Expenses.SumAsync(e => (decimal?)e.Amount) ?? 0;
+        var invoicesTotal = await SumDecimalAsync(_context.Invoices.Select(i => i.TotalAmount));
+        var paymentsTotal = await SumDecimalAsync(_context.Payments.Select(p => p.Amount));
+        var expensesTotal = await SumDecimalAsync(_context.Expenses.Select(e => e.Amount));
         var profit = paymentsTotal - expensesTotal;
         var marginRate = paymentsTotal > 0 ? profit / paymentsTotal * 100m : 0m;
         var collectionRate = invoicesTotal > 0 ? paymentsTotal / invoicesTotal * 100m : 100m;
@@ -135,15 +135,15 @@ public class EnterpriseAiEngine
     {
         var today = DateTime.Today;
         var last30Days = today.AddDays(-30);
-        var payments30 = await _context.Payments
+        var payments30 = await SumDecimalAsync(_context.Payments
             .Where(p => p.PaymentDate.Date >= last30Days)
-            .SumAsync(p => (decimal?)p.Amount) ?? 0;
-        var expenses30 = await _context.Expenses
+            .Select(p => p.Amount));
+        var expenses30 = await SumDecimalAsync(_context.Expenses
             .Where(e => e.ExpenseDate.Date >= last30Days)
-            .SumAsync(e => (decimal?)e.Amount) ?? 0;
+            .Select(e => e.Amount));
         var projectedProfit = payments30 - expenses30;
         var dailyBurn = (expenses30 - payments30) / 30m;
-        var totalCash = await _context.Payments.SumAsync(p => (decimal?)p.Amount) ?? 0;
+        var totalCash = await SumDecimalAsync(_context.Payments.Select(p => p.Amount));
         var runway = dailyBurn > 0 ? Math.Floor(totalCash / dailyBurn) : 999m;
 
         return
@@ -251,8 +251,8 @@ public class EnterpriseAiEngine
         var clients = await _context.Clients.CountAsync();
         var products = await _context.Products.CountAsync();
         var invoices = await _context.Invoices.CountAsync();
-        var payments = await _context.Payments.SumAsync(p => (decimal?)p.Amount) ?? 0;
-        var expenses = await _context.Expenses.SumAsync(e => (decimal?)e.Amount) ?? 0;
+        var payments = await SumDecimalAsync(_context.Payments.Select(p => p.Amount));
+        var expenses = await SumDecimalAsync(_context.Expenses.Select(e => e.Amount));
 
         return
             "Resume EnterpriseERP AI\n\n" +
@@ -277,5 +277,11 @@ public class EnterpriseAiEngine
             return "Conseil AI: la marge est fragile. Revois prix, remises, couts fournisseurs et transport.";
 
         return "Conseil AI: situation saine. Augmente le volume sur les clients et produits les plus rentables.";
+    }
+
+    private static async Task<decimal> SumDecimalAsync(IQueryable<decimal> query)
+    {
+        var values = await query.ToListAsync();
+        return values.Sum();
     }
 }

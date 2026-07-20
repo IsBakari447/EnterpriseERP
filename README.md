@@ -1,6 +1,6 @@
 # EnterpriseERP
 
-EnterpriseERP is a professional ERP web platform built with ASP.NET Core 8, Entity Framework Core, SQLite, QuestPDF and ClosedXML. The project centralizes the essential modules of a company: CRM, customers, suppliers, products, stock, quotes, invoices, payments, attendance, expenses, exports, audit logs, roles, security, AI assistant and CEO dashboard.
+EnterpriseERP is a professional ERP web platform built with ASP.NET Core 8, Entity Framework Core, SQLite, QuestPDF and ClosedXML. The project centralizes the essential modules of a company: CRM, customers, suppliers, products, stock, quotes, invoices, payments, attendance, expenses, exports, audit logs, roles, security, social feedback, AI assistant and CEO dashboard.
 
 Current production URL:
 
@@ -18,6 +18,7 @@ https://enterpriseerp-1.onrender.com
 - Professional Excel exports.
 - User, role and permission management.
 - Security audit and activity logging.
+- Social module with user feedback, review and rating management, service likes and moderation tools.
 - Free trial with business limits.
 - Internationalization through the internal translation service.
 - Mobile API with JWT authentication.
@@ -165,6 +166,33 @@ curl https://enterpriseerp-1.onrender.com/health
 curl https://enterpriseerp-1.onrender.com/health/ready
 ```
 
+## Social Feedback Module
+
+EnterpriseERP includes a social features module available at:
+
+```http
+GET /Social/Index
+```
+
+The module provides:
+
+- Feedback collection with category, priority, status and optional admin response.
+- Review and rating management with 1 to 5 star scoring.
+- Service likes for EnterpriseERP modules and services.
+- Moderation actions for feedback status and review approval.
+- Audit logging for feedback, review, like and moderation actions.
+- Role-based permissions through the `Social` permission module.
+
+Database tables added by the social module:
+
+```text
+Feedbacks
+Reviews
+SocialLikes
+```
+
+After deployment, make sure the latest EF Core migrations are applied. Super admins can access the module directly. For Admin, Manager or Employee accounts, assign the required `Social` permissions from the Roles & Permissions page.
+
 ## Useful QA Commands
 
 Debug build:
@@ -209,6 +237,7 @@ docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production -e Jwt__Key=a_
 - Verify `/health` and `/health/ready`.
 - Verify login/register.
 - Test Admin, Manager and Employee permissions.
+- Test the Social module: feedback creation, review rating, likes and moderation permissions.
 - Test customer, product, quote, invoice and payment creation.
 - Test invoice/quote PDF generation.
 - Test Excel exports.

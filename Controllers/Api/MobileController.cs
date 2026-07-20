@@ -237,9 +237,9 @@ namespace EnterpriseERP.Controllers.Api
         [HttpGet("reports-summary")]
         public async Task<IActionResult> GetReportsSummary()
         {
-            var invoicesTotal = await _context.Invoices.SumAsync(i => i.TotalAmount);
-            var expensesTotal = await _context.Expenses.SumAsync(e => e.Amount);
-            var paymentsTotal = await _context.Payments.SumAsync(p => p.Amount);
+            var invoicesTotal = await SumDecimalAsync(_context.Invoices.Select(i => i.TotalAmount));
+            var expensesTotal = await SumDecimalAsync(_context.Expenses.Select(e => e.Amount));
+            var paymentsTotal = await SumDecimalAsync(_context.Payments.Select(p => p.Amount));
 
             return Ok(new
             {
@@ -252,6 +252,12 @@ namespace EnterpriseERP.Controllers.Api
                 invoicesCount = await _context.Invoices.CountAsync(),
                 expensesCount = await _context.Expenses.CountAsync()
             });
+        }
+
+        private static async Task<decimal> SumDecimalAsync(IQueryable<decimal> query)
+        {
+            var values = await query.ToListAsync();
+            return values.Sum();
         }
 
         [HttpGet("backup-summary")]

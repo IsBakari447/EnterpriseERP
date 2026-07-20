@@ -45,38 +45,38 @@ namespace EnterpriseERP.Controllers
             ViewBag.TotalQuotes = await _context.Quotes.AsNoTracking().CountAsync();
             ViewBag.AcceptedQuotes = await _context.Quotes.AsNoTracking().CountAsync(q => q.Status == "Accepte" || q.Status == "Accepté");
             ViewBag.PendingQuotes = await _context.Quotes.AsNoTracking().CountAsync(q => q.Status == "Brouillon" || q.Status == "Envoye" || q.Status == "Envoyé");
-            ViewBag.TotalQuoteAmount = await _context.Quotes.AsNoTracking().SumAsync(q => (decimal?)q.TotalAmount) ?? 0m;
+            ViewBag.TotalQuoteAmount = await SumDecimalAsync(_context.Quotes.AsNoTracking().Select(q => q.TotalAmount));
 
             ViewBag.TotalInvoices = await _context.Invoices.AsNoTracking().CountAsync();
             ViewBag.PaidInvoices = await _context.Invoices.AsNoTracking().CountAsync(i => i.Status == "Paid");
             ViewBag.UnpaidInvoices = await _context.Invoices.AsNoTracking().CountAsync(i => i.Status == "Unpaid" || i.Status == "Pending");
-            ViewBag.TotalUnpaidAmount = await _context.Invoices
+            ViewBag.TotalUnpaidAmount = await SumDecimalAsync(_context.Invoices
                 .AsNoTracking()
                 .Where(i => i.Status == "Unpaid" || i.Status == "Pending")
-                .SumAsync(i => (decimal?)i.TotalAmount) ?? 0m;
+                .Select(i => i.TotalAmount));
 
             ViewBag.TotalOrders = await _context.Orders.AsNoTracking().CountAsync();
             ViewBag.PendingOrdersCount = await _context.Orders.AsNoTracking().CountAsync(o => o.Status == "Pending");
             ViewBag.TotalPayments = await _context.Payments.AsNoTracking().CountAsync();
-            ViewBag.TotalExpenses = await _context.Expenses.AsNoTracking().SumAsync(e => (decimal?)e.Amount) ?? 0m;
-            ViewBag.MonthExpenses = await _context.Expenses
+            ViewBag.TotalExpenses = await SumDecimalAsync(_context.Expenses.AsNoTracking().Select(e => e.Amount));
+            ViewBag.MonthExpenses = await SumDecimalAsync(_context.Expenses
                 .AsNoTracking()
                 .Where(e => e.ExpenseDate >= monthStart)
-                .SumAsync(e => (decimal?)e.Amount) ?? 0m;
+                .Select(e => e.Amount));
 
-            ViewBag.TotalRevenue = await _context.Payments.AsNoTracking().SumAsync(p => (decimal?)p.Amount) ?? 0m;
-            ViewBag.MonthRevenue = await _context.Payments
+            ViewBag.TotalRevenue = await SumDecimalAsync(_context.Payments.AsNoTracking().Select(p => p.Amount));
+            ViewBag.MonthRevenue = await SumDecimalAsync(_context.Payments
                 .AsNoTracking()
                 .Where(p => p.PaymentDate >= monthStart)
-                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
-            ViewBag.YearRevenue = await _context.Payments
+                .Select(p => p.Amount));
+            ViewBag.YearRevenue = await SumDecimalAsync(_context.Payments
                 .AsNoTracking()
                 .Where(p => p.PaymentDate >= yearStart)
-                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
-            ViewBag.PaymentsToday = await _context.Payments
+                .Select(p => p.Amount));
+            ViewBag.PaymentsToday = await SumDecimalAsync(_context.Payments
                 .AsNoTracking()
                 .Where(p => p.PaymentDate >= today && p.PaymentDate < tomorrow)
-                .SumAsync(p => (decimal?)p.Amount) ?? 0m;
+                .Select(p => p.Amount));
 
             ViewBag.NetProfit = ViewBag.TotalRevenue - ViewBag.TotalExpenses;
             ViewBag.MonthNetProfit = ViewBag.MonthRevenue - ViewBag.MonthExpenses;
@@ -252,6 +252,12 @@ namespace EnterpriseERP.Controllers
             ViewBag.TitleTranslated = _translator.T("Dashboard");
 
             return View();
+        }
+
+        private static async Task<decimal> SumDecimalAsync(IQueryable<decimal> query)
+        {
+            var values = await query.ToListAsync();
+            return values.Sum();
         }
     }
 }
