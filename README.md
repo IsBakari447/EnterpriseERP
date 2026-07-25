@@ -178,6 +178,24 @@ curl https://enterpriseerp-1.onrender.com/health
 curl https://enterpriseerp-1.onrender.com/health/ready
 ```
 
+## Demo and Mobile Corrections
+
+Recent demo-focused fixes:
+
+- Added mobile registration endpoint: `POST /api/mobile/auth/register`.
+- The first registered user is automatically created as `SuperAdmin` to make the initial demo easier.
+- Mobile registration can also create the first company profile when `CompanyName` is provided.
+- Mobile login and registration return JWT data compatible with `EnterpriseERP.Mobile`.
+- Health endpoints remain available at `/health` and `/health/ready` for the mobile API test button.
+
+For a phone demo, run the backend on the PC and configure the mobile app with the PC LAN IP, for example:
+
+```text
+http://192.168.1.20:5167/
+```
+
+Do not use `localhost` from a real Android phone; it points to the phone itself, not to the PC.
+
 ## Social Feedback Module
 
 EnterpriseERP includes a social features module available at:
@@ -230,6 +248,21 @@ Docker test:
 ```bash
 docker build -t enterpriseerp .
 docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production -e Jwt__Key=a_long_random_key_with_at_least_32_characters enterpriseerp
+```
+
+## User Manual and Video Tutorials
+
+The simple non-technical user manual displayed from the public home page is available at:
+
+```text
+MANUEL_UTILISATEUR.md
+```
+
+Technical suite documentation and the EnterpriseERP Web video tutorial script are also available in this repository:
+
+```text
+docs/MANUEL_UTILISATION_SUITE_ENTERPRISEERP.md
+docs/tutoriels-video/01_ENTERPRISEERP_WEB.md
 ```
 
 ## Security

@@ -13,6 +13,7 @@
                 ["Downloads"] = "Downloads",
                 ["Pricing"] = "Pricing",
                 ["Demo"] = "Demo",
+                ["Manual"] = "User manual",
                 ["Contact"] = "Contact",
                 ["Login"] = "Sign in",
                 ["TryFree"] = "Try for free",
@@ -93,6 +94,7 @@
                 ["Downloads"] = "Nedladdningar",
                 ["Pricing"] = "Priser",
                 ["Demo"] = "Demo",
+                ["Manual"] = "Manual",
                 ["Contact"] = "Kontakt",
                 ["Login"] = "Logga in",
                 ["TryFree"] = "Prova gratis",
@@ -160,7 +162,7 @@
                 ["EnterpriseText"] = "Flera företag, anpassning, driftsättning och vägledning.",
                 ["FooterText"] = "Smart Business Suite för kunder, ekonomi, lager, HR, dokument, AI och mobil.",
                 ["Product"] = "Produkt",
-                ["Access"] = "Åtkomst",
+                ["Access"] = "Access",
                 ["Support"] = "Support",
                 ["Rights"] = "Alla rättigheter förbehållna.",
                 ["Powered"] = "Drivs av Enterprise AI"
@@ -173,6 +175,7 @@
                 ["Downloads"] = "Descargas",
                 ["Pricing"] = "Precios",
                 ["Demo"] = "Demo",
+                ["Manual"] = "Manual",
                 ["Contact"] = "Contacto",
                 ["Login"] = "Iniciar sesión",
                 ["TryFree"] = "Probar gratis",
@@ -201,6 +204,7 @@
                 ["Downloads"] = "Downloads",
                 ["Pricing"] = "Preise",
                 ["Demo"] = "Demo",
+                ["Manual"] = "Handbuch",
                 ["Contact"] = "Kontakt",
                 ["Login"] = "Anmelden",
                 ["TryFree"] = "Kostenlos testen",
@@ -231,6 +235,7 @@
             ["Downloads"] = "Téléchargements",
             ["Pricing"] = "Tarifs",
             ["Demo"] = "Démo",
+            ["Manual"] = "Manuel",
             ["Contact"] = "Contact",
             ["Login"] = "Connexion",
             ["TryFree"] = "Essayer gratuitement",
@@ -810,6 +815,7 @@
         <a href="/Home/Downloads">Téléchargements</a>
         <a href="/Home/Pricing">Tarifs</a>
         <a href="/Home/Demo">Démo</a>
+        <a href="/Home/Manual">Manuel</a>
         <a href="/Home/Contact">Contact</a>
     </nav>
 
@@ -843,6 +849,7 @@
             <div class="hero-buttons">
                 <a class="btn btn-primary" href="/Account/Register">Créer un compte</a>
                 <a class="btn btn-dark" href="/Account/Login">Se connecter</a>
+                <a class="btn btn-dark" href="/Home/Manual">Lire le manuel</a>
                 <a class="btn btn-dark" href="/Home/Downloads">Telecharger l'application mobile</a>
             </div>
 
@@ -980,6 +987,7 @@
     <div>
         <h4>Accès</h4>
         <a href="/Account/Login">Connexion</a>
+        <a href="/Home/Manual">Manuel</a>
         <a href="/Account/Register">Créer un compte</a>
         <a href="/Home/Demo">Démo</a>
     </div>
@@ -1005,6 +1013,7 @@
             downloads: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Downloads"))),
             pricing: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Pricing"))),
             demo: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Demo"))),
+            manual: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Manual"))),
             contact: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Contact"))),
             login: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("Login"))),
             tryFree: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L("TryFree"))),
@@ -1087,7 +1096,7 @@
         document.title = text.title;
 
         const navLinks = document.querySelectorAll(".nav-links a");
-        [text.features, text.modules, text.downloads, text.pricing, text.demo, text.contact]
+        [text.features, text.modules, text.downloads, text.pricing, text.demo, text.manual, text.contact]
             .forEach((value, index) => {
                 if (navLinks[index]) navLinks[index].textContent = value;
             });
@@ -1122,7 +1131,8 @@
         const heroButtons = document.querySelectorAll(".hero-buttons .btn");
         if (heroButtons[0]) heroButtons[0].textContent = text.createAccount;
         if (heroButtons[1]) heroButtons[1].textContent = text.login;
-        if (heroButtons[2]) heroButtons[2].textContent = text.downloadMobile;
+        if (heroButtons[2]) heroButtons[2].textContent = text.manual;
+        if (heroButtons[3]) heroButtons[3].textContent = text.downloadMobile;
 
         const stats = document.querySelectorAll(".stats .stat span");
         [text.statModules, text.statAi, text.statPdf, text.statMobile].forEach((value, index) => {
@@ -1230,7 +1240,7 @@
             if (footerProductLinks[index]) footerProductLinks[index].textContent = value;
         });
         const footerAccessLinks = footerColumns[2]?.querySelectorAll("a") ?? [];
-        [text.login, text.createAccount, text.demo].forEach((value, index) => {
+        [text.login, text.manual, text.createAccount, text.demo].forEach((value, index) => {
             if (footerAccessLinks[index]) footerAccessLinks[index].textContent = value;
         });
         const supportLink = footerColumns[3]?.querySelectorAll("a")[1];
