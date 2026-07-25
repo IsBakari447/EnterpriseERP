@@ -72,9 +72,13 @@ namespace EnterpriseERP.Controllers
             payment.PaymentDate = DateTime.Now;
             _context.Payments.Add(payment);
 
-            var totalPaid = _context.Payments
+            var existingPaid = _context.Payments
                 .Where(p => p.InvoiceId == invoice.Id)
-                .Sum(p => p.Amount) + payment.Amount;
+                .Select(p => p.Amount)
+                .ToList()
+                .Sum();
+
+            var totalPaid = existingPaid + payment.Amount;
 
             invoice.Status = totalPaid >= invoice.TotalAmount ? "Paid" : "Pending";
 
