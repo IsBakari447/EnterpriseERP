@@ -1,4 +1,5 @@
 using EnterpriseERP.Attributes;
+using EnterpriseERP.Constants;
 using EnterpriseERP.Data;
 using EnterpriseERP.Models;
 using EnterpriseERP.Services;
@@ -55,6 +56,12 @@ namespace EnterpriseERP.Controllers
                 return View(product);
             }
 
+            if (!ProductCategories.IsValid(product.Category))
+            {
+                ViewBag.Error = "La catégorie du produit doit être EnterpriseERP, Mobile ou Cloud.";
+                return View(product);
+            }
+
             var productLimit = _trialPolicy.CanCreateProductAsync(HttpContext.RequestAborted).GetAwaiter().GetResult();
             if (!productLimit.Allowed)
             {
@@ -62,6 +69,7 @@ namespace EnterpriseERP.Controllers
                 return View(product);
             }
 
+            product.Category = ProductCategories.Normalize(product.Category);
             product.CreatedAt = DateTime.Now;
 
             _context.Products.Add(product);

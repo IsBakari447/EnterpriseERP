@@ -1,5 +1,6 @@
 @model EnterpriseERP.Models.Product
 @inject EnterpriseERP.Services.TranslationService T
+@using EnterpriseERP.Constants
 
 @{
     ViewData["Title"] = T.T("AddProduct");
@@ -30,7 +31,13 @@
 
         <div class="form-group">
             <label>@T.T("Category")</label>
-            <input asp-for="Category" />
+            <select asp-for="Category" required>
+                @foreach (var category in ProductCategories.All)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+            <span asp-validation-for="Category" class="text-danger"></span>
         </div>
 
         <div class="form-group">

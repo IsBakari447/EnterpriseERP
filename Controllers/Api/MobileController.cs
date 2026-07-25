@@ -1,4 +1,5 @@
 using QuestPDF.Fluent;
+using EnterpriseERP.Constants;
 using Microsoft.AspNetCore.Authorization;
 using EnterpriseERP.Data;
 using EnterpriseERP.Services.Trial;
@@ -356,10 +357,14 @@ namespace EnterpriseERP.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!ProductCategories.IsValid(product.Category))
+                return BadRequest(new { success = false, message = "La catégorie du produit doit être EnterpriseERP, Mobile ou Cloud." });
+
             var productLimit = await _trialPolicy.CanCreateProductAsync(HttpContext.RequestAborted);
             if (!productLimit.Allowed)
                 return StatusCode(StatusCodes.Status402PaymentRequired, new { success = false, message = productLimit.Message });
 
+            product.Category = ProductCategories.Normalize(product.Category);
             product.CreatedAt = DateTime.UtcNow;
 
             _context.Products.Add(product);
@@ -376,8 +381,11 @@ namespace EnterpriseERP.Controllers.Api
             if (existing == null)
                 return NotFound();
 
+            if (!ProductCategories.IsValid(product.Category))
+                return BadRequest(new { success = false, message = "La catégorie du produit doit être EnterpriseERP, Mobile ou Cloud." });
+
             existing.Name = product.Name;
-            existing.Category = product.Category;
+            existing.Category = ProductCategories.Normalize(product.Category);
             existing.PurchasePrice = product.PurchasePrice;
             existing.SalePrice = product.SalePrice;
             existing.Quantity = product.Quantity;

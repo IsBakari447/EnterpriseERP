@@ -12,7 +12,7 @@ https://enterpriseerp-1.onrender.com
 
 - CEO dashboard with financial indicators, sales, stock, invoices and charts.
 - Customer and supplier CRM.
-- Products, stock and stock movements.
+- Products, stock and stock movements, with product categories limited to EnterpriseERP, Mobile and Cloud across the web form and mobile API.
 - Professional quotes with invoice conversion.
 - Invoices, PDF generation, printing and payment tracking.
 - Professional Excel exports.
@@ -93,6 +93,18 @@ By default, the application uses SQLite:
 ```json
 "DefaultConnection": "Data Source=enterpriseerp.db"
 ```
+
+## Product Categories
+
+Products are organized with a controlled category list:
+
+```text
+EnterpriseERP
+Mobile
+Cloud
+```
+
+The MVC product creation form uses a dropdown for these categories, and the mobile API validates the same list when creating or updating products. This keeps the product catalog consistent across the EnterpriseERP web app and mobile clients.
 
 ## Sensitive Configuration
 
