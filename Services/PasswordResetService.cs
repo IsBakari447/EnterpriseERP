@@ -15,15 +15,18 @@ public sealed class PasswordResetService
     private readonly ApplicationDbContext _context;
     private readonly PasswordResetTokenService _tokenService;
     private readonly IEmailSender _emailSender;
+    private readonly ILogger<PasswordResetService> _logger;
 
     public PasswordResetService(
         ApplicationDbContext context,
         PasswordResetTokenService tokenService,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        ILogger<PasswordResetService> logger)
     {
         _context = context;
         _tokenService = tokenService;
         _emailSender = emailSender;
+        _logger = logger;
     }
 
     public async Task<(bool Success, string Message)> RequestResetAsync(string email, CancellationToken cancellationToken = default)
@@ -61,9 +64,7 @@ public sealed class PasswordResetService
         user.PasswordResetTokenUsedAt = null;
         user.UpdatedAt = now;
 
-        await _context.SaveChangesAsync(cancellationToken);
-
-        await _emailSender.SendAsync(new EmailMessage
+        var sent = await _emailSender.SendAsync(new EmailMessage
         {
             To = user.Email,
             Subject = "Code de verification EnterpriseERP",
@@ -76,6 +77,20 @@ public sealed class PasswordResetService
                 """
         }, cancellationToken);
 
+        if (!sent)
+        {
+            user.PasswordResetTokenHash = null;
+            user.PasswordResetTokenExpiresAt = null;
+            user.PasswordResetTokenUsedAt = null;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync(cancellationToken);
+            _logger.LogWarning("Password reset code was not delivered for {Email}.", user.Email);
+
+            return (false, "Le code n'a pas pu etre envoye. Verifiez la configuration SMTP ou utilisez un mot de passe d'application Gmail.");
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
         return GenericRequestResponse();
     }
 

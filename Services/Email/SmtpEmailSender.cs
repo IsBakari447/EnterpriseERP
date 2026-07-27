@@ -14,7 +14,7 @@ public sealed class SmtpEmailSender : IEmailSender
         _logger = logger;
     }
 
-    public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
+    public async Task<bool> SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
     {
         var host = _configuration["Email:Smtp:Host"]
             ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_SMTP_HOST")
@@ -26,7 +26,7 @@ public sealed class SmtpEmailSender : IEmailSender
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(from))
         {
             _logger.LogWarning("SMTP is not configured. Password reset email was not sent for {Email}.", message.To);
-            return;
+            return false;
         }
 
         using var mail = new MailMessage
@@ -54,12 +54,26 @@ public sealed class SmtpEmailSender : IEmailSender
         if (!string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(password))
         {
             _logger.LogWarning("SMTP password is missing. Password reset email was not sent for {Email}.", message.To);
-            return;
+            return false;
         }
 
         if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
             smtp.Credentials = new NetworkCredential(username, password);
 
-        await smtp.SendMailAsync(mail, cancellationToken);
+        try
+        {
+            await smtp.SendMailAsync(mail, cancellationToken);
+            return true;
+        }
+        catch (SmtpException ex)
+        {
+            _logger.LogWarning(ex, "SMTP authentication or delivery failed for {Email}. Status: {StatusCode}", message.To, ex.StatusCode);
+            return false;
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "SMTP delivery could not be started for {Email}.", message.To);
+            return false;
+        }
     }
 }
