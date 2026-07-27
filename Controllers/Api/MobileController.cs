@@ -1274,7 +1274,7 @@ namespace EnterpriseERP.Controllers.Api
 
 
         [HttpPost("profile/photo")]
-        public async Task<IActionResult> UploadProfilePhoto(IFormFile file)
+        public async Task<IActionResult> UploadProfilePhoto([FromForm] IFormFile file)
         {
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
@@ -1293,6 +1293,13 @@ namespace EnterpriseERP.Controllers.Api
             Directory.CreateDirectory(uploadsFolder);
 
             var extension = Path.GetExtension(file.FileName);
+            if (string.IsNullOrWhiteSpace(extension))
+                extension = ".jpg";
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            if (!allowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+                return BadRequest("Format de photo non supporté.");
+
             var fileName = $"profile_{userId}_{DateTime.UtcNow:yyyyMMddHHmmss}{extension}";
             var filePath = Path.Combine(uploadsFolder, fileName);
 

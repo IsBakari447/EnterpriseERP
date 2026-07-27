@@ -1,6 +1,7 @@
 using EnterpriseERP.Attributes;
 using EnterpriseERP.Data;
 using EnterpriseERP.Services;
+using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
 
@@ -68,10 +69,21 @@ namespace EnterpriseERP.Controllers
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             string zipName = $"EnterpriseERP_Backup_{timestamp}.zip";
             string zipPath = Path.Combine(backupFolder, zipName);
+            string tempDbPath = Path.Combine(Path.GetTempPath(), $"EnterpriseERP_Backup_{timestamp}.db");
 
-            using (var zip = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+            try
             {
-                zip.CreateEntryFromFile(dbPath, Path.GetFileName(dbPath));
+                CreateSqliteSnapshot(dbPath, tempDbPath);
+
+                using (var zip = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+                {
+                    zip.CreateEntryFromFile(tempDbPath, Path.GetFileName(dbPath));
+                }
+            }
+            finally
+            {
+                SqliteConnection.ClearAllPools();
+                TryDeleteFile(tempDbPath);
             }
 
             AuditService.Log(
@@ -176,6 +188,48 @@ namespace EnterpriseERP.Controllers
             }
 
             return Path.Combine(_env.ContentRootPath, "enterpriseerp.db");
+        }
+
+        private static void CreateSqliteSnapshot(string sourcePath, string destinationPath)
+        {
+            var sourceConnectionString = new SqliteConnectionStringBuilder
+            {
+                DataSource = sourcePath,
+                Mode = SqliteOpenMode.ReadOnly,
+                Cache = SqliteCacheMode.Shared,
+                Pooling = false
+            }.ToString();
+
+            var destinationConnectionString = new SqliteConnectionStringBuilder
+            {
+                DataSource = destinationPath,
+                Mode = SqliteOpenMode.ReadWriteCreate,
+                Pooling = false
+            }.ToString();
+
+            using var source = new SqliteConnection(sourceConnectionString);
+            using var destination = new SqliteConnection(destinationConnectionString);
+
+            source.Open();
+            destination.Open();
+            source.BackupDatabase(destination);
+        }
+
+        private static void TryDeleteFile(string path)
+        {
+            try
+            {
+                if (System.IO.File.Exists(path))
+                    System.IO.File.Delete(path);
+            }
+            catch (IOException)
+            {
+                // The backup ZIP is already created; a locked temp file should not fail the request.
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Same cleanup-only case as above.
+            }
         }
     }
 }

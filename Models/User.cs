@@ -23,6 +23,18 @@ namespace EnterpriseERP.Models
 
         public string PasswordHash { get; set; } = "";
 
+        public string? PasswordResetTokenHash { get; set; }
+
+        public DateTime? PasswordResetTokenExpiresAt { get; set; }
+
+        public DateTime? PasswordResetTokenUsedAt { get; set; }
+
+        public DateTime? PasswordResetRequestWindowStartedAt { get; set; }
+
+        public int PasswordResetRequestCount { get; set; } = 0;
+
+        public DateTime? PasswordResetLockedUntil { get; set; }
+
         // ==========================
         // RÔLES
         // ==========================

@@ -1,4 +1,5 @@
 @using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
 @{
     ViewData["Title"] = "Social";
 
@@ -8,17 +9,34 @@
     var averageRating = (double)(ViewBag.AverageRating ?? 0d);
     var platformLikes = (int)(ViewBag.PlatformLikes ?? 0);
     var userLikedPlatform = (bool)(ViewBag.UserLikedPlatform ?? false);
+
+    string CategoryLabel(string? category) => category switch
+    {
+        "Bug" => T.T("FeedbackCategoryBug"),
+        "Amelioration" => T.T("FeedbackCategoryImprovement"),
+        "Design" => T.T("FeedbackCategoryDesign"),
+        "Performance" => T.T("FeedbackCategoryPerformance"),
+        _ => T.T("FeedbackCategoryGeneral")
+    };
+
+    string StatusLabel(string? status) => status switch
+    {
+        "En cours" => T.T("SocialStatusInProgress"),
+        "Traite" => T.T("SocialStatusProcessed"),
+        "Ferme" => T.T("SocialStatusClosed"),
+        _ => T.T("SocialStatusNew")
+    };
 }
 
 <section class="dashboard-premium-v3 social-page">
     <div class="page-header">
         <div>
             <span class="eyebrow">EnterpriseERP Social Center</span>
-            <h1>Feedback, avis et interactions</h1>
-            <p>Centralisez les retours utilisateurs, les notes de satisfaction et les likes sur vos services EnterpriseERP.</p>
+            <h1>@T.T("SocialTitle")</h1>
+            <p>@T.T("SocialDescription")</p>
         </div>
         <div class="header-actions">
-            <a href="/Dashboard/Index" class="btn-secondary">Retour dashboard</a>
+            <a href="/Dashboard/Index" class="btn-secondary">@T.T("BackToDashboard")</a>
         </div>
     </div>
 
@@ -27,37 +45,37 @@
             <div class="stat-icon">FB</div>
             <div>
                 <h3>@feedbacks.Count</h3>
-                <p>Feedbacks recus</p>
+                <p>@T.T("FeedbacksReceived")</p>
             </div>
         </div>
         <div class="stat-card warning">
             <div class="stat-icon">OPEN</div>
             <div>
                 <h3>@ViewBag.OpenFeedbackCount</h3>
-                <p>Feedbacks ouverts</p>
+                <p>@T.T("OpenFeedbacks")</p>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon">STAR</div>
             <div>
                 <h3>@averageRating.ToString("0.0")/5</h3>
-                <p>Note moyenne</p>
+                <p>@T.T("AverageRating")</p>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon">LIKE</div>
             <div>
                 <h3>@platformLikes</h3>
-                <p>Likes EnterpriseERP</p>
+                <p>@T.T("EnterpriseLikes")</p>
             </div>
         </div>
     </div>
 
     <div class="social-like-panel">
         <div>
-            <span class="badge success">Service EnterpriseERP</span>
-            <h2>Aimez ce service</h2>
-            <p>Ce signal aide votre equipe a identifier les services les plus utiles et les modules a prioriser.</p>
+            <span class="badge success">@T.T("EnterpriseService")</span>
+            <h2>@T.T("LikeThisService")</h2>
+            <p>@T.T("LikeServiceDescription")</p>
         </div>
         <form method="post" action="/Social/ToggleLike">
             @Html.AntiForgeryToken()
@@ -65,7 +83,7 @@
             <input type="hidden" name="targetId" value="EnterpriseERP" />
             <button class="btn-primary" type="submit">
                 <i class="bi @(userLikedPlatform ? "bi-heart-fill" : "bi-heart")"></i>
-                @(userLikedPlatform ? "Retirer le like" : "Liker le service")
+                @(userLikedPlatform ? T.T("SocialUnlikeService") : T.T("SocialLikeService"))
             </button>
         </form>
     </div>
@@ -73,83 +91,83 @@
     <div class="dashboard-grid">
         <div class="panel">
             <div class="panel-header">
-                <h2>Nouveau feedback</h2>
-                <span class="badge">Experience</span>
+                <h2>@T.T("NewFeedback")</h2>
+                <span class="badge">@T.T("Experience")</span>
             </div>
-            <p>Collectez les demandes, bugs, ameliorations et idees internes.</p>
+            <p>@T.T("FeedbackIntro")</p>
 
             <form method="post" action="/Social/CreateFeedback" class="form-grid">
                 @Html.AntiForgeryToken()
                 <div class="form-group">
-                    <label>Titre</label>
-                    <input name="Title" maxlength="140" required placeholder="Ex: Simplifier la creation de facture" />
+                    <label>@T.T("Title")</label>
+                    <input name="Title" maxlength="140" required placeholder="@T.T("TitleExampleFeedback")" />
                 </div>
                 <div class="form-group">
-                    <label>Categorie</label>
+                    <label>@T.T("Category")</label>
                     <select name="Category">
-                        <option>General</option>
-                        <option>Bug</option>
-                        <option>Amelioration</option>
-                        <option>Design</option>
-                        <option>Performance</option>
+                        <option value="General">@T.T("FeedbackCategoryGeneral")</option>
+                        <option value="Bug">@T.T("FeedbackCategoryBug")</option>
+                        <option value="Amelioration">@T.T("FeedbackCategoryImprovement")</option>
+                        <option value="Design">@T.T("FeedbackCategoryDesign")</option>
+                        <option value="Performance">@T.T("FeedbackCategoryPerformance")</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Priorite</label>
+                    <label>@T.T("Priority")</label>
                     <select name="Priority">
-                        <option>Normale</option>
-                        <option>Haute</option>
-                        <option>Critique</option>
-                        <option>Basse</option>
+                        <option value="Normale">@T.T("PriorityNormal")</option>
+                        <option value="Haute">@T.T("PriorityHigh")</option>
+                        <option value="Critique">@T.T("PriorityCritical")</option>
+                        <option value="Basse">@T.T("PriorityLow")</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Visibilite</label>
+                    <label>@T.T("Visibility")</label>
                     <select name="IsPublic">
-                        <option value="false">Interne</option>
-                        <option value="true">Public</option>
+                        <option value="false">@T.T("Internal")</option>
+                        <option value="true">@T.T("Public")</option>
                     </select>
                 </div>
                 <div class="form-group full">
-                    <label>Message</label>
-                    <textarea name="Message" rows="5" maxlength="3000" required placeholder="Expliquez le besoin, le contexte et l'impact attendu."></textarea>
+                    <label>@T.T("Message")</label>
+                    <textarea name="Message" rows="5" maxlength="3000" required placeholder="@T.T("FeedbackMessagePlaceholder")"></textarea>
                 </div>
-                <button class="btn-primary" type="submit">Envoyer feedback</button>
+                <button class="btn-primary" type="submit">@T.T("SendFeedback")</button>
             </form>
         </div>
 
         <div class="panel">
             <div class="panel-header">
-                <h2>Nouvel avis</h2>
-                <span class="badge success">Rating</span>
+                <h2>@T.T("NewReview")</h2>
+                <span class="badge success">@T.T("Rating")</span>
             </div>
-            <p>Mesurez la satisfaction sur EnterpriseERP, un module ou un service.</p>
+            <p>@T.T("ReviewIntro")</p>
 
             <form method="post" action="/Social/CreateReview" class="form-grid">
                 @Html.AntiForgeryToken()
                 <div class="form-group">
-                    <label>Titre</label>
-                    <input name="Title" maxlength="140" required placeholder="Ex: Dashboard tres utile" />
+                    <label>@T.T("Title")</label>
+                    <input name="Title" maxlength="140" required placeholder="@T.T("TitleExampleReview")" />
                 </div>
                 <div class="form-group">
-                    <label>Module</label>
+                    <label>@T.T("Module")</label>
                     <input name="Module" maxlength="80" value="EnterpriseERP" />
                 </div>
                 <div class="form-group">
-                    <label>Note</label>
+                    <label>@T.T("Rating")</label>
                     <select name="Rating">
-                        <option value="5">5 - Excellent</option>
-                        <option value="4">4 - Tres bien</option>
-                        <option value="3">3 - Correct</option>
-                        <option value="2">2 - A ameliorer</option>
-                        <option value="1">1 - Bloquant</option>
+                        <option value="5">5 - @T.T("Excellent")</option>
+                        <option value="4">4 - @T.T("VeryGood")</option>
+                        <option value="3">3 - @T.T("Fair")</option>
+                        <option value="2">2 - @T.T("NeedsImprovement")</option>
+                        <option value="1">1 - @T.T("Blocking")</option>
                     </select>
                 </div>
                 <div class="form-group full">
-                    <label>Commentaire</label>
-                    <textarea name="Comment" rows="5" maxlength="3000" required placeholder="Partagez votre avis concret."></textarea>
+                    <label>@T.T("Comment")</label>
+                    <textarea name="Comment" rows="5" maxlength="3000" required placeholder="@T.T("ReviewCommentPlaceholder")"></textarea>
                 </div>
-                <button class="btn-primary" type="submit">Publier avis</button>
+                <button class="btn-primary" type="submit">@T.T("PublishReview")</button>
             </form>
         </div>
     </div>
@@ -157,14 +175,14 @@
     <div class="dashboard-grid">
         <div class="panel">
             <div class="panel-header">
-                <h2>Feedbacks recents</h2>
+                <h2>@T.T("RecentFeedbacks")</h2>
                 <span class="badge">@feedbacks.Count</span>
             </div>
 
             <div class="social-list">
                 @if (!feedbacks.Any())
                 {
-                    <p>Aucun feedback pour le moment.</p>
+                    <p>@T.T("NoFeedbacksYet")</p>
                 }
                 @foreach (var feedback in feedbacks)
                 {
@@ -173,15 +191,15 @@
                         <div class="social-item-header">
                             <div>
                                 <h3>@feedback.Title</h3>
-                                <p>@feedback.Category - @feedback.CreatedByName - @feedback.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+                                <p>@CategoryLabel(feedback.Category) - @feedback.CreatedByName - @feedback.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
                             </div>
-                            <span class="status-badge @badgeClass">@feedback.Status</span>
+                            <span class="status-badge @badgeClass">@StatusLabel(feedback.Status)</span>
                         </div>
                         <p>@feedback.Message</p>
                         @if (!string.IsNullOrWhiteSpace(feedback.AdminResponse))
                         {
                             <div class="social-response">
-                                <strong>Reponse admin</strong>
+                                <strong>@T.T("AdminResponse")</strong>
                                 <p>@feedback.AdminResponse</p>
                             </div>
                         }
@@ -189,13 +207,13 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@feedback.Id" />
                             <select name="status">
-                                <option selected="@(feedback.Status == "Nouveau")">Nouveau</option>
-                                <option selected="@(feedback.Status == "En cours")">En cours</option>
-                                <option selected="@(feedback.Status == "Traite")">Traite</option>
-                                <option selected="@(feedback.Status == "Ferme")">Ferme</option>
+                                <option value="Nouveau" selected="@(feedback.Status == "Nouveau")">@T.T("SocialStatusNew")</option>
+                                <option value="En cours" selected="@(feedback.Status == "En cours")">@T.T("SocialStatusInProgress")</option>
+                                <option value="Traite" selected="@(feedback.Status == "Traite")">@T.T("SocialStatusProcessed")</option>
+                                <option value="Ferme" selected="@(feedback.Status == "Ferme")">@T.T("SocialStatusClosed")</option>
                             </select>
-                            <input name="adminResponse" maxlength="2000" placeholder="Reponse admin optionnelle" />
-                            <button class="btn-secondary" type="submit">Mettre a jour</button>
+                            <input name="adminResponse" maxlength="2000" placeholder="@T.T("OptionalAdminResponse")" />
+                            <button class="btn-secondary" type="submit">@T.T("Update")</button>
                         </form>
                     </article>
                 }
@@ -204,14 +222,14 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2>Avis et notes</h2>
+                <h2>@T.T("ReviewsAndRatings")</h2>
                 <span class="badge success">@reviews.Count</span>
             </div>
 
             <div class="social-list">
                 @if (!reviews.Any())
                 {
-                    <p>Aucun avis pour le moment.</p>
+                    <p>@T.T("NoReviewsYet")</p>
                 }
                 @foreach (var review in reviews)
                 {
@@ -228,8 +246,8 @@
                         <form method="post" action="/Social/ToggleReviewApproval" class="social-inline-form compact">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@review.Id" />
-                            <span class="status-badge @(review.IsApproved ? "success" : "warning")">@(review.IsApproved ? "Approuve" : "Masque")</span>
-                            <button class="btn-secondary" type="submit">Basculer moderation</button>
+                            <span class="status-badge @(review.IsApproved ? "success" : "warning")">@(review.IsApproved ? T.T("Approved") : T.T("Hidden"))</span>
+                            <button class="btn-secondary" type="submit">@T.T("ToggleModeration")</button>
                         </form>
                     </article>
                 }
@@ -239,13 +257,13 @@
 
     <div class="panel">
         <div class="panel-header">
-            <h2>Dernieres interactions sociales</h2>
+            <h2>@T.T("LatestSocialInteractions")</h2>
             <span class="badge">@likes.Count likes</span>
         </div>
         <div class="social-like-grid">
             @if (!likes.Any())
             {
-                <p>Aucun like enregistre pour le moment.</p>
+                <p>@T.T("NoLikesYet")</p>
             }
             @foreach (var like in likes)
             {

@@ -12,12 +12,18 @@ namespace EnterpriseERP.Controllers
         private readonly ApplicationDbContext _context;
         private readonly TranslationService _translation;
         private readonly TrialPolicyService _trialPolicy;
+        private readonly PasswordResetService _passwordResetService;
 
-        public AccountController(ApplicationDbContext context, TranslationService translation, TrialPolicyService trialPolicy)
+        public AccountController(
+            ApplicationDbContext context,
+            TranslationService translation,
+            TrialPolicyService trialPolicy,
+            PasswordResetService passwordResetService)
         {
             _context = context;
             _translation = translation;
             _trialPolicy = trialPolicy;
+            _passwordResetService = passwordResetService;
         }
 
         [HttpGet]
@@ -96,6 +102,67 @@ namespace EnterpriseERP.Controllers
                 return RedirectToAction("Index", "Dashboard");
 
             LoadRegisterViewBags(hasUsers);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ViewBag.Error = _translation.T("ForgotPasswordEmailRequired");
+                return View();
+            }
+
+            var result = await _passwordResetService.RequestResetAsync(email, HttpContext.RequestAborted);
+            if (!result.Success)
+            {
+                ViewBag.Error = result.Message;
+                return View();
+            }
+
+            ViewBag.Success = result.Message;
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email)
+        {
+            ViewBag.Email = email ?? string.Empty;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(string email, string code, string password, string confirmPassword)
+        {
+            var result = await _passwordResetService.ResetPasswordAsync(
+                email,
+                code,
+                password,
+                confirmPassword,
+                HttpContext.RequestAborted);
+
+            if (!result.Success)
+            {
+                ViewBag.Email = email ?? string.Empty;
+                ViewBag.Error = result.Message;
+                return View();
+            }
+
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
             return View();
         }
 

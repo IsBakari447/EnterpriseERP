@@ -68,7 +68,7 @@ public static class Audit
         ["AllModules"] = "Alla moduler",
         ["AllSeverities"] = "Alla allvarlighetsgrader",
         ["Filter"] = "Filtrera",
-        ["Reset"] = "Återställ",
+        ["Reset"] = "Aterstall",
         ["AuditLog"] = "Revisionslogg",
         ["Severity"] = "Allvarlighetsgrad",
         ["Module"] = "Modul",

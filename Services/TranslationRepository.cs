@@ -29,6 +29,7 @@ public static class TranslationRepository
         Add(French, Security.Fr);
         Add(French, Settings.Fr);
         Add(French, Account.Fr);
+        Add(French, Social.Fr);
         Add(French, Employees.Fr);
         Add(French, Presence.Fr);
 
@@ -49,6 +50,7 @@ public static class TranslationRepository
         Add(English, Security.En);
         Add(English, Settings.En);
         Add(English, Account.En);
+        Add(English, Social.En);
         Add(English, Employees.En);
         Add(English, Presence.En);
 
@@ -69,6 +71,7 @@ public static class TranslationRepository
         Add(Swedish, Security.Sv);
         Add(Swedish, Settings.Sv);
         Add(Swedish, Account.Sv);
+        Add(Swedish, Social.Sv);
         Add(Swedish, Employees.Sv);
         Add(Swedish, Presence.Sv);
 

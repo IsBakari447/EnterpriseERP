@@ -1479,6 +1479,24 @@ namespace EnterpriseERP.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("PasswordResetRequestCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("PasswordResetLockedUntil")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PasswordResetRequestWindowStartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordResetTokenHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PasswordResetTokenUsedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Phone")
                         .HasColumnType("TEXT");
 
