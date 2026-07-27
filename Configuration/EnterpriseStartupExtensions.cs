@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Data;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
@@ -48,6 +49,7 @@ public static class EnterpriseStartupExtensions
 
         EnsureSqliteDirectoryExists(configuration, logger);
         db.Database.Migrate();
+        EnsurePasswordResetColumns(db, logger);
         SeedAdminFromConfiguration(db, configuration, logger);
 
         return app;
@@ -350,6 +352,86 @@ public static class EnterpriseStartupExtensions
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Unable to prepare the SQLite database directory.");
+        }
+    }
+
+    private static void EnsurePasswordResetColumns(ApplicationDbContext db, ILogger logger)
+    {
+        var columns = new Dictionary<string, string>
+        {
+            ["PasswordResetTokenHash"] = "TEXT",
+            ["PasswordResetTokenExpiresAt"] = "TEXT",
+            ["PasswordResetTokenUsedAt"] = "TEXT",
+            ["PasswordResetRequestWindowStartedAt"] = "TEXT",
+            ["PasswordResetRequestCount"] = "INTEGER NOT NULL DEFAULT 0",
+            ["PasswordResetLockedUntil"] = "TEXT"
+        };
+
+        try
+        {
+            foreach (var column in columns)
+            {
+                if (SqliteColumnExists(db, "Users", column.Key))
+                    continue;
+
+                ExecuteSqliteCommand(db, $"ALTER TABLE Users ADD COLUMN {column.Key} {column.Value}");
+                logger.LogInformation("Added missing SQLite column Users.{Column}.", column.Key);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Unable to verify password reset columns in SQLite.");
+        }
+    }
+
+    private static bool SqliteColumnExists(ApplicationDbContext db, string tableName, string columnName)
+    {
+        var connection = db.Database.GetDbConnection();
+        var shouldClose = connection.State == ConnectionState.Closed;
+
+        if (shouldClose)
+            connection.Open();
+
+        try
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = $"PRAGMA table_info({tableName})";
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var name = reader["name"]?.ToString();
+                if (string.Equals(name, columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+        finally
+        {
+            if (shouldClose)
+                connection.Close();
+        }
+    }
+
+    private static void ExecuteSqliteCommand(ApplicationDbContext db, string sql)
+    {
+        var connection = db.Database.GetDbConnection();
+        var shouldClose = connection.State == ConnectionState.Closed;
+
+        if (shouldClose)
+            connection.Open();
+
+        try
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = sql;
+            command.ExecuteNonQuery();
+        }
+        finally
+        {
+            if (shouldClose)
+                connection.Close();
         }
     }
 
