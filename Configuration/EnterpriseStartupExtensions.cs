@@ -12,6 +12,7 @@ using EnterpriseERP.Services.Email;
 using EnterpriseERP.Services.Trial;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ public static class EnterpriseStartupExtensions
         builder.Services.AddScoped<EnterpriseERP.Services.Export.BrandingService>();
 
         builder.AddProductionDataProtection();
+        builder.AddReverseProxySupport();
         builder.AddCompression();
         builder.AddApplicationServices();
         builder.AddDatabase();
@@ -58,6 +60,8 @@ public static class EnterpriseStartupExtensions
 
     public static WebApplication UseEnterpriseErpPipeline(this WebApplication app)
     {
+        app.UseForwardedHeaders();
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
@@ -135,6 +139,22 @@ public static class EnterpriseStartupExtensions
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         return app;
+    }
+
+    private static WebApplicationBuilder AddReverseProxySupport(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+            if (builder.Environment.IsProduction())
+            {
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            }
+        });
+
+        return builder;
     }
 
     private static WebApplicationBuilder AddProductionDataProtection(this WebApplicationBuilder builder)

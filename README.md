@@ -166,6 +166,8 @@ ASP.NET Data Protection keys are stored in:
 
 This prevents session and antiforgery errors after redeployment.
 
+The application reads Render reverse-proxy headers (`X-Forwarded-Proto`) so secure cookies and antiforgery tokens work correctly behind HTTPS.
+
 ## QA Endpoints
 
 Verify that the application is running:
