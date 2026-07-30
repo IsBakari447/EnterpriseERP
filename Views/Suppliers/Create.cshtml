@@ -1,17 +1,18 @@
 @model EnterpriseERP.Models.Supplier
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Ajouter un fournisseur";
+    ViewData["Title"] = T.T("AddSupplier");
 }
 
 <div class="page-header">
     <div>
-        <h1>Ajouter un fournisseur</h1>
-        <p>Créer une nouvelle fiche fournisseur</p>
+        <h1>@T.T("AddSupplier")</h1>
+        <p>@T.T("CreateSupplierRecord")</p>
     </div>
 
     <a href="/Suppliers/Index" class="btn-secondary">
-        ← Retour
+        @T.T("Back")
     </a>
 </div>
 
@@ -25,37 +26,37 @@
         @Html.AntiForgeryToken()
 
         <div class="form-group">
-            <label>Nom du fournisseur</label>
+            <label>@T.T("SupplierName")</label>
             <input name="Name" value="@Model?.Name" required />
         </div>
 
         <div class="form-group">
-            <label>Personne de contact</label>
+            <label>@T.T("ContactPerson")</label>
             <input name="ContactPerson" value="@Model?.ContactPerson" />
         </div>
 
         <div class="form-group">
-            <label>Email</label>
+            <label>@T.T("Email")</label>
             <input name="Email" type="email" value="@Model?.Email" />
         </div>
 
         <div class="form-group">
-            <label>Téléphone</label>
+            <label>@T.T("Phone")</label>
             <input name="Phone" value="@Model?.Phone" />
         </div>
 
         <div class="form-group">
-            <label>Catégorie</label>
+            <label>@T.T("Category")</label>
             <input name="Category" value="@Model?.Category" placeholder="Ex: Informatique, Transport, Alimentaire..." />
         </div>
 
         <div class="form-group">
-            <label>Adresse</label>
+            <label>@T.T("Address")</label>
             <input name="Address" value="@Model?.Address" />
         </div>
 
         <button type="submit" class="btn-primary">
-            Enregistrer
+            @T.T("Save")
         </button>
     </form>
 </div>

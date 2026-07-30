@@ -314,6 +314,70 @@ namespace EnterpriseERP.Migrations
                     b.ToTable("AutomationRules");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.BankReconciliation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BankAccount")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ErpBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("StatementBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("StatementDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status", "StatementDate");
+
+                    b.ToTable("BankReconciliations");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.CashflowForecast", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ExpectedInflow")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ExpectedOutflow")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Period")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Scenario")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Period", "Scenario");
+
+                    b.ToTable("CashflowForecasts");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -633,6 +697,47 @@ namespace EnterpriseERP.Migrations
                     b.ToTable("DynamicReports");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.EcommerceConnection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastSyncAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Platform")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StoreName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StoreUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SyncOrders")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SyncProducts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SyncStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Platform");
+
+                    b.ToTable("EcommerceConnections");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -816,6 +921,71 @@ namespace EnterpriseERP.Migrations
                     b.ToTable("Feedbacks");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.HrDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "DocumentType");
+
+                    b.ToTable("HrDocuments");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.HrSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WorkDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "WorkDate");
+
+                    b.ToTable("HrSchedules");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Invoice", b =>
                 {
                     b.Property<int>("Id")
@@ -920,6 +1090,43 @@ namespace EnterpriseERP.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("InvoiceItems");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.LeaveRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "Status", "StartDate");
+
+                    b.ToTable("LeaveRequests");
                 });
 
             modelBuilder.Entity("EnterpriseERP.Models.MarketplaceExtension", b =>
@@ -1028,6 +1235,39 @@ namespace EnterpriseERP.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.PayrollSlip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("GrossAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Period")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId", "Period");
+
+                    b.ToTable("PayrollSlips");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -1105,6 +1345,80 @@ namespace EnterpriseERP.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.ProjectBoard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClientName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status", "Deadline");
+
+                    b.ToTable("ProjectBoards");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.ProjectTaskItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AssignedTo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProjectBoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectBoardId");
+
+                    b.HasIndex("Status", "Deadline");
+
+                    b.ToTable("ProjectTaskItems");
                 });
 
             modelBuilder.Entity("EnterpriseERP.Models.Quote", b =>
@@ -1479,11 +1793,11 @@ namespace EnterpriseERP.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PasswordResetRequestCount")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("PasswordResetLockedUntil")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PasswordResetRequestCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("PasswordResetRequestWindowStartedAt")
                         .HasColumnType("TEXT");
@@ -1531,6 +1845,28 @@ namespace EnterpriseERP.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.HrDocument", b =>
+                {
+                    b.HasOne("EnterpriseERP.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.HrSchedule", b =>
+                {
+                    b.HasOne("EnterpriseERP.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Invoice", b =>
                 {
                     b.HasOne("EnterpriseERP.Models.Client", "Client")
@@ -1557,6 +1893,17 @@ namespace EnterpriseERP.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.LeaveRequest", b =>
+                {
+                    b.HasOne("EnterpriseERP.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("EnterpriseERP.Models.Order", b =>
@@ -1589,6 +1936,17 @@ namespace EnterpriseERP.Migrations
                     b.Navigation("Invoice");
                 });
 
+            modelBuilder.Entity("EnterpriseERP.Models.PayrollSlip", b =>
+                {
+                    b.HasOne("EnterpriseERP.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("EnterpriseERP.Models.Presence", b =>
                 {
                     b.HasOne("EnterpriseERP.Models.Employee", "Employee")
@@ -1598,6 +1956,17 @@ namespace EnterpriseERP.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.ProjectTaskItem", b =>
+                {
+                    b.HasOne("EnterpriseERP.Models.ProjectBoard", "ProjectBoard")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectBoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProjectBoard");
                 });
 
             modelBuilder.Entity("EnterpriseERP.Models.Quote", b =>
@@ -1664,6 +2033,11 @@ namespace EnterpriseERP.Migrations
             modelBuilder.Entity("EnterpriseERP.Models.Invoice", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("EnterpriseERP.Models.ProjectBoard", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("EnterpriseERP.Models.Quote", b =>

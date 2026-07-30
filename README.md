@@ -114,11 +114,13 @@ Important variables:
 
 ```text
 Jwt__Key=a_long_random_key_with_at_least_32_characters
+JWT_KEY=a_long_random_key_with_at_least_32_characters
 Cors__AllowedOrigins__0=https://your-domain.com
 DataProtection__KeysPath=/data/dataprotection-keys
 ```
 
-In production, `Jwt__Key` is required. The application refuses weak or placeholder JWT keys.
+In production, a JWT key is required. You can use either `Jwt__Key` or `JWT_KEY`.
+The application refuses weak or placeholder JWT keys.
 
 ## Render Deployment
 
@@ -139,8 +141,15 @@ Minimum Render environment variables:
 ```text
 ASPNETCORE_ENVIRONMENT=Production
 Jwt__Key=a_long_random_key_with_at_least_32_characters
+# or JWT_KEY=a_long_random_key_with_at_least_32_characters
 Cors__AllowedOrigins__0=https://enterpriseerp-1.onrender.com
 DataProtection__KeysPath=/data/dataprotection-keys
+```
+
+Generate a strong JWT key before deploying:
+
+```powershell
+[Convert]::ToBase64String((1..64 | ForEach-Object { Get-Random -Maximum 256 }))
 ```
 
 The production SQLite database is configured as:

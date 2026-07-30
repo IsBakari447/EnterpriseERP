@@ -51,6 +51,7 @@ public static class EnterpriseStartupExtensions
         db.Database.Migrate();
         EnsurePasswordResetColumns(db, logger);
         SeedAdminFromConfiguration(db, configuration, logger);
+        EnsureEnterprisePermissions(db);
 
         return app;
     }
@@ -264,8 +265,8 @@ public static class EnterpriseStartupExtensions
     {
         var jwt = builder.Configuration.GetSection("Jwt");
         var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-        var secretKey = jwt["Key"] ?? jwtSettings["SecretKey"]
-            ?? throw new InvalidOperationException("JWT key is missing. Configure Jwt:Key or JwtSettings:SecretKey in user-secrets or environment variables.");
+        var secretKey = ResolveJwtSecret(builder.Configuration)
+            ?? throw new InvalidOperationException("JWT key is missing. Configure Jwt:Key, JwtSettings:SecretKey, JWT_KEY or ENTERPRISEERP_JWT_KEY in user-secrets or environment variables.");
         var issuer = jwt["Issuer"] ?? jwtSettings["Issuer"] ?? "EnterpriseERP";
         var audience = jwt["Audience"] ?? jwtSettings["Audience"] ?? "EnterpriseERP.Mobile";
 
@@ -435,6 +436,101 @@ public static class EnterpriseStartupExtensions
         }
     }
 
+    private static void EnsureEnterprisePermissions(ApplicationDbContext db)
+    {
+        var modules = new[]
+        {
+            "Dashboard",
+            "Clients",
+            "Employés",
+            "Produits",
+            "Stock",
+            "Factures",
+            "Commandes",
+            "Fournisseurs",
+            "Paiements",
+            "Présences",
+            "Exports",
+            "Devis",
+            "Notifications",
+            "Social",
+            "RH",
+            "Projets",
+            "Ecommerce",
+            "Finance avancée",
+            "IA",
+            "Paramètres",
+            "Audit",
+            "Utilisateurs"
+        };
+
+        var actions = new[] { "Voir", "Créer", "Modifier", "Supprimer", "Exporter" };
+
+        foreach (var module in modules)
+        {
+            foreach (var action in actions)
+            {
+                if (db.Permissions.Any(p => p.Module == module && p.Action == action))
+                    continue;
+
+                db.Permissions.Add(new Permission
+                {
+                    Module = module,
+                    Action = action,
+                    Description = $"{action} {module}"
+                });
+            }
+        }
+
+        db.SaveChanges();
+
+        var permissions = db.Permissions.ToList();
+        GrantMissingRolePermissions(db, permissions, "Admin", modules, actions);
+        GrantMissingRolePermissions(db, permissions, "Manager",
+            new[] { "Dashboard", "Clients", "Produits", "Stock", "Factures", "Commandes", "Paiements", "Présences", "Exports", "Devis", "Notifications", "Social", "RH", "Projets", "Ecommerce", "Finance avancée", "IA" },
+            new[] { "Voir", "Créer", "Modifier", "Exporter" });
+        GrantMissingRolePermissions(db, permissions, "Employee",
+            new[] { "Dashboard", "Clients", "Produits", "Stock", "Présences", "Notifications", "Projets" },
+            new[] { "Voir", "Créer", "Modifier" });
+        GrantMissingRolePermissions(db, permissions, "Comptable",
+            new[] { "Dashboard", "Clients", "Factures", "Paiements", "Exports", "Devis", "Finance avancée", "IA" },
+            new[] { "Voir", "Créer", "Modifier", "Exporter" });
+        GrantMissingRolePermissions(db, permissions, "RH",
+            new[] { "Dashboard", "Employés", "Présences", "RH", "Projets", "Notifications", "IA" },
+            new[] { "Voir", "Créer", "Modifier", "Exporter" });
+        GrantMissingRolePermissions(db, permissions, "Client",
+            new[] { "Dashboard", "Devis", "Factures", "Notifications" },
+            new[] { "Voir" });
+
+        db.SaveChanges();
+    }
+
+    private static void GrantMissingRolePermissions(
+        ApplicationDbContext db,
+        List<Permission> permissions,
+        string role,
+        IEnumerable<string> modules,
+        IEnumerable<string> actions)
+    {
+        var moduleSet = modules.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var actionSet = actions.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var targetPermissions = permissions
+            .Where(p => moduleSet.Contains(p.Module) && actionSet.Contains(p.Action))
+            .ToList();
+
+        foreach (var permission in targetPermissions)
+        {
+            if (db.RolePermissions.Any(rp => rp.Role == role && rp.PermissionId == permission.Id))
+                continue;
+
+            db.RolePermissions.Add(new RolePermission
+            {
+                Role = role,
+                PermissionId = permission.Id
+            });
+        }
+    }
+
     private static void SeedAdminFromConfiguration(ApplicationDbContext db, IConfiguration configuration, ILogger logger)
     {
         if (db.Users.Any())
@@ -490,5 +586,18 @@ public static class EnterpriseStartupExtensions
         };
 
         return weakMarkers.Any(marker => secretKey.Contains(marker, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? ResolveJwtSecret(IConfiguration configuration)
+    {
+        var jwt = configuration.GetSection("Jwt");
+        var jwtSettings = configuration.GetSection("JwtSettings");
+
+        return jwt["Key"]
+            ?? jwtSettings["SecretKey"]
+            ?? Environment.GetEnvironmentVariable("JWT_KEY")
+            ?? Environment.GetEnvironmentVariable("JWT_SECRET")
+            ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_JWT_KEY")
+            ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_JWT_SECRET");
     }
 }

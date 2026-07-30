@@ -30,6 +30,8 @@ public static class TranslationRepository
         Add(French, Settings.Fr);
         Add(French, Account.Fr);
         Add(French, Social.Fr);
+        Add(French, AdvancedModules.Fr);
+        Add(French, AdminSecurity.Fr);
         Add(French, Employees.Fr);
         Add(French, Presence.Fr);
 
@@ -51,6 +53,8 @@ public static class TranslationRepository
         Add(English, Settings.En);
         Add(English, Account.En);
         Add(English, Social.En);
+        Add(English, AdvancedModules.En);
+        Add(English, AdminSecurity.En);
         Add(English, Employees.En);
         Add(English, Presence.En);
 
@@ -72,6 +76,8 @@ public static class TranslationRepository
         Add(Swedish, Settings.Sv);
         Add(Swedish, Account.Sv);
         Add(Swedish, Social.Sv);
+        Add(Swedish, AdvancedModules.Sv);
+        Add(Swedish, AdminSecurity.Sv);
         Add(Swedish, Employees.Sv);
         Add(Swedish, Presence.Sv);
 
@@ -79,11 +85,15 @@ public static class TranslationRepository
         Add(Spanish, Common.Es);
         Add(Spanish, Dashboard.Es);
         Add(Spanish, Account.Es);
+        Add(Spanish, AdvancedModules.Es);
+        Add(Spanish, AdminSecurity.Es);
 
         Add(German, French);
         Add(German, Common.De);
         Add(German, Dashboard.De);
         Add(German, Account.De);
+        Add(German, AdvancedModules.De);
+        Add(German, AdminSecurity.De);
     }
 
     private static void Add(Dictionary<string,string> destination, Dictionary<string,string> source)

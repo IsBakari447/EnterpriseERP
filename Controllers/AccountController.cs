@@ -301,6 +301,9 @@ namespace EnterpriseERP.Controllers
                 "Admin" => "Admin",
                 "Manager" => "Manager",
                 "Employee" => "Employee",
+                "Comptable" => "Comptable",
+                "RH" => "RH",
+                "Client" => "Client",
                 _ => "Employee"
             };
         }

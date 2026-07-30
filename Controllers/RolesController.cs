@@ -29,7 +29,10 @@ namespace EnterpriseERP.Controllers
             {
                 "Admin",
                 "Manager",
-                "Employee"
+                "Employee",
+                "Comptable",
+                "RH",
+                "Client"
             };
 
             ViewBag.Permissions = _context.Permissions
@@ -101,6 +104,11 @@ namespace EnterpriseERP.Controllers
                 "Devis",
                 "Notifications",
                 "Social",
+                "RH",
+                "Projets",
+                "Ecommerce",
+                "Finance avancée",
+                "IA",
                 "Paramètres",
                 "Audit",
                 "Utilisateurs"

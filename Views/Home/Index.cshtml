@@ -1,4 +1,4 @@
-@inject EnterpriseERP.Services.TranslationService T
+﻿@inject EnterpriseERP.Services.TranslationService T
 @{
     Layout = null;
     string L(string key)
@@ -20,9 +20,9 @@
                 ["CreateAccount"] = "Create account",
                 ["DownloadMobile"] = "Download the mobile app",
                 ["Badge"] = "ERP Web + Mobile + AI",
-                ["HeroTitle"] = "The next-generation ERP to manage your business",
+                ["HeroTitle"] = "Run your business from one intelligent command center",
                 ["HeroAccent"] = "with AI.",
-                ["HeroText"] = "EnterpriseERP centralizes your customers, suppliers, products, quotes, invoices, payments, attendance, reports, backups and audits in one modern platform. The AI Assistant and CEO Dashboard help you understand your priorities in seconds.",
+                ["HeroText"] = "Bring customers, suppliers, sales, stock, finance, HR, documents, mobile access and AI insights together in one professional ERP. EnterpriseERP gives managers a clearer view of priorities, risks and growth opportunities in seconds.",
                 ["StatModules"] = "ERP modules",
                 ["StatAi"] = "Smart assistant",
                 ["StatPdf"] = "Professional documents",
@@ -242,9 +242,9 @@
             ["CreateAccount"] = "Créer un compte",
             ["DownloadMobile"] = "Telecharger l'application mobile",
             ["Badge"] = "ERP Web + Mobile + AI",
-            ["HeroTitle"] = "L’ERP nouvelle génération pour gérer votre entreprise",
+            ["HeroTitle"] = "Pilotez votre entreprise depuis un centre de commande intelligent",
             ["HeroAccent"] = "avec l’IA.",
-            ["HeroText"] = "EnterpriseERP centralise vos clients, fournisseurs, produits, devis, factures, paiements, présences, rapports, sauvegardes et audits dans une plateforme moderne. L’Assistant AI et le CEO Dashboard vous aident à comprendre vos priorités en quelques secondes.",
+            ["HeroText"] = "EnterpriseERP regroupe clients, fournisseurs, ventes, stock, finance, RH, documents, mobile et analyses AI dans une suite professionnelle. Le CEO Dashboard aide les dirigeants a voir les priorites, les risques et les opportunites en quelques secondes.",
             ["StatModules"] = "Modules ERP",
             ["StatAi"] = "Assistant intelligent",
             ["StatPdf"] = "Documents pros",
@@ -366,15 +366,16 @@
         .navbar {
             position: sticky;
             top: 0;
-            z-index: 100;
-            padding: 18px 7%;
+            z-index: 1000;
+            padding: 14px 7%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 24px;
-            background: rgba(2, 6, 23, .86);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(51,65,85,.55);
+            background: linear-gradient(180deg, rgba(2, 6, 23, .94), rgba(2, 6, 23, .78));
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(148, 163, 184, .18);
+            box-shadow: 0 18px 55px rgba(2, 6, 23, .28);
         }
 
         .brand {
@@ -439,16 +440,46 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--purple2), var(--purple));
             border-color: transparent;
+            box-shadow: 0 18px 38px rgba(124, 58, 237, .28);
         }
 
         .btn-dark { background: #111827; }
 
         .hero {
-            padding: 95px 7% 80px;
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            padding: 110px 7% 88px;
             background:
-                radial-gradient(circle at top left, rgba(124,58,237,.30), transparent 34%),
-                radial-gradient(circle at top right, rgba(37,99,235,.28), transparent 30%),
+                linear-gradient(rgba(2, 6, 23, .82), rgba(2, 6, 23, .92)),
+                radial-gradient(circle at top left, rgba(124,58,237,.34), transparent 32%),
+                radial-gradient(circle at 82% 18%, rgba(14,165,233,.24), transparent 28%),
                 linear-gradient(135deg, #020617, #0b1228);
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            opacity: .30;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, .12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, .12) 1px, transparent 1px);
+            background-size: 58px 58px;
+            mask-image: linear-gradient(90deg, transparent, black 18%, black 82%, transparent);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 7% 42px auto;
+            z-index: -1;
+            width: min(480px, 42vw);
+            height: min(480px, 42vw);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, .28), rgba(124, 58, 237, .12) 48%, transparent 70%);
+            filter: blur(24px);
         }
 
         .hero-grid {
@@ -456,6 +487,14 @@
             grid-template-columns: 1.05fr .95fr;
             align-items: center;
             gap: 70px;
+        }
+
+        .hero-grid > div:first-child {
+            animation: landingFadeUp .75s ease both;
+        }
+
+        .hero-grid > .mockup {
+            animation: landingSlideIn .85s ease .12s both;
         }
 
         .badge {
@@ -520,7 +559,9 @@
         .mockup {
             border: 1px solid var(--border);
             border-radius: 32px;
-            background: rgba(15,23,42,.78);
+            background:
+                linear-gradient(145deg, rgba(15, 23, 42, .94), rgba(17, 24, 39, .82)),
+                radial-gradient(circle at top right, rgba(124, 58, 237, .26), transparent 42%);
             padding: 24px;
             box-shadow: 0 35px 120px rgba(0,0,0,.5);
         }
@@ -539,7 +580,9 @@
         }
 
         .dash-card {
-            background: #111827;
+            background:
+                linear-gradient(145deg, rgba(17,24,39,.96), rgba(15,23,42,.92)),
+                radial-gradient(circle at top left, rgba(34,197,94,.12), transparent 38%);
             border: 1px solid var(--border);
             border-radius: 22px;
             padding: 24px;
@@ -559,10 +602,44 @@
         }
 
         .mini {
-            background: #0f172a;
+            background: linear-gradient(145deg, rgba(15,23,42,.96), rgba(2,6,23,.72));
             border: 1px solid #273449;
             border-radius: 16px;
             padding: 16px;
+        }
+
+        .stat,
+        .mini,
+        .dash-card,
+        .card,
+        .price,
+        .ai-box {
+            transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+        }
+
+        .stat:hover,
+        .mini:hover,
+        .dash-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(167, 139, 250, .75);
+            box-shadow: 0 22px 60px rgba(15, 23, 42, .34);
+        }
+
+        @@keyframes landingFadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @@keyframes landingSlideIn {
+            from { opacity: 0; transform: translateX(26px) scale(.98); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @@media (prefers-reduced-motion: reduce) {
+            .hero-grid > div:first-child,
+            .hero-grid > .mockup {
+                animation: none;
+            }
         }
 
         .mini strong {
@@ -748,13 +825,14 @@
         }
 
         .navbar {
-            background: rgba(2, 6, 23, .94) !important;
+            background: linear-gradient(180deg, rgba(2, 6, 23, .96), rgba(2, 6, 23, .80)) !important;
         }
 
         .hero {
             background:
-                radial-gradient(circle at top left, rgba(124,58,237,.32), transparent 34%),
-                radial-gradient(circle at top right, rgba(37,99,235,.30), transparent 30%),
+                linear-gradient(rgba(2, 6, 23, .82), rgba(2, 6, 23, .92)),
+                radial-gradient(circle at top left, rgba(124,58,237,.34), transparent 32%),
+                radial-gradient(circle at 82% 18%, rgba(14,165,233,.24), transparent 28%),
                 linear-gradient(135deg, #020617, #0b1228) !important;
         }
 
@@ -810,13 +888,13 @@
     </a>
 
     <nav class="nav-links">
-        <a href="/Home/Features">Fonctionnalités</a>
-        <a href="#modules">Modules</a>
-        <a href="/Home/Downloads">Téléchargements</a>
-        <a href="/Home/Pricing">Tarifs</a>
-        <a href="/Home/Demo">Démo</a>
-        <a href="/Home/Manual">Manuel</a>
-        <a href="/Home/Contact">Contact</a>
+        <a href="/Home/Features">@L("Features")</a>
+        <a href="#modules">@L("Modules")</a>
+        <a href="/Home/Downloads">@L("Downloads")</a>
+        <a href="/Home/Pricing">@L("Pricing")</a>
+        <a href="/Home/Demo">@L("Demo")</a>
+        <a href="/Home/Manual">@L("Manual")</a>
+        <a href="/Home/Contact">@L("Contact")</a>
     </nav>
 
     <div class="nav-actions">
@@ -828,36 +906,32 @@
         <option value="sv" selected="@(T.Lang == "sv")">SV</option>
     </select>
 </form>
-<a class="btn btn-dark" href="/Account/Login">Connexion</a>
-        <a class="btn btn-primary" href="/Account/Register">Essayer gratuitement</a>
+<a class="btn btn-dark" href="/Account/Login">@L("Login")</a>
+        <a class="btn btn-primary" href="/Account/Register">@L("TryFree")</a>
     </div>
 </header>
 
 <section class="hero">
     <div class="hero-grid">
         <div>
-            <div class="badge">ERP Web + Mobile + AI</div>
+            <div class="badge">@L("Badge")</div>
 
-            <h1>L’ERP nouvelle génération pour gérer votre entreprise <span>avec l’IA.</span></h1>
+            <h1>@L("HeroTitle") <span>@L("HeroAccent")</span></h1>
 
-            <p>
-                EnterpriseERP centralise vos clients, fournisseurs, produits, devis, factures,
-                paiements, présences, rapports, sauvegardes et audits dans une plateforme moderne.
-                L’Assistant AI et le CEO Dashboard vous aident à comprendre vos priorités en quelques secondes.
-            </p>
+            <p>@L("HeroText")</p>
 
             <div class="hero-buttons">
-                <a class="btn btn-primary" href="/Account/Register">Créer un compte</a>
-                <a class="btn btn-dark" href="/Account/Login">Se connecter</a>
-                <a class="btn btn-dark" href="/Home/Manual">Lire le manuel</a>
-                <a class="btn btn-dark" href="/Home/Downloads">Telecharger l'application mobile</a>
+                <a class="btn btn-primary" href="/Account/Register">@L("CreateAccount")</a>
+                <a class="btn btn-dark" href="/Account/Login">@L("Login")</a>
+                <a class="btn btn-dark" href="/Home/Manual">@L("Manual")</a>
+                <a class="btn btn-dark" href="/Home/Downloads">@L("DownloadMobile")</a>
             </div>
 
             <div class="stats">
-                <div class="stat"><strong>12+</strong><span>Modules ERP</span></div>
-                <div class="stat"><strong>AI</strong><span>Assistant intelligent</span></div>
-                <div class="stat"><strong>PDF</strong><span>Documents pros</span></div>
-                <div class="stat"><strong>Mobile</strong><span>Android, iOS & Windows</span></div>
+                <div class="stat"><strong>12+</strong><span>@L("StatModules")</span></div>
+                <div class="stat"><strong>AI</strong><span>@L("StatAi")</span></div>
+                <div class="stat"><strong>PDF</strong><span>@L("StatPdf")</span></div>
+                <div class="stat"><strong>Mobile</strong><span>@L("StatMobile")</span></div>
             </div>
         </div>
 
@@ -868,15 +942,15 @@
 
             <div class="dash-card">
                 <h3>CEO Dashboard</h3>
-                <p>Santé entreprise : 84/100</p>
-                <p>Priorité : relancer les factures impayées.</p>
+                <p>@L("CompanyHealth")</p>
+                <p>@L("Priority")</p>
             </div>
 
             <div class="dash-grid">
-                <div class="mini">Profit<strong>10 000 €</strong></div>
-                <div class="mini">Factures impayées<strong>2</strong></div>
-                <div class="mini">Stock faible<strong>0</strong></div>
-                <div class="mini">Clients<strong>3</strong></div>
+                <div class="mini">@L("Profit")<strong>10 000 EUR</strong></div>
+                <div class="mini">@L("UnpaidInvoices")<strong>2</strong></div>
+                <div class="mini">@L("LowStock")<strong>0</strong></div>
+                <div class="mini">@L("Clients")<strong>3</strong></div>
             </div>
         </div>
     </div>
@@ -884,42 +958,38 @@
 
 <section class="section" id="modules">
     <div class="section-header">
-        <h2>Un ERP complet pour piloter toute l’entreprise</h2>
-        <p>EnterpriseERP regroupe les outils essentiels pour gérer les opérations, les ventes, le stock, les RH, la finance et la sécurité.</p>
+        <h2>@L("ModulesTitle")</h2>
+        <p>@L("ModulesText")</p>
     </div>
 
     <div class="cards">
-        <div class="card"><div class="icon">🤝</div><h3>CRM & Clients</h3><p>Gestion clients, historique, commandes, factures, paiements et suivi commercial.</p></div>
-        <div class="card"><div class="icon">📦</div><h3>Produits & Stock</h3><p>Catalogue, mouvements de stock, alertes de rupture et inventaire.</p></div>
-        <div class="card"><div class="icon">📄</div><h3>Devis & Factures</h3><p>Documents professionnels, PDF, Excel, statuts et suivi de paiement.</p></div>
-        <div class="card"><div class="icon">👥</div><h3>RH & Présences</h3><p>Employés, pointage, présences du jour, rôles et utilisateurs.</p></div>
-        <div class="card"><div class="icon">🔐</div><h3>Sécurité</h3><p>JWT, rôles, permissions, audit, sauvegardes et protection des données.</p></div>
-        <div class="card"><div class="icon">🧠</div><h3>Assistant AI</h3><p>Analyse financière, alertes intelligentes, recommandations et réponses en langage naturel.</p></div>
+        <div class="card"><div class="icon">CRM</div><h3>@L("CrmTitle")</h3><p>@L("CrmText")</p></div>
+        <div class="card"><div class="icon">STK</div><h3>@L("StockTitle")</h3><p>@L("StockText")</p></div>
+        <div class="card"><div class="icon">PDF</div><h3>@L("InvoicesTitle")</h3><p>@L("InvoicesText")</p></div>
+        <div class="card"><div class="icon">RH</div><h3>@L("HrTitle")</h3><p>@L("HrText")</p></div>
+        <div class="card"><div class="icon">SEC</div><h3>@L("Security")</h3><p>@L("SecurityText")</p></div>
+        <div class="card"><div class="icon">AI</div><h3>@L("AiTitle")</h3><p>@L("AiText")</p></div>
     </div>
 </section>
 
 <section class="section">
     <div class="split">
         <div>
-            <div class="badge">Enterprise AI Copilot</div>
-            <h2>L’IA qui comprend vos données ERP</h2>
-            <p>
-                Posez une question comme « Quels clients dois-je relancer ? » ou
-                « Fais-moi un résumé financier ». L’assistant analyse les vraies données :
-                factures, paiements, dépenses, clients, stock et présences.
-            </p>
+            <div class="badge">@L("AiBadge")</div>
+            <h2>@L("AiSectionTitle")</h2>
+            <p>@L("AiSectionText")</p>
             <div class="hero-buttons">
-                <a class="btn btn-primary" href="/Account/Login">Tester l’Assistant AI</a>
-                <a class="btn btn-dark" href="/Home/Demo">Voir la démo</a>
+                <a class="btn btn-primary" href="/Account/Login">@L("TryAi")</a>
+                <a class="btn btn-dark" href="/Home/Demo">@L("SeeDemo")</a>
             </div>
         </div>
 
         <div class="ai-box">
             <div class="chat">
-                <div class="msg">Issa : Pourquoi mon bénéfice est-il faible ?</div>
-                <div class="msg ai">AI : Votre profit est de 10 000 €, mais 2 factures restent impayées. Je recommande une relance aujourd’hui.</div>
-                <div class="msg">Issa : Prépare un rapport complet.</div>
-                <div class="msg ai">AI : Je peux générer un rapport financier PDF avec les alertes et recommandations.</div>
+                <div class="msg">@L("Chat1")</div>
+                <div class="msg ai">@L("Chat2")</div>
+                <div class="msg">@L("Chat3")</div>
+                <div class="msg ai">@L("Chat4")</div>
             </div>
         </div>
     </div>
@@ -928,80 +998,76 @@
 <section class="section download">
     <div class="split">
         <div>
-            <div class="badge">Application mobile</div>
-            <h2>Votre entreprise dans votre poche</h2>
-            <p>
-                EnterpriseERP Mobile connecte le dirigeant aux données essentielles :
-                clients, factures, paiements, présences, rapports, profil professionnel,
-                Assistant AI et CEO Dashboard.
-            </p>
+            <div class="badge">@L("MobileBadge")</div>
+            <h2>@L("MobileTitle")</h2>
+            <p>@L("MobileText")</p>
         </div>
 
         <div class="cards mobile-download-cards">
-            <div class="card"><div class="icon">🤖</div><h3>Android</h3><p>APK connecté à l’API EnterpriseERP.</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">Télécharger</a></div>
-            <div class="card"><div class="icon">iOS</div><h3>iOS</h3><p>Application iPhone et iPad preparee pour TestFlight ou l'App Store.</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.ipa">Telecharger</a></div>
-            <div class="card"><div class="icon">🪟</div><h3>Windows</h3><p>Application MAUI Windows.</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">Télécharger</a></div>
+            <div class="card"><div class="icon">AND</div><h3>Android</h3><p>@L("AndroidText")</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.apk">@L("Download")</a></div>
+            <div class="card"><div class="icon">iOS</div><h3>iOS</h3><p>@L("IosText")</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.ipa">@L("Download")</a></div>
+            <div class="card"><div class="icon">WIN</div><h3>Windows</h3><p>@L("WindowsText")</p><a class="btn btn-primary" href="/downloads/EnterpriseERP.Mobile.msix">@L("Download")</a></div>
         </div>
     </div>
 </section>
 
 <section class="section">
     <div class="section-header">
-        <h2>Pourquoi choisir EnterpriseERP ?</h2>
-        <p>Une solution moderne, extensible et pensée pour les PME qui veulent gérer plus vite et mieux.</p>
+        <h2>@L("WhyTitle")</h2>
+        <p>@L("WhyText")</p>
     </div>
 
     <div class="cards">
-        <div class="card"><div class="icon">⚡</div><h3>Rapide</h3><p>Interface moderne, navigation claire et données accessibles rapidement.</p></div>
-        <div class="card"><div class="icon">☁️</div><h3>Cloud ready</h3><p>Prêt pour déploiement serveur, API sécurisée, mobile connecté.</p></div>
-        <div class="card"><div class="icon">📊</div><h3>Décision</h3><p>CEO Dashboard, score de santé, alertes, recommandations et analyses.</p></div>
+        <div class="card"><div class="icon">FAST</div><h3>@L("Fast")</h3><p>@L("FastText")</p></div>
+        <div class="card"><div class="icon">CLOUD</div><h3>@L("CloudReady")</h3><p>@L("CloudText")</p></div>
+        <div class="card"><div class="icon">DATA</div><h3>@L("Decision")</h3><p>@L("DecisionText")</p></div>
     </div>
 </section>
 
 <section class="section">
     <div class="section-header">
-        <h2>Offres simples</h2>
-        <p>Commencez gratuitement, puis faites évoluer EnterpriseERP selon les besoins de votre entreprise.</p>
+        <h2>@L("OffersTitle")</h2>
+        <p>@L("OffersText")</p>
     </div>
 
     <div class="pricing">
-        <div class="price"><h3>Essai gratuit</h3><h4>14 jours</h4><p>Admin complet, 3 utilisateurs, 20 factures et 50 produits. Fin d'essai en lecture seule, paiement obligatoire, données conservées 90 jours.</p></div>
-        <div class="price featured"><h3>Business</h3><h4>À définir</h4><p>ERP complet, mobile, AI, rapports, sécurité et support.</p></div>
-        <div class="price"><h3>Enterprise</h3><h4>Sur devis</h4><p>Multi-entreprises, personnalisation, déploiement et accompagnement.</p></div>
+        <div class="price"><h3>@L("Free")</h3><h4>14 jours</h4><p>@L("StarterText")</p></div>
+        <div class="price featured"><h3>Business</h3><h4>@L("ToDefine")</h4><p>@L("BusinessText")</p></div>
+        <div class="price"><h3>Enterprise</h3><h4>@L("QuoteOnly")</h4><p>@L("EnterpriseText")</p></div>
     </div>
 </section>
 
 <footer class="footer">
     <div>
         <h4>EnterpriseERP</h4>
-        <p>Business Suite intelligente pour gérer clients, finances, stock, RH, documents, AI et mobile.</p>
+        <p>@L("FooterText")</p>
     </div>
 
     <div>
-        <h4>Produit</h4>
-        <a href="/Home/Features">Fonctionnalités</a>
-        <a href="/Home/Downloads">Téléchargements</a>
-        <a href="/Home/Pricing">Tarifs</a>
+        <h4>@L("Product")</h4>
+        <a href="/Home/Features">@L("Features")</a>
+        <a href="/Home/Downloads">@L("Downloads")</a>
+        <a href="/Home/Pricing">@L("Pricing")</a>
     </div>
 
     <div>
-        <h4>Accès</h4>
-        <a href="/Account/Login">Connexion</a>
-        <a href="/Home/Manual">Manuel</a>
-        <a href="/Account/Register">Créer un compte</a>
-        <a href="/Home/Demo">Démo</a>
+        <h4>@L("Access")</h4>
+        <a href="/Account/Login">@L("Login")</a>
+        <a href="/Home/Manual">@L("Manual")</a>
+        <a href="/Account/Register">@L("CreateAccount")</a>
+        <a href="/Home/Demo">@L("Demo")</a>
     </div>
 
     <div>
-        <h4>Contact</h4>
+        <h4>@L("Contact")</h4>
         <a href="mailto:bakarii447@gmail.com">bakarii447@gmail.com</a>
-        <a href="/Home/Contact">Support</a>
+        <a href="/Home/Contact">@L("Support")</a>
     </div>
 </footer>
 
 <div class="bottom">
-    <div>© @DateTime.Now.Year EnterpriseERP. Tous droits réservés.</div>
-    <div>Version 1.0 · Powered by Enterprise AI</div>
+    <div>&copy; @DateTime.Now.Year EnterpriseERP. @L("Rights")</div>
+    <div>Version 1.0 - @L("Powered")</div>
 </div>
 
 <script>
@@ -1253,3 +1319,6 @@
 </script>
 </body>
 </html>
+
+
+

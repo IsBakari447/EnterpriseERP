@@ -19,7 +19,12 @@ public class JwtService
         var jwt = _config.GetSection("Jwt");
         var jwtSettings = _config.GetSection("JwtSettings");
 
-        var secretKey = jwt["Key"] ?? jwtSettings["SecretKey"]
+        var secretKey = jwt["Key"]
+            ?? jwtSettings["SecretKey"]
+            ?? Environment.GetEnvironmentVariable("JWT_KEY")
+            ?? Environment.GetEnvironmentVariable("JWT_SECRET")
+            ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_JWT_KEY")
+            ?? Environment.GetEnvironmentVariable("ENTERPRISEERP_JWT_SECRET")
             ?? throw new InvalidOperationException("JWT key is missing.");
 
         var issuer = jwt["Issuer"] ?? jwtSettings["Issuer"] ?? "EnterpriseERP";

@@ -1,46 +1,47 @@
 @model EnterpriseERP.Models.Employee
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Supprimer un employé";
+    ViewData["Title"] = T.T("DeleteEmployee");
 }
 
 <div class="page-header">
     <div>
-        <h1>Supprimer un employé</h1>
-        <p>Confirmer la suppression</p>
+        <h1>@T.T("DeleteEmployee")</h1>
+        <p>@T.T("DeleteConfirmation")</p>
     </div>
 
     <a href="/Employees/Index" class="btn-secondary">
-        ← Retour à la liste
+        @T.T("BackToList")
     </a>
 </div>
 
 <div class="form-card">
     <div class="alert-error">
-        Voulez-vous vraiment supprimer cet employé ?
+        @T.T("DeleteEmployeeQuestion")
     </div>
 
     <p>
-        <strong>Nom :</strong> @Model.FullName
+        <strong>@T.T("Name"):</strong> @Model.FullName
     </p>
 
     <p>
-        <strong>Poste :</strong> @Model.Position
+        <strong>@T.T("Position"):</strong> @Model.Position
     </p>
 
     <p>
-        <strong>Email :</strong> @Model.Email
+        <strong>@T.T("Email"):</strong> @Model.Email
     </p>
 
     <form method="post" action="/Employees/DeleteConfirmed/@Model.Id">
         @Html.AntiForgeryToken()
 
         <button type="submit" class="btn-danger">
-            Oui, supprimer
+            @T.T("YesDelete")
         </button>
 
         <a href="/Employees/Index" class="btn-secondary">
-            Annuler
+            @T.T("Cancel")
         </a>
     </form>
 </div>

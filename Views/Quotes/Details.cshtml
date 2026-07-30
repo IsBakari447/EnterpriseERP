@@ -1,4 +1,5 @@
-@model EnterpriseERP.Models.Quote
+﻿@model EnterpriseERP.Models.Quote
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
     ViewData["Title"] = "Détails du devis";
@@ -98,7 +99,7 @@
 
     <div class="erp-card mb-4">
         <div class="erp-card-header">
-            <h5>Produits du devis</h5>
+            <h5>@T.T("QuoteProducts")</h5>
             <span>@Model.Items.Count ligne(s)</span>
         </div>
 
@@ -185,3 +186,6 @@
     }
 
 </div>
+
+
+

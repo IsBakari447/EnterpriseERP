@@ -1,19 +1,21 @@
+@inject EnterpriseERP.Services.TranslationService T
+
 @{
     var type = ViewBag.Type as string ?? "all";
     var query = ViewBag.Query as string ?? "";
 
-    string pageTitle = type switch
+    string pageTitleKey = type switch
     {
-        "clients" => "Recherche clients",
-        "employees" => "Recherche employés",
-        "products" => "Recherche produits",
-        "invoices" => "Recherche factures",
-        "stock" => "Recherche stock",
-        "presence" => "Recherche présences",
-        _ => "Recherche globale"
+        "clients" => "SearchClients",
+        "employees" => "SearchEmployees",
+        "products" => "SearchProducts",
+        "invoices" => "SearchInvoices",
+        "stock" => "SearchStock",
+        "presence" => "SearchPresences",
+        _ => "GlobalSearch"
     };
 
-    ViewData["Title"] = pageTitle;
+    ViewData["Title"] = T.T(pageTitleKey);
 
     var employees = ViewBag.Employees as List<EnterpriseERP.Models.Employee>;
     var clients = ViewBag.Clients as List<EnterpriseERP.Models.Client>;
@@ -25,35 +27,35 @@
 
 <div class="page-header">
     <div>
-        <h1>@pageTitle</h1>
+        <h1>@T.T(pageTitleKey)</h1>
         <p>
-            Catégorie :
+            @T.T("Category"):
             <strong>@type</strong>
-            —
-            Résultats pour :
+            -
+            @T.T("ResultsFor"):
             <strong>@query</strong>
         </p>
     </div>
 
     <a href="/Dashboard/Index" class="btn-secondary">
-        ← Retour dashboard
+        @T.T("BackToDashboard")
     </a>
 </div>
 
 @if (type == "all" || type == "employees")
 {
     <div class="panel">
-        <h2>Employés</h2>
+        <h2>@T.T("Employees")</h2>
 
         @if (employees != null && employees.Any())
         {
             <table>
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Poste</th>
-                        <th>Email</th>
-                        <th>Téléphone</th>
+                        <th>@T.T("Name")</th>
+                        <th>@T.T("Position")</th>
+                        <th>@T.T("Email")</th>
+                        <th>@T.T("Phone")</th>
                     </tr>
                 </thead>
 
@@ -72,7 +74,7 @@
         }
         else
         {
-            <p class="empty">Aucun employé trouvé.</p>
+            <p class="empty">@T.T("NoEmployeeFound")</p>
         }
     </div>
 }
@@ -80,18 +82,18 @@
 @if (type == "all" || type == "clients")
 {
     <div class="panel">
-        <h2>Clients</h2>
+        <h2>@T.T("Clients")</h2>
 
         @if (clients != null && clients.Any())
         {
             <table>
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Entreprise</th>
-                        <th>Email</th>
-                        <th>Téléphone</th>
-                        <th>Adresse</th>
+                        <th>@T.T("Name")</th>
+                        <th>@T.T("Company")</th>
+                        <th>@T.T("Email")</th>
+                        <th>@T.T("Phone")</th>
+                        <th>@T.T("Address")</th>
                     </tr>
                 </thead>
 
@@ -111,7 +113,7 @@
         }
         else
         {
-            <p class="empty">Aucun client trouvé.</p>
+            <p class="empty">@T.T("NoClientFound")</p>
         }
     </div>
 }
@@ -119,18 +121,18 @@
 @if (type == "all" || type == "products")
 {
     <div class="panel">
-        <h2>Produits</h2>
+        <h2>@T.T("Products")</h2>
 
         @if (products != null && products.Any())
         {
             <table>
                 <thead>
                     <tr>
-                        <th>Produit</th>
-                        <th>Catégorie</th>
-                        <th>Prix achat</th>
-                        <th>Prix vente</th>
-                        <th>Stock</th>
+                        <th>@T.T("Product")</th>
+                        <th>@T.T("Category")</th>
+                        <th>@T.T("PurchasePrice")</th>
+                        <th>@T.T("SalePrice")</th>
+                        <th>@T.T("Stock")</th>
                     </tr>
                 </thead>
 
@@ -140,8 +142,8 @@
                         <tr>
                             <td>@p.Name</td>
                             <td>@p.Category</td>
-                            <td>@p.PurchasePrice €</td>
-                            <td>@p.SalePrice €</td>
+                            <td>@p.PurchasePrice &euro;</td>
+                            <td>@p.SalePrice &euro;</td>
                             <td>@p.Quantity</td>
                         </tr>
                     }
@@ -150,7 +152,7 @@
         }
         else
         {
-            <p class="empty">Aucun produit trouvé.</p>
+            <p class="empty">@T.T("NoProductFound")</p>
         }
     </div>
 }
@@ -158,7 +160,7 @@
 @if (type == "all" || type == "invoices")
 {
     <div class="panel">
-        <h2>Factures</h2>
+        <h2>@T.T("Invoices")</h2>
 
         @if (invoices != null && invoices.Any())
         {
@@ -166,10 +168,10 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Client</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Statut</th>
+                        <th>@T.T("Client")</th>
+                        <th>@T.T("Date")</th>
+                        <th>@T.T("Total")</th>
+                        <th>@T.T("Status")</th>
                     </tr>
                 </thead>
 
@@ -180,7 +182,7 @@
                             <td>#@i.Id</td>
                             <td>@i.Client?.FullName</td>
                             <td>@i.InvoiceDate.ToString("dd/MM/yyyy")</td>
-                            <td>@i.TotalAmount €</td>
+                            <td>@i.TotalAmount &euro;</td>
                             <td>@i.Status</td>
                         </tr>
                     }
@@ -189,7 +191,7 @@
         }
         else
         {
-            <p class="empty">Aucune facture trouvée.</p>
+            <p class="empty">@T.T("NoInvoiceFound")</p>
         }
     </div>
 }
@@ -197,17 +199,17 @@
 @if (type == "all" || type == "stock")
 {
     <div class="panel">
-        <h2>Stock</h2>
+        <h2>@T.T("Stock")</h2>
 
         @if (stockMovements != null && stockMovements.Any())
         {
             <table>
                 <thead>
                     <tr>
-                        <th>Produit</th>
-                        <th>Type</th>
-                        <th>Quantité</th>
-                        <th>Date</th>
+                        <th>@T.T("Product")</th>
+                        <th>@T.T("MovementType")</th>
+                        <th>@T.T("Quantity")</th>
+                        <th>@T.T("Date")</th>
                     </tr>
                 </thead>
 
@@ -226,7 +228,7 @@
         }
         else
         {
-            <p class="empty">Aucun mouvement de stock trouvé.</p>
+            <p class="empty">@T.T("NoStockMovementFound")</p>
         }
     </div>
 }
@@ -234,17 +236,17 @@
 @if (type == "all" || type == "presence")
 {
     <div class="panel">
-        <h2>Présences</h2>
+        <h2>@T.T("Presences")</h2>
 
         @if (presences != null && presences.Any())
         {
             <table>
                 <thead>
                     <tr>
-                        <th>Employé</th>
-                        <th>Date</th>
-                        <th>Entrée</th>
-                        <th>Sortie</th>
+                        <th>@T.T("Employees")</th>
+                        <th>@T.T("Date")</th>
+                        <th>@T.T("Entry")</th>
+                        <th>@T.T("Exit")</th>
                     </tr>
                 </thead>
 
@@ -263,7 +265,7 @@
         }
         else
         {
-            <p class="empty">Aucune présence trouvée.</p>
+            <p class="empty">@T.T("NoPresenceFound")</p>
         }
     </div>
 }

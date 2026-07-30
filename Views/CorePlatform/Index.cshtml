@@ -1,4 +1,5 @@
-@using EnterpriseERP.Models
+﻿@using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
 @{
     ViewData["Title"] = "Core Platform";
     var featureStatus = ViewBag.FeatureStatus as List<(string Feature, string Status, string Details)> ?? new();
@@ -87,7 +88,7 @@
                 <select name="Trigger">
                     <option value="LowStock">Stock faible</option>
                     <option value="InvoiceOverdue">Facture impayee</option>
-                    <option value="NewOrder">Nouvelle commande</option>
+                    <option value="NewOrder">@T.T("NewOrder")</option>
                     <option value="SecurityEvent">Evenement securite</option>
                 </select>
             </div>
@@ -406,3 +407,4 @@
         </table>
     }
 </div>
+

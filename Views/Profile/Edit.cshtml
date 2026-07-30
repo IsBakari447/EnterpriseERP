@@ -1,17 +1,18 @@
 @model EnterpriseERP.Models.User
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Modifier profil";
+    ViewData["Title"] = T.T("EditProfile");
 }
 
 <div class="page-header">
     <div>
-        <h1>Modifier profil</h1>
-        <p>Mettre à jour vos informations personnelles</p>
+        <h1>@T.T("EditProfile")</h1>
+        <p>@T.T("EditProfileDescription")</p>
     </div>
 
     <a href="/Profile/Index" class="btn-secondary">
-        ← Retour profil
+        @T.T("BackToProfile")
     </a>
 </div>
 
@@ -22,54 +23,54 @@
         <input type="hidden" name="id" value="@Model.Id" />
 
         <div class="form-group">
-            <label>Nom complet</label>
+            <label>@T.T("FullName")</label>
             <input value="@Model.FullName" readonly />
         </div>
 
         <div class="form-group">
-            <label>Email</label>
+            <label>@T.T("Email")</label>
             <input value="@Model.Email" readonly />
         </div>
 
         <div class="form-group">
-            <label>Téléphone</label>
+            <label>@T.T("Phone")</label>
             <input name="Phone" value="@Model.Phone" />
         </div>
 
         <div class="form-group">
-            <label>Adresse</label>
+            <label>@T.T("Address")</label>
             <input name="Address" value="@Model.Address" />
         </div>
 
         <div class="form-group">
-            <label>Département</label>
-            <input name="Department" value="@Model.Department" placeholder="Ex: Comptabilité, Stock, RH..." />
+            <label>@T.T("Department")</label>
+            <input name="Department" value="@Model.Department" placeholder="Ex: Comptabilite, Stock, RH..." />
         </div>
 
         <div class="form-group">
-            <label>Poste</label>
+            <label>@T.T("Position")</label>
             <input name="Position" value="@Model.Position" placeholder="Ex: Manager, Comptable..." />
         </div>
 
         <div class="form-group">
-            <label>Langue préférée</label>
+            <label>@T.T("PreferredLanguage")</label>
             <select name="PreferredLanguage">
-                <option value="fr" selected="@(Model.PreferredLanguage == "fr")">Français</option>
+                <option value="fr" selected="@(Model.PreferredLanguage == "fr")">Francais</option>
                 <option value="en" selected="@(Model.PreferredLanguage == "en")">English</option>
                 <option value="sv" selected="@(Model.PreferredLanguage == "sv")">Svenska</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Thème préféré</label>
+            <label>@T.T("PreferredTheme")</label>
             <select name="Theme">
-                <option value="Dark" selected="@(Model.Theme == "Dark")">Mode sombre</option>
-                <option value="Light" selected="@(Model.Theme == "Light")">Mode clair</option>
+                <option value="Dark" selected="@(Model.Theme == "Dark")">@T.T("DarkMode")</option>
+                <option value="Light" selected="@(Model.Theme == "Light")">@T.T("LightMode")</option>
             </select>
         </div>
 
         <button type="submit" class="btn-primary">
-            Enregistrer les modifications
+            @T.T("SaveChanges")
         </button>
     </form>
 </div>

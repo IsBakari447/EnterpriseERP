@@ -1,0 +1,75 @@
+@using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("AdvancedFinance");
+    var reconciliations = ViewBag.Reconciliations as List<BankReconciliation> ?? new();
+    var forecasts = ViewBag.Forecasts as List<CashflowForecast> ?? new();
+    decimal invoicesTotal = ViewBag.InvoicesTotal ?? 0m;
+    decimal paymentsTotal = ViewBag.PaymentsTotal ?? 0m;
+    decimal expensesTotal = ViewBag.ExpensesTotal ?? 0m;
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Finance Intelligence</span>
+            <h1>@T.T("AdvancedFinanceTitle")</h1>
+            <p>@T.T("AdvancedFinanceText")</p>
+        </div>
+        <div class="header-actions"><a href="/Exports/Index" class="btn-secondary">@T.T("AccountingExport")</a></div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">INV</div><div><h3>@invoicesTotal.ToString("N2") EUR</h3><p>@T.T("TotalInvoiced")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">PAY</div><div><h3>@paymentsTotal.ToString("N2") EUR</h3><p>@T.T("Collected")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">EXP</div><div><h3>@expensesTotal.ToString("N2") EUR</h3><p>@T.T("Expenses")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">CASH</div><div><h3>@((paymentsTotal - expensesTotal).ToString("N2")) EUR</h3><p>@T.T("EstimatedCash")</p></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("BankReconciliation")</h2>
+            <form method="post" action="/FinanceAdvanced/CreateReconciliation" class="form-grid">
+                @Html.AntiForgeryToken()
+                <input name="BankAccount" placeholder="@T.T("BankAccount")" required />
+                <input type="date" name="StatementDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input name="StatementBalance" type="number" step="0.01" placeholder="@T.T("BankBalance")" />
+                <input name="ErpBalance" type="number" step="0.01" placeholder="@T.T("ErpBalance")" />
+                <textarea name="Notes" placeholder="@T.T("Description")"></textarea>
+                <button class="btn-primary" type="submit">@T.T("AnalyzeGap")</button>
+            </form>
+        </div>
+        <div class="panel">
+            <h2>@T.T("FinancialForecast")</h2>
+            <form method="post" action="/FinanceAdvanced/CreateForecast" class="form-grid">
+                @Html.AntiForgeryToken()
+                <input name="Period" value="@DateTime.Today.ToString("yyyy-MM")" />
+                <input name="ExpectedInflow" type="number" step="0.01" placeholder="@T.T("ExpectedInflow")" />
+                <input name="ExpectedOutflow" type="number" step="0.01" placeholder="@T.T("ExpectedOutflow")" />
+                <select name="Scenario"><option value="Prudent">@T.T("Cautious")</option><option value="Realiste" selected>@T.T("Realistic")</option><option value="Optimiste">@T.T("Optimistic")</option></select>
+                <button class="btn-primary" type="submit">@T.T("AddForecast")</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("Reconciliations")</h2>
+            <table><thead><tr><th>@T.T("BankAccount")</th><th>@T.T("Date")</th><th>@T.T("Bank")</th><th>ERP</th><th>@T.T("Status")</th></tr></thead><tbody>
+            @foreach (var item in reconciliations)
+            {
+                <tr><td>@item.BankAccount</td><td>@item.StatementDate.ToString("dd/MM/yyyy")</td><td>@item.StatementBalance.ToString("N2")</td><td>@item.ErpBalance.ToString("N2")</td><td>@item.Status</td></tr>
+            }
+            </tbody></table>
+        </div>
+        <div class="panel">
+            <h2>@T.T("CashflowTable")</h2>
+            <table><thead><tr><th>@T.T("Period")</th><th>@T.T("Scenario")</th><th>@T.T("ExpectedInflow")</th><th>@T.T("ExpectedOutflow")</th><th>@T.T("ForecastBalance")</th></tr></thead><tbody>
+            @foreach (var item in forecasts)
+            {
+                <tr><td>@item.Period</td><td>@item.Scenario</td><td>@item.ExpectedInflow.ToString("N2")</td><td>@item.ExpectedOutflow.ToString("N2")</td><td>@((item.ExpectedInflow - item.ExpectedOutflow).ToString("N2"))</td></tr>
+            }
+            </tbody></table>
+        </div>
+    </div>
+</section>

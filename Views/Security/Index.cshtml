@@ -1,5 +1,6 @@
+@inject EnterpriseERP.Services.TranslationService T
 @{
-    ViewData["Title"] = "Security Center";
+    ViewData["Title"] = T.T("SecurityCenter");
 
     var accessDeniedLogs = ViewBag.AccessDeniedLogs as List<EnterpriseERP.Models.AuditLog>;
     var loginLogs = ViewBag.LoginLogs as List<EnterpriseERP.Models.AuditLog>;
@@ -9,68 +10,37 @@
 
 <div class="page-header">
     <div>
-        <h1>Security Center</h1>
-        <p>Surveillance des accès, utilisateurs, alertes et événements de sécurité</p>
+        <h1>@T.T("SecurityCenter")</h1>
+        <p>@T.T("SecurityCenterText")</p>
     </div>
 
-    <a href="/Admin/Index" class="btn-secondary">
-        ← Retour Admin Center
-    </a>
+    <a href="/Admin/Index" class="btn-secondary">@T.T("BackToAdminCenter")</a>
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div>
-            <h3>@ViewBag.TotalUsers</h3>
-            <p>Utilisateurs</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">✅</div>
-        <div>
-            <h3>@ViewBag.ActiveUsers</h3>
-            <p>Comptes actifs</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">⛔</div>
-        <div>
-            <h3>@ViewBag.AccessDeniedLogs?.Count</h3>
-            <p>Accès refusés récents</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">👑</div>
-        <div>
-            <h3>@ViewBag.SuperAdmins</h3>
-            <p>SuperAdmins</p>
-        </div>
-    </div>
+    <div class="stat-card"><div class="stat-icon">USR</div><div><h3>@ViewBag.TotalUsers</h3><p>@T.T("Users")</p></div></div>
+    <div class="stat-card"><div class="stat-icon">ACT</div><div><h3>@ViewBag.ActiveUsers</h3><p>@T.T("ActiveAccounts")</p></div></div>
+    <div class="stat-card warning"><div class="stat-icon">DEN</div><div><h3>@ViewBag.AccessDeniedLogs?.Count</h3><p>@T.T("RecentDeniedAccess")</p></div></div>
+    <div class="stat-card"><div class="stat-icon">ADM</div><div><h3>@ViewBag.SuperAdmins</h3><p>SuperAdmins</p></div></div>
 </div>
 
 <div class="dashboard-grid">
     <div class="panel">
-        <h2>🛡️ Accès rapides sécurité</h2>
-
+        <h2>@T.T("QuickSecurityAccess")</h2>
         <div class="dashboard-grid">
-            <a href="/Audit/Index" class="btn-primary">Audit Center</a>
-            <a href="/Roles/Index" class="btn-secondary">Rôles & Permissions</a>
-            <a href="/Account/Register" class="btn-secondary">Créer utilisateur</a>
-            <a href="/Settings/Index" class="btn-secondary">Paramètres sécurité</a>
+            <a href="/Audit/Index" class="btn-primary">@T.T("AuditLog")</a>
+            <a href="/Roles/Index" class="btn-secondary">@T.T("RolesPermissions")</a>
+            <a href="/Account/Register" class="btn-secondary">@T.T("CreateUser")</a>
+            <a href="/Settings/Index" class="btn-secondary">@T.T("SecuritySettings")</a>
         </div>
     </div>
 
     <div class="panel">
-        <h2>📊 Résumé utilisateurs</h2>
-
+        <h2>@T.T("UsersSummary")</h2>
         <table>
-            <tr><th>Utilisateurs actifs</th><td>@ViewBag.ActiveUsers</td></tr>
-            <tr><th>Utilisateurs inactifs</th><td>@ViewBag.InactiveUsers</td></tr>
-            <tr><th>Comptes non approuvés</th><td>@ViewBag.PendingUsers</td></tr>
+            <tr><th>@T.T("ActiveUsers")</th><td>@ViewBag.ActiveUsers</td></tr>
+            <tr><th>@T.T("InactiveUsers")</th><td>@ViewBag.InactiveUsers</td></tr>
+            <tr><th>@T.T("PendingUsers")</th><td>@ViewBag.PendingUsers</td></tr>
             <tr><th>SuperAdmins</th><td>@ViewBag.SuperAdmins</td></tr>
         </table>
     </div>
@@ -78,138 +48,82 @@
 
 <div class="dashboard-grid">
     <div class="panel">
-        <h2>⛔ Derniers accès refusés</h2>
-
+        <h2>@T.T("LatestDeniedAccess")</h2>
         @if (accessDeniedLogs != null && accessDeniedLogs.Any())
         {
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Utilisateur</th>
-                        <th>Description</th>
-                        <th>IP</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>@T.T("Date")</th><th>@T.T("User")</th><th>@T.T("Description")</th><th>IP</th></tr></thead>
                 <tbody>
-                    @foreach (var log in accessDeniedLogs)
-                    {
-                        <tr>
-                            <td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@log.UserName</td>
-                            <td>@log.Description</td>
-                            <td>@log.IpAddress</td>
-                        </tr>
-                    }
+                @foreach (var log in accessDeniedLogs)
+                {
+                    <tr><td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@log.UserName</td><td>@log.Description</td><td>@log.IpAddress</td></tr>
+                }
                 </tbody>
             </table>
         }
         else
         {
-            <p class="empty">Aucun accès refusé récent.</p>
+            <p class="empty">@T.T("NoDeniedAccess")</p>
         }
     </div>
 
     <div class="panel">
-        <h2>🔑 Dernières connexions</h2>
-
+        <h2>@T.T("LatestLogins")</h2>
         @if (loginLogs != null && loginLogs.Any())
         {
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Utilisateur</th>
-                        <th>IP</th>
-                        <th>Navigateur</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>@T.T("Date")</th><th>@T.T("User")</th><th>IP</th><th>@T.T("Browser")</th></tr></thead>
                 <tbody>
-                    @foreach (var log in loginLogs)
-                    {
-                        <tr>
-                            <td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@log.UserName</td>
-                            <td>@log.IpAddress</td>
-                            <td>@log.Browser</td>
-                        </tr>
-                    }
+                @foreach (var log in loginLogs)
+                {
+                    <tr><td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@log.UserName</td><td>@log.IpAddress</td><td>@log.Browser</td></tr>
+                }
                 </tbody>
             </table>
         }
         else
         {
-            <p class="empty">Aucune connexion enregistrée.</p>
+            <p class="empty">@T.T("NoLogin")</p>
         }
     </div>
 </div>
 
 <div class="panel">
-    <h2>⚠️ Alertes de sécurité</h2>
-
+    <h2>@T.T("SecurityWarnings")</h2>
     @if (warningLogs != null && warningLogs.Any())
     {
         <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Module</th>
-                    <th>Action</th>
-                    <th>Utilisateur</th>
-                    <th>Gravité</th>
-                </tr>
-            </thead>
+            <thead><tr><th>@T.T("Date")</th><th>Module</th><th>@T.T("Actions")</th><th>@T.T("User")</th><th>@T.T("Severity")</th></tr></thead>
             <tbody>
-                @foreach (var log in warningLogs)
-                {
-                    <tr>
-                        <td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@log.Module</td>
-                        <td>@log.Action</td>
-                        <td>@log.UserName</td>
-                        <td>@log.Severity</td>
-                    </tr>
-                }
+            @foreach (var log in warningLogs)
+            {
+                <tr><td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@log.Module</td><td>@log.Action</td><td>@log.UserName</td><td>@log.Severity</td></tr>
+            }
             </tbody>
         </table>
     }
     else
     {
-        <p class="empty">Aucune alerte de sécurité.</p>
+        <p class="empty">@T.T("NoSecurityWarning")</p>
     }
 </div>
 
 <div class="panel">
-    <h2>📜 Événements sécurité récents</h2>
-
+    <h2>@T.T("RecentSecurityEvents")</h2>
     @if (recentSecurityEvents != null && recentSecurityEvents.Any())
     {
         <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Module</th>
-                    <th>Action</th>
-                    <th>Description</th>
-                    <th>Succès</th>
-                </tr>
-            </thead>
+            <thead><tr><th>@T.T("Date")</th><th>Module</th><th>@T.T("Actions")</th><th>@T.T("Description")</th><th>@T.T("Success")</th></tr></thead>
             <tbody>
-                @foreach (var log in recentSecurityEvents)
-                {
-                    <tr>
-                        <td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@log.Module</td>
-                        <td>@log.Action</td>
-                        <td>@log.Description</td>
-                        <td>@(log.Success ? "Oui" : "Non")</td>
-                    </tr>
-                }
+            @foreach (var log in recentSecurityEvents)
+            {
+                <tr><td>@log.Date.ToString("dd/MM/yyyy HH:mm")</td><td>@log.Module</td><td>@log.Action</td><td>@log.Description</td><td>@(log.Success ? T.T("Yes") : T.T("No"))</td></tr>
+            }
             </tbody>
         </table>
     }
     else
     {
-        <p class="empty">Aucun événement de sécurité récent.</p>
+        <p class="empty">@T.T("NoSecurityEvent")</p>
     }
 </div>

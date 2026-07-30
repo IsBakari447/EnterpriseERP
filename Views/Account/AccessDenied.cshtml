@@ -1,19 +1,21 @@
+@inject EnterpriseERP.Services.TranslationService T
+
 @{
-    ViewData["Title"] = "Accès refusé";
+    ViewData["Title"] = T.T("AccessDenied");
 }
 
 <div class="page-header">
     <div>
-        <h1>Accès refusé</h1>
-        <p>Vous n'avez pas l'autorisation d'accéder à cette fonctionnalité.</p>
+        <h1>@T.T("AccessDenied")</h1>
+        <p>@T.T("AccessDeniedText")</p>
     </div>
 
     <a href="/Dashboard/Index" class="btn-secondary">
-        ← Retour dashboard
+        @T.T("BackToDashboard")
     </a>
 </div>
 
 <div class="panel">
-    <h2>Autorisation insuffisante</h2>
-    <p>Contactez un administrateur si vous pensez que c'est une erreur.</p>
+    <h2>@T.T("InsufficientAuthorization")</h2>
+    <p>@T.T("ContactAdminIfError")</p>
 </div>

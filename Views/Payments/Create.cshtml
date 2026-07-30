@@ -1,18 +1,19 @@
 @model EnterpriseERP.Models.Payment
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Ajouter un paiement";
+    ViewData["Title"] = T.T("AddPayment");
     var invoices = ViewBag.Invoices as List<EnterpriseERP.Models.Invoice>;
 }
 
 <div class="page-header">
     <div>
-        <h1>Ajouter un paiement</h1>
-        <p>Associer un paiement à une facture</p>
+        <h1>@T.T("AddPayment")</h1>
+        <p>@T.T("AddPaymentDescription")</p>
     </div>
 
     <a href="/Payments/Index" class="btn-secondary">
-        ← Retour
+        @T.T("Back")
     </a>
 </div>
 
@@ -26,16 +27,16 @@
         @Html.AntiForgeryToken()
 
         <div class="form-group">
-            <label>Facture</label>
+            <label>@T.T("Invoice")</label>
             <select name="InvoiceId" required>
-                <option value="">-- Sélectionner une facture --</option>
+                <option value="">@T.T("SelectInvoice")</option>
 
                 @if (invoices != null)
                 {
                     foreach (var invoice in invoices)
                     {
                         <option value="@invoice.Id">
-                            Facture #@invoice.Id — @invoice.Client?.FullName — @invoice.TotalAmount € — @invoice.Status
+                            @T.T("Invoice") #@invoice.Id - @invoice.Client?.FullName - @invoice.TotalAmount EUR - @invoice.Status
                         </option>
                     }
                 }
@@ -43,28 +44,28 @@
         </div>
 
         <div class="form-group">
-            <label>Montant payé</label>
+            <label>@T.T("PaidAmount")</label>
             <input name="Amount" type="number" step="0.01" min="1" required />
         </div>
 
         <div class="form-group">
-            <label>Méthode de paiement</label>
+            <label>@T.T("PaymentMethod")</label>
             <select name="Method">
-                <option value="Cash">Espèces</option>
-                <option value="Card">Carte bancaire</option>
-                <option value="Bank Transfer">Virement bancaire</option>
+                <option value="Cash">@T.T("Cash")</option>
+                <option value="Card">@T.T("Card")</option>
+                <option value="Bank Transfer">@T.T("BankTransfer")</option>
                 <option value="Swish">Swish</option>
                 <option value="Mobile Money">Mobile Money</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Référence</label>
-            <input name="Reference" placeholder="Ex: transaction, reçu, numéro..." />
+            <label>@T.T("Reference")</label>
+            <input name="Reference" placeholder="@T.T("ReferencePlaceholder")" />
         </div>
 
         <button type="submit" class="btn-primary">
-            Enregistrer le paiement
+            @T.T("SavePayment")
         </button>
     </form>
 </div>

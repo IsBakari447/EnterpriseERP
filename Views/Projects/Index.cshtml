@@ -1,0 +1,85 @@
+@using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("Projects");
+    var projects = ViewBag.Projects as List<ProjectBoard> ?? new();
+    var tasks = ViewBag.Tasks as List<ProjectTaskItem> ?? new();
+    var columns = new[] {
+        new { Value = "A faire", Label = T.T("Todo") },
+        new { Value = "En cours", Label = T.T("InProgress") },
+        new { Value = "En revue", Label = T.T("InReview") },
+        new { Value = "Termine", Label = T.T("Done") }
+    };
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">@T.T("ProjectsEyebrow")</span>
+            <h1>@T.T("ProjectsTitle")</h1>
+            <p>@T.T("ProjectsText")</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("NewProject")</h2>
+            <form method="post" action="/Projects/CreateProject" class="form-grid">
+                @Html.AntiForgeryToken()
+                <input name="Name" placeholder="@T.T("ProjectName")" required />
+                <input name="ClientName" placeholder="@T.T("ClientOrDepartment")" />
+                <input type="date" name="Deadline" value="@DateTime.Today.AddDays(30).ToString("yyyy-MM-dd")" />
+                <input type="number" name="Progress" min="0" max="100" value="0" />
+                <button class="btn-primary" type="submit">@T.T("CreateProject")</button>
+            </form>
+        </div>
+        <div class="panel">
+            <h2>@T.T("NewTask")</h2>
+            <form method="post" action="/Projects/CreateTask" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="ProjectBoardId" required>
+                    @foreach (var project in projects) { <option value="@project.Id">@project.Name</option> }
+                </select>
+                <input name="Title" placeholder="@T.T("TaskTitle")" required />
+                <input name="AssignedTo" placeholder="@T.T("AssignedTo")" />
+                <input type="date" name="Deadline" value="@DateTime.Today.AddDays(7).ToString("yyyy-MM-dd")" />
+                <select name="Status">@foreach (var column in columns) { <option value="@column.Value">@column.Label</option> }</select>
+                <input type="number" name="Progress" min="0" max="100" value="0" />
+                <textarea name="Description" placeholder="Description"></textarea>
+                <button class="btn-primary" type="submit">@T.T("AddTask")</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        @foreach (var project in projects.Take(4))
+        {
+            <div class="stat-card"><div class="stat-icon">PRJ</div><div><h3>@project.Progress%</h3><p>@project.Name - @project.Deadline.ToString("dd/MM/yyyy")</p></div></div>
+        }
+    </div>
+
+    <div class="kanban-board">
+        @foreach (var column in columns)
+        {
+            <div class="kanban-column">
+                <h2>@column.Label</h2>
+                @foreach (var task in tasks.Where(t => t.Status == column.Value))
+                {
+                    <article class="kanban-card">
+                        <strong>@task.Title</strong>
+                        <span>@task.ProjectBoard?.Name</span>
+                        <small>@T.T("Assignment"): @(string.IsNullOrWhiteSpace(task.AssignedTo) ? T.T("Unassigned") : task.AssignedTo)</small>
+                        <small>@T.T("Deadline"): @task.Deadline.ToString("dd/MM/yyyy")</small>
+                        <div class="progress-track"><span style="width:@task.Progress%"></span></div>
+                        <form method="post" action="/Projects/MoveTask">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@task.Id" />
+                            <select name="status">@foreach (var target in columns) { <option value="@target.Value" selected="@(target.Value == task.Status)">@target.Label</option> }</select>
+                            <button class="btn-secondary" type="submit">@T.T("Move")</button>
+                        </form>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

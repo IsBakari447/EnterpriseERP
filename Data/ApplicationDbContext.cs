@@ -41,6 +41,15 @@ namespace EnterpriseERP.Data
         public DbSet<TenantAccount> TenantAccounts => Set<TenantAccount>();
         public DbSet<MarketplaceExtension> MarketplaceExtensions => Set<MarketplaceExtension>();
         public DbSet<CustomFieldDefinition> CustomFieldDefinitions => Set<CustomFieldDefinition>();
+        public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
+        public DbSet<HrSchedule> HrSchedules => Set<HrSchedule>();
+        public DbSet<PayrollSlip> PayrollSlips => Set<PayrollSlip>();
+        public DbSet<HrDocument> HrDocuments => Set<HrDocument>();
+        public DbSet<ProjectBoard> ProjectBoards => Set<ProjectBoard>();
+        public DbSet<ProjectTaskItem> ProjectTaskItems => Set<ProjectTaskItem>();
+        public DbSet<EcommerceConnection> EcommerceConnections => Set<EcommerceConnection>();
+        public DbSet<BankReconciliation> BankReconciliations => Set<BankReconciliation>();
+        public DbSet<CashflowForecast> CashflowForecasts => Set<CashflowForecast>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -163,6 +172,63 @@ namespace EnterpriseERP.Data
             modelBuilder.Entity<CustomFieldDefinition>()
                 .HasIndex(f => new { f.EntityType, f.FieldKey })
                 .IsUnique();
+
+            modelBuilder.Entity<LeaveRequest>()
+                .HasIndex(l => new { l.EmployeeId, l.Status, l.StartDate });
+
+            modelBuilder.Entity<HrSchedule>()
+                .HasIndex(s => new { s.EmployeeId, s.WorkDate });
+
+            modelBuilder.Entity<PayrollSlip>()
+                .Property(p => p.GrossAmount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<PayrollSlip>()
+                .Property(p => p.NetAmount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<PayrollSlip>()
+                .HasIndex(p => new { p.EmployeeId, p.Period });
+
+            modelBuilder.Entity<HrDocument>()
+                .HasIndex(d => new { d.EmployeeId, d.DocumentType });
+
+            modelBuilder.Entity<ProjectBoard>()
+                .HasMany(p => p.Tasks)
+                .WithOne(t => t.ProjectBoard)
+                .HasForeignKey(t => t.ProjectBoardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProjectBoard>()
+                .HasIndex(p => new { p.Status, p.Deadline });
+
+            modelBuilder.Entity<ProjectTaskItem>()
+                .HasIndex(t => new { t.Status, t.Deadline });
+
+            modelBuilder.Entity<EcommerceConnection>()
+                .HasIndex(e => e.Platform);
+
+            modelBuilder.Entity<BankReconciliation>()
+                .Property(b => b.StatementBalance)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BankReconciliation>()
+                .Property(b => b.ErpBalance)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BankReconciliation>()
+                .HasIndex(b => new { b.Status, b.StatementDate });
+
+            modelBuilder.Entity<CashflowForecast>()
+                .Property(c => c.ExpectedInflow)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<CashflowForecast>()
+                .Property(c => c.ExpectedOutflow)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<CashflowForecast>()
+                .HasIndex(c => new { c.Period, c.Scenario });
         }
     }
 }

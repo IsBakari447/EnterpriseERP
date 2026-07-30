@@ -1,4 +1,5 @@
-@model EnterpriseERP.Models.AppSetting
+﻿@model EnterpriseERP.Models.AppSetting
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
     ViewData["Title"] = "Settings Center";
@@ -212,7 +213,7 @@
         </div>
 
         <div class="form-card">
-            <h2>🔐 Sécurité utilisateurs</h2>
+            <h2>@T.T("UserSecurity")</h2>
 
             <div class="form-group">
                 <label>Durée session en minutes</label>
@@ -373,7 +374,7 @@
 
     <div class="panel" style="margin-top:20px;">
         <button type="submit" class="btn-primary">
-            Enregistrer tous les paramètres
+            @T.T("SaveAllSettings")
         </button>
     </div>
 </form>
@@ -403,3 +404,6 @@
         </tr>
     </table>
 </div>
+
+
+

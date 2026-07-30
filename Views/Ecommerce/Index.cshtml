@@ -1,0 +1,68 @@
+@using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("Ecommerce");
+    var connections = ViewBag.Connections as List<EcommerceConnection> ?? new();
+    var products = ViewBag.Products as List<Product> ?? new();
+    var orders = ViewBag.OpenOrders as List<Order> ?? new();
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">@T.T("CommerceConnect")</span>
+            <h1>@T.T("EcommerceTitle")</h1>
+            <p>@T.T("EcommerceText")</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">SKU</div><div><h3>@products.Count</h3><p>@T.T("CatalogProducts")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">API</div><div><h3>@connections.Count</h3><p>@T.T("Connectors")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">ORD</div><div><h3>@orders.Count</h3><p>@T.T("RecentOrders")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">QR</div><div><h3>@T.T("Active")</h3><p>@T.T("QrReady")</p></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("NewConnector")</h2>
+            <form method="post" action="/Ecommerce/Connect" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="Platform"><option>Shopify</option><option>WooCommerce</option><option>Prestashop</option><option>Marketplace</option></select>
+                <input name="StoreName" placeholder="@T.T("StoreName")" required />
+                <input name="StoreUrl" placeholder="@T.T("StoreUrl")" />
+                <label><input type="checkbox" name="SyncProducts" value="true" checked /> @T.T("SyncProducts")</label>
+                <label><input type="checkbox" name="SyncOrders" value="true" checked /> @T.T("SyncOrders")</label>
+                <button class="btn-primary" type="submit">@T.T("CreateConnector")</button>
+            </form>
+        </div>
+        <div class="panel">
+            <h2>@T.T("ActiveConnectors")</h2>
+            <table><thead><tr><th>@T.T("Platform")</th><th>@T.T("Store")</th><th>@T.T("Status")</th><th>@T.T("LastSync")</th><th></th></tr></thead><tbody>
+            @foreach (var item in connections)
+            {
+                <tr>
+                    <td>@item.Platform</td><td>@item.StoreName</td><td>@item.SyncStatus</td><td>@(item.LastSyncAt?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                    <td>
+                        <form method="post" action="/Ecommerce/MarkSynced">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn-secondary" type="submit">@T.T("MarkSynced")</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody></table>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>@T.T("CatalogReady")</h2>
+        <table><thead><tr><th>@T.T("Product")</th><th>@T.T("Category")</th><th>@T.T("Stock")</th><th>@T.T("Price")</th><th>QR</th></tr></thead><tbody>
+        @foreach (var product in products.Take(30))
+        {
+            <tr><td>@product.Name</td><td>@product.Category</td><td>@product.Quantity</td><td>@product.SalePrice.ToString("N2") EUR</td><td>ERP-PROD-@product.Id</td></tr>
+        }
+        </tbody></table>
+    </div>
+</section>

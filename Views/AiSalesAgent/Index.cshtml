@@ -1,0 +1,174 @@
+@model EnterpriseERP.Controllers.SalesAgentRequest
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("AiSalesAgent");
+    var sectors = ViewBag.Sectors as string[] ?? Array.Empty<string>();
+    var objectives = ViewBag.Objectives as string[] ?? Array.Empty<string>();
+    var result = ViewBag.Result as EnterpriseERP.Controllers.SalesAgentResult ?? new EnterpriseERP.Controllers.SalesAgentResult();
+
+    string SectorLabel(string sector) => (sector, T.Lang) switch
+    {
+        ("Commerce", "en") => "Retail",
+        ("Commerce", "sv") => "Handel",
+        ("Restauration", "en") => "Restaurants",
+        ("Restauration", "sv") => "Restaurang",
+        ("Services", "sv") => "Tjanster",
+        ("Industrie", "en") => "Industry",
+        ("Industrie", "sv") => "Industri",
+        ("Sante", "en") => "Healthcare",
+        ("Sante", "sv") => "Halsa",
+        ("Education", "sv") => "Utbildning",
+        ("Immobilier", "en") => "Real estate",
+        ("Immobilier", "sv") => "Fastigheter",
+        ("Transport", "sv") => "Transport",
+        ("Construction", "sv") => "Bygg",
+        _ => sector
+    };
+
+    string ObjectiveLabel(string objective) => (objective, T.Lang) switch
+    {
+        ("Prospection", "en") => "Prospecting",
+        ("Prospection", "sv") => "Prospektering",
+        ("Relance", "en") => "Follow-up",
+        ("Relance", "sv") => "Uppfoljning",
+        ("Presentation", "sv") => "Presentation",
+        ("Proposition", "en") => "Proposal",
+        ("Proposition", "sv") => "Forslag",
+        ("Demo", "sv") => "Demo",
+        ("Objection", "en") => "Objection handling",
+        ("Objection", "sv") => "Invandningar",
+        ("Fidelisation", "en") => "Retention",
+        ("Fidelisation", "sv") => "Kundlojalitet",
+        _ => objective
+    };
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">EnterpriseERP Sales AI</span>
+            <h1>@T.T("AiSalesAgentTitle")</h1>
+            <p>@T.T("AiSalesAgentText")</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">MAIL</div><div><h3>@T.T("EmailTemplates")</h3><p>@T.T("EmailTemplatesText")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">CALL</div><div><h3>@T.T("SalesScripts")</h3><p>@T.T("SalesScriptsText")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">SOC</div><div><h3>LinkedIn</h3><p>@T.T("LinkedInGeneratorText")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">PAGE</div><div><h3>@T.T("SalesPages")</h3><p>@T.T("SalesPagesText")</p></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="form-card">
+            <h2>@T.T("GenerateSalesContent")</h2>
+            <form asp-action="Generate" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label>@T.T("Sector")</label>
+                    <select asp-for="Sector">
+                        @foreach (var sector in sectors)
+                        {
+                            <option value="@sector" selected="@(Model.Sector == sector)">@SectorLabel(sector)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>@T.T("SalesObjective")</label>
+                    <select asp-for="Objective">
+                        @foreach (var objective in objectives)
+                        {
+                            <option value="@objective" selected="@(Model.Objective == objective)">@ObjectiveLabel(objective)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>@T.T("CompanyName")</label>
+                    <input asp-for="CompanyName" placeholder="@T.T("CompanyNamePlaceholder")" />
+                </div>
+
+                <div class="form-group">
+                    <label>@T.T("TargetAudience")</label>
+                    <input asp-for="Target" placeholder="@T.T("TargetAudiencePlaceholder")" />
+                </div>
+
+                <div class="form-group">
+                    <label>@T.T("Offer")</label>
+                    <input asp-for="Offer" placeholder="@T.T("OfferPlaceholder")" />
+                </div>
+
+                <div class="form-group">
+                    <label>@T.T("Context")</label>
+                    <textarea asp-for="Context" rows="5" placeholder="@T.T("SalesContextPlaceholder")"></textarea>
+                </div>
+
+                <button class="btn-primary" type="submit">@T.T("GenerateWithAi")</button>
+            </form>
+        </div>
+
+        <div class="forecast-panel">
+            <div class="forecast-header">
+                <div>
+                    <h2>@T.T("RecommendedProspectingPlan")</h2>
+                    <p>@T.T("RecommendedProspectingPlanText")</p>
+                </div>
+            </div>
+            <div class="services-grid">
+                @foreach (var action in result.ProspectingActions)
+                {
+                    <div class="service-card"><span class="dash-symbol">GO</span><p>@action</p></div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="services-panel">
+        <div class="services-header">
+            <div>
+                <span class="eyebrow">@T.T("GeneratedContent")</span>
+                <h2>@T.T("SalesAgentOutputs")</h2>
+                <p>@T.T("SalesAgentOutputsText")</p>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <article class="service-card">
+                <span class="dash-symbol">ANL</span>
+                <h3>@T.T("SectorAnalysis")</h3>
+                <pre class="ai-output">@result.SectorAnalysis</pre>
+            </article>
+
+            <article class="service-card">
+                <span class="dash-symbol">MAIL</span>
+                <h3>@T.T("CommercialEmail")</h3>
+                <pre class="ai-output">@result.Email</pre>
+            </article>
+
+            <article class="service-card">
+                <span class="dash-symbol">CALL</span>
+                <h3>@T.T("CallScript")</h3>
+                <pre class="ai-output">@result.CallScript</pre>
+            </article>
+
+            <article class="service-card">
+                <span class="dash-symbol">IN</span>
+                <h3>@T.T("LinkedInMessage")</h3>
+                <pre class="ai-output">@result.LinkedInMessage</pre>
+            </article>
+
+            <article class="service-card">
+                <span class="dash-symbol">WA</span>
+                <h3>@T.T("WhatsAppMessage")</h3>
+                <pre class="ai-output">@result.WhatsAppMessage</pre>
+            </article>
+
+            <article class="service-card">
+                <span class="dash-symbol">WEB</span>
+                <h3>@T.T("SalesPageGenerator")</h3>
+                <pre class="ai-output">@result.SalesPage</pre>
+            </article>
+        </div>
+    </div>
+</section>

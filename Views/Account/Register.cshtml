@@ -1,4 +1,4 @@
-@inject EnterpriseERP.Services.TranslationService T
+﻿@inject EnterpriseERP.Services.TranslationService T
 @{
     Layout = null;
     ViewData["Title"] = T.T("RegisterPageTitle");
@@ -281,7 +281,7 @@
             <div class="muted">@T.T("UserCreation")</div>
             <div class="info">
                 Pendant l'essai, l'inscription reste ouverte jusqu'a @maxTrialUsers comptes.
-                Roles disponibles : Admin, Manager et Employee.
+                @T.T("AdminOnlyInfo")
             </div>
             <div class="trial-meter">
                 <div class="trial-meter-top">
@@ -324,12 +324,18 @@
                         <option value="Admin">@T.T("Admin")</option>
                         <option value="Manager">@T.T("Manager")</option>
                         <option value="Employee" selected>@T.T("Employee")</option>
+                        <option value="Comptable">@T.T("Accountant")</option>
+                        <option value="RH">@T.T("HrRole")</option>
+                        <option value="Client">@T.T("ClientRole")</option>
                     }
                     else
                     {
                         <option value="Admin">@T.T("Admin")</option>
                         <option value="Manager">@T.T("Manager")</option>
                         <option value="Employee" selected>@T.T("Employee")</option>
+                        <option value="Comptable">@T.T("Accountant")</option>
+                        <option value="RH">@T.T("HrRole")</option>
+                        <option value="Client">@T.T("ClientRole")</option>
                     }
                 </select>
             }
@@ -354,3 +360,4 @@
 
 </body>
 </html>
+

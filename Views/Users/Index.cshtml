@@ -1,4 +1,4 @@
-@model List<EnterpriseERP.Models.User>
+﻿@model List<EnterpriseERP.Models.User>
 @inject EnterpriseERP.Services.TranslationService T
 
 @{
@@ -35,7 +35,13 @@
             ["Approve"] = "Approuver",
             ["Disable"] = "Desactiver",
             ["Enable"] = "Activer",
-            ["Empty"] = "Aucun utilisateur trouve."
+            ["Empty"] = "Aucun utilisateur trouve.",
+            ["AdminRole"] = "Administrateur",
+            ["ManagerRole"] = "Manager",
+            ["EmployeeRole"] = "Employe",
+            ["AccountantRole"] = "Comptable",
+            ["HrRole"] = "RH",
+            ["ClientRole"] = "Client"
         },
         ["en"] = new()
         {
@@ -68,7 +74,13 @@
             ["Approve"] = "Approve",
             ["Disable"] = "Disable",
             ["Enable"] = "Enable",
-            ["Empty"] = "No users found."
+            ["Empty"] = "No users found.",
+            ["AdminRole"] = "Administrator",
+            ["ManagerRole"] = "Manager",
+            ["EmployeeRole"] = "Employee",
+            ["AccountantRole"] = "Accountant",
+            ["HrRole"] = "HR",
+            ["ClientRole"] = "Client"
         },
         ["sv"] = new()
         {
@@ -101,7 +113,13 @@
             ["Approve"] = "Godkann",
             ["Disable"] = "Inaktivera",
             ["Enable"] = "Aktivera",
-            ["Empty"] = "Ingen anvandare hittades."
+            ["Empty"] = "Ingen anvandare hittades.",
+            ["AdminRole"] = "Administrator",
+            ["ManagerRole"] = "Manager",
+            ["EmployeeRole"] = "Anstalld",
+            ["AccountantRole"] = "Ekonom",
+            ["HrRole"] = "HR",
+            ["ClientRole"] = "Kund"
         },
         ["es"] = new()
         {
@@ -134,7 +152,13 @@
             ["Approve"] = "Aprobar",
             ["Disable"] = "Desactivar",
             ["Enable"] = "Activar",
-            ["Empty"] = "No se encontraron usuarios."
+            ["Empty"] = "No se encontraron usuarios.",
+            ["AdminRole"] = "Administrador",
+            ["ManagerRole"] = "Manager",
+            ["EmployeeRole"] = "Empleado",
+            ["AccountantRole"] = "Contable",
+            ["HrRole"] = "RR. HH.",
+            ["ClientRole"] = "Cliente"
         },
         ["de"] = new()
         {
@@ -167,7 +191,13 @@
             ["Approve"] = "Genehmigen",
             ["Disable"] = "Deaktivieren",
             ["Enable"] = "Aktivieren",
-            ["Empty"] = "Keine Benutzer gefunden."
+            ["Empty"] = "Keine Benutzer gefunden.",
+            ["AdminRole"] = "Administrator",
+            ["ManagerRole"] = "Manager",
+            ["EmployeeRole"] = "Mitarbeiter",
+            ["AccountantRole"] = "Buchhalter",
+            ["HrRole"] = "Personal",
+            ["ClientRole"] = "Kunde"
         }
     };
 
@@ -246,9 +276,12 @@
 
         <select name="role">
             <option value="">@L("AllRoles")</option>
-            <option value="Admin" selected="@(ViewBag.Role == "Admin")">Admin</option>
-            <option value="Manager" selected="@(ViewBag.Role == "Manager")">Manager</option>
-            <option value="Employee" selected="@(ViewBag.Role == "Employee")">Employee</option>
+            <option value="Admin" selected="@(ViewBag.Role == "Admin")">@L("AdminRole")</option>
+            <option value="Manager" selected="@(ViewBag.Role == "Manager")">@L("ManagerRole")</option>
+            <option value="Employee" selected="@(ViewBag.Role == "Employee")">@L("EmployeeRole")</option>
+            <option value="Comptable" selected="@(ViewBag.Role == "Comptable")">@L("AccountantRole")</option>
+            <option value="RH" selected="@(ViewBag.Role == "RH")">@L("HrRole")</option>
+            <option value="Client" selected="@(ViewBag.Role == "Client")">@L("ClientRole")</option>
         </select>
 
         <select name="status">
@@ -315,9 +348,12 @@
                                     <input type="hidden" name="id" value="@user.Id" />
 
                                     <select name="role">
-                                        <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
-                                        <option value="Manager" selected="@(user.Role == "Manager")">Manager</option>
-                                        <option value="Employee" selected="@(user.Role == "Employee")">Employee</option>
+                                        <option value="Admin" selected="@(user.Role == "Admin")">@L("AdminRole")</option>
+                                        <option value="Manager" selected="@(user.Role == "Manager")">@L("ManagerRole")</option>
+                                        <option value="Employee" selected="@(user.Role == "Employee")">@L("EmployeeRole")</option>
+                                        <option value="Comptable" selected="@(user.Role == "Comptable")">@L("AccountantRole")</option>
+                                        <option value="RH" selected="@(user.Role == "RH")">@L("HrRole")</option>
+                                        <option value="Client" selected="@(user.Role == "Client")">@L("ClientRole")</option>
                                     </select>
 
                                     <button type="submit" class="btn-secondary">OK</button>
@@ -365,3 +401,4 @@
         <p class="empty">@L("Empty")</p>
     }
 </div>
+

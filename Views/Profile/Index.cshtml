@@ -1,13 +1,14 @@
 @model EnterpriseERP.Models.User
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Profil utilisateur";
+    ViewData["Title"] = T.T("UserProfile");
 }
 
 <div class="page-header">
     <div>
-        <h1>Profil utilisateur</h1>
-        <p>Informations complètes du compte connecté</p>
+        <h1>@T.T("UserProfile")</h1>
+        <p>@T.T("UserProfileText")</p>
     </div>
 
     <div class="header-actions">
@@ -15,12 +16,12 @@
              Context.Session.GetString("UserRole") == "Admin")
         {
             <a href="/Account/Register" class="btn-primary">
-                + Créer utilisateur
+                @T.T("CreateUser")
             </a>
         }
 
         <a href="/Dashboard/Index" class="btn-secondary">
-            ← Retour dashboard
+            @T.T("BackToDashboard")
         </a>
     </div>
 </div>
@@ -39,102 +40,102 @@
         </div>
 
         <div class="form-group">
-            <label>Nom complet</label>
+            <label>@T.T("FullName")</label>
             <input value="@Model.FullName" readonly />
         </div>
 
         <div class="form-group">
-            <label>Email</label>
+            <label>@T.T("Email")</label>
             <input value="@Model.Email" readonly />
         </div>
 
         <div class="form-group">
-            <label>Rôle</label>
+            <label>@T.T("Role")</label>
             <input value="@Model.Role" readonly />
         </div>
 
         <div class="form-group">
-            <label>Téléphone</label>
+            <label>@T.T("Phone")</label>
             <input value="@Model.Phone" readonly />
         </div>
 
         <div class="form-group">
-            <label>Adresse</label>
+            <label>@T.T("Address")</label>
             <input value="@Model.Address" readonly />
         </div>
 
         <div class="form-group">
-            <label>Département</label>
+            <label>@T.T("Department")</label>
             <input value="@Model.Department" readonly />
         </div>
 
         <div class="form-group">
-            <label>Poste</label>
+            <label>@T.T("Position")</label>
             <input value="@Model.Position" readonly />
         </div>
 
         <div class="dashboard-grid" style="margin-top:20px;">
             <a href="/Profile/Edit" class="btn-primary">
-                Modifier profil
+                @T.T("EditProfile")
             </a>
 
             <a href="/Account/Logout" class="btn-danger">
-                Se déconnecter
+                @T.T("Logout")
             </a>
         </div>
     </div>
 
     <div class="panel">
-        <h2>Informations système</h2>
+        <h2>@T.T("SystemInformation")</h2>
 
         <table>
             <tr>
-                <th>Compte actif</th>
-                <td>@(Model.IsActive ? "Oui" : "Non")</td>
+                <th>@T.T("ActiveAccount")</th>
+                <td>@(Model.IsActive ? T.T("Yes") : T.T("No"))</td>
             </tr>
 
             <tr>
-                <th>Compte approuvé</th>
-                <td>@(Model.IsApproved ? "Oui" : "Non")</td>
+                <th>@T.T("ApprovedAccount")</th>
+                <td>@(Model.IsApproved ? T.T("Yes") : T.T("No"))</td>
             </tr>
 
             <tr>
                 <th>SuperAdmin</th>
-                <td>@(Model.IsSuperAdmin ? "Oui" : "Non")</td>
+                <td>@(Model.IsSuperAdmin ? T.T("Yes") : T.T("No"))</td>
             </tr>
 
             <tr>
-                <th>Langue préférée</th>
+                <th>@T.T("PreferredLanguage")</th>
                 <td>@Model.PreferredLanguage</td>
             </tr>
 
             <tr>
-                <th>Thème préféré</th>
+                <th>@T.T("PreferredTheme")</th>
                 <td>@Model.Theme</td>
             </tr>
 
             <tr>
-                <th>Créé le</th>
+                <th>@T.T("CreatedAt")</th>
                 <td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
             </tr>
 
             <tr>
-                <th>Dernière modification</th>
+                <th>@T.T("UpdatedAt")</th>
                 <td>@Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm")</td>
             </tr>
 
             <tr>
-                <th>Dernière connexion</th>
+                <th>@T.T("LastLogin")</th>
                 <td>@Model.LastConnection?.ToString("dd/MM/yyyy HH:mm")</td>
             </tr>
 
             <tr>
-                <th>Nombre de connexions</th>
+                <th>@T.T("LoginCount")</th>
                 <td>@Model.LoginCount</td>
             </tr>
 
             <tr>
-                <th>Dernière IP</th>
+                <th>@T.T("LastIp")</th>
                 <td>@Model.LastIPAddress</td>
             </tr>
         </table>

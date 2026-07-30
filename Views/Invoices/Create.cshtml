@@ -1,187 +1,183 @@
+@inject EnterpriseERP.Services.TranslationService T
 @{
-    ViewData["Title"] = "Nouvelle facture";
-
+    ViewData["Title"] = T.T("NewInvoice");
     var clients = ViewBag.Clients as List<EnterpriseERP.Models.Client>;
     var products = ViewBag.Products as List<EnterpriseERP.Models.Product>;
 }
 
 <div class="page-header">
     <div>
-        <h1>Nouvelle facture</h1>
-        <p>Créer une facture complète avec produits, TVA et total automatique</p>
+        <h1>@T.T("NewInvoice")</h1>
+        <p>@T.T("NewInvoiceDescription")</p>
     </div>
 
-    <a href="/Invoices/Index" class="btn-secondary">← Retour</a>
+    <a href="/Invoices/Index" class="btn-secondary">@T.T("Back")</a>
 </div>
 
 <div class="form-card" style="max-width:100%;">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert-error">@ViewBag.Error</div>
-}
+    <form method="post" action="/Invoices/Create">
+        @Html.AntiForgeryToken()
 
-<form method="post" action="/Invoices/Create">
-    @Html.AntiForgeryToken()
-
-    <div class="dashboard-grid">
-        <div class="form-group">
-            <label>Client</label>
-            <select name="ClientId" required>
-                <option value="">-- Sélectionner un client --</option>
-                @if (clients != null)
-                {
-                    foreach (var client in clients)
+        <div class="dashboard-grid">
+            <div class="form-group">
+                <label>@T.T("Client")</label>
+                <select name="ClientId" required>
+                    <option value="">@T.T("SelectClient")</option>
+                    @if (clients != null)
                     {
-                        <option value="@client.Id">@client.FullName</option>
+                        foreach (var client in clients)
+                        {
+                            <option value="@client.Id">@client.FullName</option>
+                        }
                     }
-                }
-            </select>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>@T.T("Status")</label>
+                <select name="Status">
+                    <option value="Unpaid">@T.T("Unpaid")</option>
+                    <option value="Pending">@T.T("Pending")</option>
+                    <option value="Paid">@T.T("Paid")</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="form-group">
+                <label>@T.T("VatIncludedQuestion")</label>
+                <select name="VatIncluded" id="VatIncluded">
+                    <option value="true">@T.T("VatIncluded")</option>
+                    <option value="false">@T.T("VatNotIncluded")</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>@T.T("VatRate")</label>
+                <input name="VatRate" id="VatRate" type="number" step="0.01" value="20" required />
+            </div>
         </div>
 
         <div class="form-group">
-            <label>Statut</label>
-            <select name="Status">
-                <option value="Unpaid">Non payée</option>
-                <option value="Pending">En attente</option>
-                <option value="Paid">Payée</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="dashboard-grid">
-        <div class="form-group">
-            <label>TVA incluse dans les prix ?</label>
-            <select name="VatIncluded" id="VatIncluded">
-                <option value="true">Oui, TVA incluse</option>
-                <option value="false">Non, TVA non incluse</option>
+            <label>@T.T("PaymentMethod")</label>
+            <select name="PaymentMethod">
+                <option value="Cash">@T.T("Cash")</option>
+                <option value="Card">@T.T("Card")</option>
+                <option value="Bank Transfer">@T.T("BankTransfer")</option>
+                <option value="Swish">Swish</option>
+                <option value="Mobile Money">Mobile Money</option>
             </select>
         </div>
 
-        <div class="form-group">
-            <label>Taux TVA (%)</label>
-            <input name="VatRate" id="VatRate" type="number" step="0.01" value="20" required />
-        </div>
-    </div>
+        <div class="panel">
+            <h2>@T.T("InvoiceLines")</h2>
 
-    <div class="form-group">
-        <label>Méthode de paiement</label>
-        <select name="PaymentMethod">
-            <option value="Cash">Espèces</option>
-            <option value="Card">Carte bancaire</option>
-            <option value="Bank Transfer">Virement bancaire</option>
-            <option value="Swish">Swish</option>
-            <option value="Mobile Money">Mobile Money</option>
-        </select>
-    </div>
+            <table id="invoiceItemsTable">
+                <thead>
+                    <tr>
+                        <th>@T.T("Product")</th>
+                        <th>@T.T("Description")</th>
+                        <th>@T.T("Quantity")</th>
+                        <th>@T.T("UnitPrice")</th>
+                        <th>@T.T("DiscountPercent")</th>
+                        <th>@T.T("TotalExclTax")</th>
+                        <th>@T.T("Vat")</th>
+                        <th>@T.T("TotalInclTax")</th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-    <div class="panel">
-        <h2>Lignes de facture</h2>
-
-        <table id="invoiceItemsTable">
-            <thead>
-                <tr>
-                    <th>Produit</th>
-                    <th>Description</th>
-                    <th>Quantité</th>
-                    <th>Prix unitaire</th>
-                    <th>Remise %</th>
-                    <th>Total HT</th>
-                    <th>TVA</th>
-                    <th>Total TTC</th>
-                    <th></th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>
-                        <select name="ProductId" onchange="fillProduct(this)">
-                            <option value="">Manuel</option>
-                            @if (products != null)
-                            {
-                                foreach (var product in products)
+                <tbody>
+                    <tr>
+                        <td>
+                            <select name="ProductId" onchange="fillProduct(this)">
+                                <option value="">@T.T("Manual")</option>
+                                @if (products != null)
                                 {
-                                    <option value="@product.Id"
-                                            data-name="@product.Name"
-                                            data-price="@product.SalePrice">
-                                        @product.Name - @product.SalePrice €
-                                    </option>
+                                    foreach (var product in products)
+                                    {
+                                        <option value="@product.Id" data-name="@product.Name" data-price="@product.SalePrice">
+                                            @product.Name - @product.SalePrice EUR
+                                        </option>
+                                    }
                                 }
-                            }
-                        </select>
+                            </select>
 
-                        <input name="ProductName" placeholder="Nom produit/service" required />
-                    </td>
+                            <input name="ProductName" placeholder="@T.T("ProductServiceName")" required />
+                        </td>
 
-                    <td>
-                        <input name="Description" placeholder="Description" />
-                    </td>
+                        <td>
+                            <input name="Description" placeholder="@T.T("Description")" />
+                        </td>
 
-                    <td>
-                        <input name="Quantity" type="number" step="0.01" min="1" value="1" required />
-                    </td>
+                        <td>
+                            <input name="Quantity" type="number" step="0.01" min="1" value="1" required />
+                        </td>
 
-                    <td>
-                        <input name="UnitPrice" type="number" step="0.01" min="0" value="0" required />
-                    </td>
+                        <td>
+                            <input name="UnitPrice" type="number" step="0.01" min="0" value="0" required />
+                        </td>
 
-                    <td>
-                        <input name="Discount" type="number" step="0.01" min="0" value="0" />
-                    </td>
+                        <td>
+                            <input name="Discount" type="number" step="0.01" min="0" value="0" />
+                        </td>
 
-                    <td class="line-ht">0.00 €</td>
-                    <td class="line-vat">0.00 €</td>
-                    <td class="line-ttc">0.00 €</td>
+                        <td class="line-ht">0.00 EUR</td>
+                        <td class="line-vat">0.00 EUR</td>
+                        <td class="line-ttc">0.00 EUR</td>
 
-                    <td>
-                        <button type="button" class="btn-danger" onclick="removeRow(this)">X</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <td>
+                            <button type="button" class="btn-danger" onclick="removeRow(this)">X</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <button type="button" class="btn-secondary" onclick="addRow()" style="margin-top:15px;">
-            + Ajouter une ligne
-        </button>
-    </div>
+            <button type="button" class="btn-secondary" onclick="addRow()" style="margin-top:15px;">
+                @T.T("AddLine")
+            </button>
+        </div>
 
-    <div class="panel" style="margin-top:20px;">
-        <h2>Résumé de la facture</h2>
+        <div class="panel" style="margin-top:20px;">
+            <h2>@T.T("InvoiceSummary")</h2>
 
-        <div class="finance-summary">
-            <div>
-                <span>Total HT</span>
-                <strong id="subTotal">0.00 €</strong>
-            </div>
+            <div class="finance-summary">
+                <div>
+                    <span>@T.T("TotalExclTax")</span>
+                    <strong id="subTotal">0.00 EUR</strong>
+                </div>
 
-            <div>
-                <span>Montant TVA</span>
-                <strong id="vatAmount">0.00 €</strong>
-            </div>
+                <div>
+                    <span>@T.T("VatAmount")</span>
+                    <strong id="vatAmount">0.00 EUR</strong>
+                </div>
 
-            <div>
-                <span>Total TTC</span>
-                <strong id="totalTTC">0.00 €</strong>
-            </div>
+                <div>
+                    <span>@T.T("TotalInclTax")</span>
+                    <strong id="totalTTC">0.00 EUR</strong>
+                </div>
 
-            <div>
-                <span>TVA</span>
-                <strong id="vatInfo">20% incluse</strong>
+                <div>
+                    <span>@T.T("Vat")</span>
+                    <strong id="vatInfo">20%</strong>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-group" style="margin-top:20px;">
-        <label>Message de remerciement</label>
-        <textarea name="ThankYouMessage" rows="4">Merci beaucoup pour votre confiance. Nous serons ravis de vous accueillir à nouveau la prochaine fois.</textarea>
-    </div>
+        <div class="form-group" style="margin-top:20px;">
+            <label>@T.T("ThankYouMessage")</label>
+            <textarea name="ThankYouMessage" rows="4">@T.T("ThankYouMessageDefault")</textarea>
+        </div>
 
-    <button type="submit" class="btn-primary">
-        Enregistrer la facture
-    </button>
-</form>
-
+        <button type="submit" class="btn-primary">
+            @T.T("SaveInvoice")
+        </button>
+    </form>
 </div>
 
 <script>
@@ -212,9 +208,9 @@
 
         newRow.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
 
-        newRow.querySelector(".line-ht").innerText = "0.00 €";
-        newRow.querySelector(".line-vat").innerText = "0.00 €";
-        newRow.querySelector(".line-ttc").innerText = "0.00 €";
+        newRow.querySelector(".line-ht").innerText = "0.00 EUR";
+        newRow.querySelector(".line-vat").innerText = "0.00 EUR";
+        newRow.querySelector(".line-ttc").innerText = "0.00 EUR";
 
         table.appendChild(newRow);
         calculateTotals();
@@ -259,19 +255,19 @@
                 lineTTC = lineHT + lineVat;
             }
 
-            row.querySelector(".line-ht").innerText = lineHT.toFixed(2) + " €";
-            row.querySelector(".line-vat").innerText = lineVat.toFixed(2) + " €";
-            row.querySelector(".line-ttc").innerText = lineTTC.toFixed(2) + " €";
+            row.querySelector(".line-ht").innerText = lineHT.toFixed(2) + " EUR";
+            row.querySelector(".line-vat").innerText = lineVat.toFixed(2) + " EUR";
+            row.querySelector(".line-ttc").innerText = lineTTC.toFixed(2) + " EUR";
 
             subTotal += lineHT;
             vatAmount += lineVat;
             totalTTC += lineTTC;
         });
 
-        document.getElementById("subTotal").innerText = subTotal.toFixed(2) + " €";
-        document.getElementById("vatAmount").innerText = vatAmount.toFixed(2) + " €";
-        document.getElementById("totalTTC").innerText = totalTTC.toFixed(2) + " €";
-        document.getElementById("vatInfo").innerText = vatRate + "% " + (vatIncluded ? "incluse" : "non incluse");
+        document.getElementById("subTotal").innerText = subTotal.toFixed(2) + " EUR";
+        document.getElementById("vatAmount").innerText = vatAmount.toFixed(2) + " EUR";
+        document.getElementById("totalTTC").innerText = totalTTC.toFixed(2) + " EUR";
+        document.getElementById("vatInfo").innerText = vatRate + "%";
     }
 
     document.addEventListener("input", calculateTotals);

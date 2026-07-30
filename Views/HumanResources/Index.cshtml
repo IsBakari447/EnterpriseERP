@@ -1,0 +1,122 @@
+@using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("AdvancedHr");
+    var employees = ViewBag.Employees as List<Employee> ?? new();
+    var leaveRequests = ViewBag.LeaveRequests as List<LeaveRequest> ?? new();
+    var schedules = ViewBag.Schedules as List<HrSchedule> ?? new();
+    var payrollSlips = ViewBag.PayrollSlips as List<PayrollSlip> ?? new();
+    var documents = ViewBag.Documents as List<HrDocument> ?? new();
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">@T.T("AdvancedHrEyebrow")</span>
+            <h1>@T.T("AdvancedHrTitle")</h1>
+            <p>@T.T("AdvancedHrText")</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">HR</div><div><h3>@employees.Count</h3><p>@T.T("EmployeeCount")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">ABS</div><div><h3>@leaveRequests.Count(l => l.Status == "En attente")</h3><p>@T.T("PendingLeave")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">PAY</div><div><h3>@payrollSlips.Count</h3><p>@T.T("PayrollSlips")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">DOC</div><div><h3>@documents.Count</h3><p>@T.T("HrDocuments")</p></div></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("NewLeaveRequest")</h2>
+            <form method="post" action="/HumanResources/CreateLeave" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="EmployeeId" required>
+                    @foreach (var employee in employees) { <option value="@employee.Id">@employee.FullName</option> }
+                </select>
+                <select name="Type"><option value="Conges payes">@T.T("PaidLeave")</option><option value="Maladie">@T.T("SickLeave")</option><option value="Personnel">@T.T("PersonalLeave")</option><option value="Teletravail">@T.T("RemoteWork")</option></select>
+                <input type="date" name="StartDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input type="date" name="EndDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <textarea name="Reason" placeholder="@T.T("Reason")"></textarea>
+                <button class="btn-primary" type="submit">@T.T("SendRequest")</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h2>@T.T("Schedule")</h2>
+            <form method="post" action="/HumanResources/CreateSchedule" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="EmployeeId" required>
+                    @foreach (var employee in employees) { <option value="@employee.Id">@employee.FullName</option> }
+                </select>
+                <input type="date" name="WorkDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input name="StartTime" value="08:00" />
+                <input name="EndTime" value="17:00" />
+                <input name="Notes" placeholder="@T.T("ScheduleNotes")" />
+                <button class="btn-primary" type="submit">@T.T("AddToSchedule")</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("PayrollSlip")</h2>
+            <form method="post" action="/HumanResources/CreatePayroll" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="EmployeeId" required>
+                    @foreach (var employee in employees) { <option value="@employee.Id">@employee.FullName</option> }
+                </select>
+                <input name="Period" value="@DateTime.Today.ToString("yyyy-MM")" />
+                <input name="GrossAmount" type="number" step="0.01" placeholder="@T.T("GrossAmount")" />
+                <input name="NetAmount" type="number" step="0.01" placeholder="@T.T("NetAmount")" />
+                <select name="Status"><option value="Brouillon">@T.T("Draft")</option><option value="Validee">@T.T("Validated")</option><option value="Envoyee">@T.T("Sent")</option></select>
+                <button class="btn-primary" type="submit">@T.T("CreatePayrollSlip")</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h2>@T.T("HrDocumentContract")</h2>
+            <form method="post" action="/HumanResources/CreateDocument" class="form-grid">
+                @Html.AntiForgeryToken()
+                <select name="EmployeeId" required>
+                    @foreach (var employee in employees) { <option value="@employee.Id">@employee.FullName</option> }
+                </select>
+                <input name="Title" placeholder="@T.T("DocumentTitle")" required />
+                <select name="DocumentType"><option value="Contrat">@T.T("Contract")</option><option value="Avenant">@T.T("Amendment")</option><option value="Piece administrative">@T.T("AdministrativeDocument")</option><option value="Certificat">@T.T("Certificate")</option></select>
+                <input name="FileUrl" placeholder="@T.T("FileReference")" />
+                <input type="date" name="ExpirationDate" value="@DateTime.Today.AddYears(1).ToString("yyyy-MM-dd")" />
+                <button class="btn-primary" type="submit">@T.T("AddDocument")</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="panel">
+            <h2>@T.T("LeaveRequests")</h2>
+            <table><thead><tr><th>@T.T("Employee")</th><th>@T.T("Period")</th><th>@T.T("Type")</th><th>@T.T("Status")</th><th>@T.T("Actions")</th></tr></thead><tbody>
+            @foreach (var item in leaveRequests)
+            {
+                <tr>
+                    <td>@item.Employee?.FullName</td><td>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</td><td>@item.Type</td><td>@item.Status</td>
+                    <td>
+                        <form method="post" action="/HumanResources/UpdateLeaveStatus" style="display:flex;gap:8px;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <select name="status"><option value="Approuve">@T.T("Approved")</option><option value="Refuse">@T.T("Rejected")</option><option value="En attente">@T.T("Pending")</option></select>
+                            <button class="btn-secondary" type="submit">@T.T("Update")</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody></table>
+        </div>
+        <div class="panel">
+            <h2>@T.T("RecentSchedule")</h2>
+            <table><thead><tr><th>@T.T("Date")</th><th>@T.T("Employee")</th><th>@T.T("WorkingHours")</th><th>@T.T("ScheduleNotes")</th></tr></thead><tbody>
+            @foreach (var item in schedules)
+            {
+                <tr><td>@item.WorkDate.ToString("dd/MM/yyyy")</td><td>@item.Employee?.FullName</td><td>@item.StartTime - @item.EndTime</td><td>@item.Notes</td></tr>
+            }
+            </tbody></table>
+        </div>
+    </div>
+</section>

@@ -1,8 +1,9 @@
-@model EnterpriseERP.Models.Quote
+﻿@model EnterpriseERP.Models.Quote
 @using EnterpriseERP.Models
+@inject EnterpriseERP.Services.TranslationService T
 
 @{
-    ViewData["Title"] = "Nouveau devis";
+    ViewData["Title"] = T.T("NewQuote");
     var products = ViewBag.Products as List<Product> ?? new List<Product>();
 }
 
@@ -10,8 +11,8 @@
 
     <div class="quote-header">
         <div>
-            <h1>Nouveau devis</h1>
-            <p>Créer un devis professionnel avec plusieurs produits.</p>
+            <h1>@T.T("NewQuote")</h1>
+            <p>@T.T("CreateQuoteDescription")</p>
         </div>
 
         <a asp-action="Index" class="btn btn-secondary">
@@ -89,10 +90,10 @@
 
         <div class="erp-card mb-4">
             <div class="erp-card-header">
-                <h5>Produits du devis</h5>
+                <h5>@T.T("QuoteProducts")</h5>
 
                 <button type="button" class="btn btn-primary btn-sm" onclick="addLine()">
-                    + Ajouter une ligne
+                    @T.T("AddLine")
                 </button>
             </div>
 
@@ -288,3 +289,6 @@
         calculateTotals();
     </script>
 }
+
+
+

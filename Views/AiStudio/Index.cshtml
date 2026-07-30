@@ -1,0 +1,56 @@
+@inject EnterpriseERP.Services.TranslationService T
+@{
+    ViewData["Title"] = T.T("AiStudio");
+    var features = ViewBag.Features as string[] ?? Array.Empty<string>();
+    decimal salesPrediction = ViewBag.SalesPrediction ?? 0m;
+    decimal cashPrediction = ViewBag.CashPrediction ?? 0m;
+    int stockRisk = ViewBag.StockRisk ?? 0;
+}
+
+<section class="dashboard-premium-v3 dashboard-professional">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">EnterpriseERP AI Studio</span>
+            <h1>@T.T("AiStudioTitle")</h1>
+            <p>@T.T("AiStudioText")</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">AI</div><div><h3>@salesPrediction.ToString("N2") EUR</h3><p>@T.T("SalesPrediction")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">CASH</div><div><h3>@cashPrediction.ToString("N2") EUR</h3><p>@T.T("CashPrediction")</p></div></div>
+        <div class="stat-card warning"><div class="stat-icon">STK</div><div><h3>@stockRisk</h3><p>@T.T("StockBreakRisk")</p></div></div>
+        <div class="stat-card"><div class="stat-icon">LOG</div><div><h3>@T.T("SecureStatus")</h3><p>@T.T("SecureLogs")</p></div></div>
+    </div>
+
+    <div class="services-panel">
+        <div class="services-header">
+            <div>
+                <span class="eyebrow">@T.T("AiRoadmap")</span>
+                <h2>@T.T("AiFunctionsTitle")</h2>
+                <p>@T.T("AiFunctionsText")</p>
+            </div>
+        </div>
+        <div class="services-grid">
+            @foreach (var feature in features)
+            {
+                <div class="service-card"><span class="dash-symbol">AI</span><h3>@T.T(feature)</h3><p>@T.T("AiFeatureText")</p></div>
+            }
+        </div>
+    </div>
+
+    <div class="forecast-panel">
+        <div class="forecast-header">
+            <div>
+                <h2>@T.T("CloudMobilePerformance")</h2>
+                <p>@T.T("CloudMobilePerformanceText")</p>
+            </div>
+        </div>
+        <div class="forecast-grid">
+            <div class="forecast-card"><span class="dash-symbol">CLOUD</span><small>@T.T("AutoCloudBackup")</small><strong>@T.T("ConfiguredViaBackup")</strong></div>
+            <div class="forecast-card"><span class="dash-symbol">SYNC</span><small>@T.T("MultiDevice")</small><strong>@T.T("ApiMobile")</strong></div>
+            <div class="forecast-card"><span class="dash-symbol">OFF</span><small>@T.T("OfflineMobile")</small><strong>@T.T("LocalQueue")</strong></div>
+            <div class="forecast-card"><span class="dash-symbol">SIGN</span><small>@T.T("DigitalSignature")</small><strong>@T.T("QuotesInvoices")</strong></div>
+        </div>
+    </div>
+</section>
