@@ -5,7 +5,7 @@ EnterpriseERP is a professional ERP web platform built with ASP.NET Core 8, Enti
 Current production URL:
 
 ```text
-https://enterpriseerp-1.onrender.com
+https://enterpriseerp-2.onrender.com
 ```
 
 ## Main Features
